@@ -174,7 +174,27 @@ export default function MembershipPage() {
                                 </div>
                                 <div style={{ display: 'flex', gap: '12px', flexDirection: 'column', alignItems: 'flex-end' }}>
                                     {tier.active === false && <span style={{ color: '#ef4444', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase' }}>Paused</span>}
-                                    <Button variant="secondary" onClick={() => setEditingIndex(index)}>Edit</Button>
+                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                        <Button variant="secondary" onClick={() => setEditingIndex(index)}>Edit</Button>
+                                        <Button
+                                            variant="secondary"
+                                            onClick={async () => {
+                                                if (confirm('Delete this tier?')) {
+                                                    const newTiers = tiers.filter((_, i) => i !== index);
+                                                    setTiers(newTiers);
+                                                    await fetch('/api/tiers', {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify({ address, tiers: newTiers })
+                                                    });
+                                                    window.location.reload();
+                                                }
+                                            }}
+                                            style={{ background: '#991b1b', borderColor: '#991b1b' }}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         )}

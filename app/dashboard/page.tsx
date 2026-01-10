@@ -62,6 +62,8 @@ export default function Dashboard() {
 
     // Check local DB for profile
     const [profile, setProfile] = useState<any>(null);
+    const [hasTiers, setHasTiers] = useState(false);
+
     useEffect(() => {
         if (address) {
             fetch('/api/creators')
@@ -69,6 +71,13 @@ export default function Dashboard() {
                 .then(creators => {
                     const found = creators.find((c: any) => c.address === address);
                     setProfile(found);
+                });
+
+            // Check for tiers
+            fetch(`/api/tiers?address=${address}`)
+                .then(res => res.json())
+                .then(tiers => {
+                    setHasTiers(tiers && tiers.length > 0);
                 });
         }
     }, [address]);
@@ -112,7 +121,7 @@ export default function Dashboard() {
     const steps = [
         { label: "Create Profile", done: !!profile },
         { label: "Deploy Contract", done: !!deployedAddress },
-        { label: "Create First Tier", done: false }, // Need to check tiers
+        { label: "Create First Tier", done: hasTiers }, // Check from Supabase
         { label: "Customize Public Page", done: !!(profile && profile.description) }
     ];
 
