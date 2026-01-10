@@ -5,16 +5,28 @@ import { usePathname, useRouter } from 'next/navigation';
 import Button from '../components/Button';
 import WalletButton from '../components/WalletButton';
 import { useAccount } from 'wagmi';
+import { supabase } from '@/utils/supabase';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
     const { address } = useAccount();
     const [mounted, setMounted] = useState(false);
+    const [profile, setProfile] = useState<any>(null);
 
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    // Fetch Profile for Sidebar
+    useEffect(() => {
+        const fetchProfile = async () => {
+            if (!address) return;
+            const { data } = await supabase.from('creators').select('*').eq('address', address).single();
+            if (data) setProfile(data);
+        };
+        fetchProfile();
+    }, [address]);
 
 
     if (!mounted) return null; // or a skeleton loader
@@ -32,17 +44,35 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div style={{ display: 'flex', minHeight: '100vh' }}>
             {/* Sidebar */}
             <aside style={{ width: '280px', borderRight: '1px solid #2e333d', padding: '24px', display: 'flex', flexDirection: 'column' }}>
-                <div style={{ marginBottom: '40px', paddingLeft: '12px' }}>
+                <div style={{ marginBottom: '24px', paddingLeft: '12px' }}>
                     <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', background: 'linear-gradient(to right, #65b3ad, #fff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', cursor: 'pointer' }} onClick={() => router.push('/')}>Kinship</h2>
                 </div>
 
-                {/* Creator Profile Preview */}
-                <div style={{ marginBottom: '40px', padding: '16px', background: '#1a1d24', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#2e333d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        👻
+                {/* Global Search Bar */}
+                <div style={{ marginBottom: '24px', position: 'relative' }}>
+                    <div style={{ width: '100%', padding: '10px 12px 10px 40px', background: '#1a1d24', border: '1px solid #2e333d', borderRadius: '8px', color: '#a1a1aa', fontSize: '0.875rem' }}>
+                        Search creators...
                     </div>
+                    <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>🔍</span>
+                </div>
+
+                {/* Creator Profile Preview (Real Data) */}
+                <div style={{ marginBottom: '40px', padding: '16px', background: '#1a1d24', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {mounted && profile?.avatar ? (
+                        <img
+                            src={profile.avatar}
+                            alt="Avatar"
+                            style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
+                        />
+                    ) : (
+                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#2e333d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            👻
+                        </div>
+                    )}
                     <div style={{ overflow: 'hidden' }}>
-                        <p style={{ fontWeight: 'bold', fontSize: '0.875rem' }}>Creator</p>
+                        <p style={{ fontWeight: 'bold', fontSize: '0.875rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {mounted && profile?.name ? profile.name : 'Creator'}
+                        </p>
                         <p style={{ fontSize: '0.75rem', color: '#65b3ad', fontFamily: 'monospace' }}>
                             {mounted && address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Connect Wallet'}
                         </p>
@@ -79,6 +109,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </nav>
 
                 <div style={{ marginTop: 'auto', paddingTop: '24px', borderTop: '1px solid #2e333d' }}>
+                    {/* Wallet Button is already in global navbar/sidebar, keeping it simple here or removing if redundant */}
                     <div style={{ marginBottom: '16px' }}>
                         <WalletButton />
                     </div>
