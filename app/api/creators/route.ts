@@ -23,7 +23,9 @@ export async function POST(request: Request) {
         address,
         name,
         description,
-        avatarUrl: body.avatarUrl // might be passed
+        avatarUrl: body.avatarUrl,
+        socials: body.socials,
+        payoutToken: body.payoutToken
     }, { onConflict: 'address' }).select();
 
     if (error) {
