@@ -96,7 +96,6 @@ export const SUBSCRIPTION_ABI = [
         ],
         "stateMutability": "view",
         "type": "function"
-        "type": "function"
     },
     {
         "inputs": [],
