@@ -8,36 +8,57 @@ import { useAccount } from 'wagmi';
 
 export default function AudiencePage() {
     const { address } = useAccount();
-
-    // Mock Data Generator consistent for the user
-    // In a real app, this fetches from Supabase 'subscriptions' table
     const [members, setMembers] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchMembers = () => {
+        if (!address) return;
+        setLoading(true);
+        fetch(`/api/audience?creator=${address}`)
+            .then(res => res.json())
+            .then(data => {
+                setMembers(data);
+                setLoading(false);
+            })
+            .catch(() => setLoading(false));
+    };
 
     useEffect(() => {
-        // Generating "Specific" data for demonstration
-        const mockData = [
-            { address: '0x1234...5678', tier: 'Supporter', joined: '2026-01-01', total: '10 MNT', status: 'Active', expiry: '2026-02-01', tx: '0xabc...def' },
-            { address: '0x8765...4321', tier: 'VIP', joined: '2026-01-05', total: '40 MNT', status: 'Active', expiry: '2026-02-05', tx: '0x123...456' },
-            { address: '0x1111...0000', tier: 'Supporter', joined: '2025-12-15', total: '10 MNT', status: 'Expired', expiry: '2026-01-15', tx: '0x999...888' },
-            { address: '0xaaaa...bbbb', tier: 'Super Fan', joined: '2026-01-08', total: '100 MNT', status: 'Active', expiry: '2026-02-08', tx: '0xaaa...bbb' },
-            { address: '0xcccc...dddd', tier: 'Supporter', joined: '2026-01-09', total: '5 MNT', status: 'Active', expiry: '2026-02-09', tx: '0xccc...ddd' },
+        fetchMembers();
+    }, [address]);
+
+    const generateDemoData = async () => {
+        if (!address) return;
+        // Seed some specific dummy data for this user
+        const dummy = [
+            { subscriberAddress: '0x1010...1010', creatorAddress: address, tierName: 'Supporter', price: '10 MNT', status: 'Active', expiresAt: '2026-02-01', createdAt: new Date().toISOString() },
+            { subscriberAddress: '0x2020...2020', creatorAddress: address, tierName: 'VIP', price: '40 MNT', status: 'Active', expiresAt: '2026-02-15', createdAt: new Date().toISOString() },
+            { subscriberAddress: '0x3030...3030', creatorAddress: address, tierName: 'Supporter', price: '10 MNT', status: 'Expired', expiresAt: '2026-01-01', createdAt: new Date().toISOString() }
         ];
-        setMembers(mockData);
-    }, []);
+
+        for (const sub of dummy) {
+            await fetch('/api/audience', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(sub)
+            });
+        }
+        fetchMembers(); // refresh
+    };
 
     const [search, setSearch] = useState('');
     const [filterStatus, setFilterStatus] = useState('All');
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
     const filteredMembers = members.filter(m => {
-        const matchesSearch = m.address.toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = m.subscriberAddress.toLowerCase().includes(search.toLowerCase());
         const matchesStatus = filterStatus === 'All' || m.status === filterStatus;
         return matchesSearch && matchesStatus;
     });
 
     const handleExportCSV = () => {
-        const headers = ["Member", "Tier", "Join Date", "Lifetime Value", "Status"];
-        const rows = filteredMembers.map(m => [m.address, m.tier, m.joined, m.total, m.status]);
+        const headers = ["Member", "Tier", "Join Date", "Price", "Status"];
+        const rows = filteredMembers.map(m => [m.subscriberAddress, m.tierName, new Date(m.createdAt).toLocaleDateString(), m.price, m.status]);
 
         const csvContent = "data:text/csv;charset=utf-8,"
             + headers.join(",") + "\n"
@@ -98,10 +119,10 @@ export default function AudiencePage() {
                                     onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
                                     onMouseLeave={(e) => e.currentTarget.style.background = expandedRow === i ? 'rgba(255,255,255,0.02)' : 'transparent'}
                                 >
-                                    <td style={{ padding: '16px', fontFamily: 'monospace', color: '#65b3ad' }}>{m.address}</td>
-                                    <td style={{ padding: '16px' }}>{m.tier}</td>
-                                    <td style={{ padding: '16px', color: '#a1a1aa' }}>{m.joined}</td>
-                                    <td style={{ padding: '16px' }}>{m.total}</td>
+                                    <td style={{ padding: '16px', fontFamily: 'monospace', color: '#65b3ad' }}>{m.subscriberAddress.slice(0, 6)}...{m.subscriberAddress.slice(-4)}</td>
+                                    <td style={{ padding: '16px' }}>{m.tierName}</td>
+                                    <td style={{ padding: '16px', color: '#a1a1aa' }}>{new Date(m.createdAt).toLocaleDateString()}</td>
+                                    <td style={{ padding: '16px' }}>{m.price}</td>
                                     <td style={{ padding: '16px' }}>
                                         <span style={{
                                             background: m.status === 'Active' ? 'rgba(101, 179, 173, 0.2)' : 'rgba(239, 68, 68, 0.2)',
@@ -121,15 +142,11 @@ export default function AudiencePage() {
                                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
                                                 <div>
                                                     <p style={{ fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '4px' }}>Full Address</p>
-                                                    <p style={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>{m.address}</p>
+                                                    <p style={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>{m.subscriberAddress}</p>
                                                 </div>
                                                 <div>
                                                     <p style={{ fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '4px' }}>Membership Expiry</p>
-                                                    <p style={{ fontSize: '0.9rem' }}>{m.expiry}</p>
-                                                </div>
-                                                <div>
-                                                    <p style={{ fontSize: '0.75rem', color: '#a1a1aa', marginBottom: '4px' }}>Last Transaction</p>
-                                                    <a href="#" style={{ color: '#65b3ad', textDecoration: 'none', fontSize: '0.9rem' }}>{m.tx} ↗</a>
+                                                    <p style={{ fontSize: '0.9rem' }}>{new Date(m.expiresAt).toLocaleDateString()}</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -139,7 +156,16 @@ export default function AudiencePage() {
                         )) : (
                             <tr>
                                 <td colSpan={6} style={{ padding: '48px', textAlign: 'center', color: '#52525b' }}>
-                                    {address ? "No supporters found yet. Share your profile!" : "Please connect your wallet to view audience."}
+                                    {loading ? 'Loading...' : (
+                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                                            <p>{address ? "No supporters found yet." : "Please connect your wallet."}</p>
+                                            {address && (
+                                                <Button onClick={generateDemoData} variant="secondary" style={{ fontSize: '0.8rem' }}>
+                                                    ✨ Generate Demo Data for Me
+                                                </Button>
+                                            )}
+                                        </div>
+                                    )}
                                 </td>
                             </tr>
                         )}
