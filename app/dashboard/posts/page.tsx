@@ -11,6 +11,7 @@ export default function PostsPage() {
     const [title, setTitle] = useState('');
     const [teaser, setTeaser] = useState('');
     const [content, setContent] = useState('');
+    const [postImage, setPostImage] = useState('');
     const [saving, setSaving] = useState(false);
     const [visibility, setVisibility] = useState('members'); // public, members
 
@@ -26,6 +27,7 @@ export default function PostsPage() {
                 title,
                 content,
                 teaser,
+                image: postImage,
                 isPublic: visibility === 'public',
                 createdAt: new Date().toISOString()
             })
@@ -107,6 +109,44 @@ export default function PostsPage() {
                         />
                     </div>
                 )}
+
+                <div style={{ marginBottom: '24px' }}>
+                    <label style={{ display: 'block', fontSize: '0.875rem', color: '#a1a1aa', marginBottom: '8px' }}>Post Image (Optional)</label>
+                    {postImage ? (
+                        <div style={{ position: 'relative', width: '100%', height: '300px', borderRadius: '8px', overflow: 'hidden', marginBottom: '8px', border: '1px solid #2e333d' }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={postImage} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <button
+                                onClick={() => setPostImage('')}
+                                style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.7)', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer' }}
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    ) : (
+                        <div style={{ width: '100%', height: '120px', border: '2px dashed #2e333d', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', background: '#1a1d24', cursor: 'pointer', transition: 'all 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.borderColor = '#65b3ad'} onMouseLeave={(e) => e.currentTarget.style.borderColor = '#2e333d'}>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => {
+                                            setPostImage(reader.result as string);
+                                        };
+                                        reader.readAsDataURL(file);
+                                    }
+                                }}
+                                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+                            />
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', color: '#a1a1aa' }}>
+                                <span style={{ fontSize: '1.5rem' }}>🖼️</span>
+                                <span style={{ fontSize: '0.9rem' }}>Click or Drag image here</span>
+                            </div>
+                        </div>
+                    )}
+                </div>
 
                 <div style={{ marginBottom: '24px' }}>
                     <label style={{ display: 'block', fontSize: '0.875rem', color: '#a1a1aa', marginBottom: '8px' }}>

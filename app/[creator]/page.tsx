@@ -172,6 +172,13 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                                 <p style={{ fontSize: '0.875rem', color: '#a1a1aa' }}>{new Date(post.createdAt).toLocaleDateString()}</p>
                             </div>
 
+                            {/* Post Image */}
+                            {post.image && (
+                                <div style={{ marginBottom: '16px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #2e333d' }}>
+                                    <img src={post.image} alt="Post Attachment" style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', display: 'block' }} />
+                                </div>
+                            )}
+
                             {/* Content Gating Logic */}
                             {post.isPublic || isSubscribed ? (
                                 <div style={{ color: '#d4d4d8', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>{post.content}</div>

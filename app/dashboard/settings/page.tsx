@@ -83,13 +83,27 @@ export default function SettingsPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', gap: '24px' }}>
                         <div>
                             <label style={{ fontSize: '0.875rem', color: '#a1a1aa', marginBottom: '8px', display: 'block' }}>Avatar</label>
-                            <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: avatarUrl ? `url(${avatarUrl}) center/cover` : '#2e333d', marginBottom: '12px', border: '2px solid #2e333d' }}></div>
-                            <Input
-                                placeholder="Image URL..."
-                                value={avatarUrl}
-                                onChange={(e: any) => setAvatarUrl(e.target.value)}
-                                style={{ fontSize: '0.75rem' }}
-                            />
+                            <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: avatarUrl ? `url(${avatarUrl}) center/cover` : '#2e333d', marginBottom: '12px', border: '2px solid #2e333d', position: 'relative', overflow: 'hidden' }}>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            const reader = new FileReader();
+                                            reader.onloadend = () => {
+                                                setAvatarUrl(reader.result as string);
+                                            };
+                                            reader.readAsDataURL(file);
+                                        }
+                                    }}
+                                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+                                />
+                                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: '0.7rem', textAlign: 'center', padding: '4px', pointerEvents: 'none' }}>
+                                    Change
+                                </div>
+                            </div>
+                            <p style={{ fontSize: '0.75rem', color: '#64748b' }}>Click to upload (Max 1MB)</p>
                         </div>
                         <div style={{ display: 'grid', gap: '16px' }}>
                             <Input
