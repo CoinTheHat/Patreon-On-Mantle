@@ -50,17 +50,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
                 {/* Global Search Bar */}
                 <div style={{ marginBottom: '24px', position: 'relative' }}>
-                    <div style={{ width: '100%', padding: '10px 12px 10px 40px', background: '#1a1d24', border: '1px solid #2e333d', borderRadius: '8px', color: '#a1a1aa', fontSize: '0.875rem' }}>
-                        Search creators...
-                    </div>
+                    <input
+                        type="text"
+                        placeholder="Search creators..."
+                        style={{ width: '100%', padding: '10px 12px 10px 40px', background: '#1a1d24', border: '1px solid #2e333d', borderRadius: '8px', color: '#fff', fontSize: '0.875rem', outline: 'none' }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                alert(`Search for quotes/creators: "${(e.currentTarget as HTMLInputElement).value}"`);
+                            }
+                        }}
+                    />
                     <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>🔍</span>
                 </div>
 
                 {/* Creator Profile Preview (Real Data) */}
                 <div style={{ marginBottom: '40px', padding: '16px', background: '#1a1d24', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    {mounted && profile?.avatar ? (
+                    {mounted && profile?.avatarUrl ? (
                         <img
-                            src={profile.avatar}
+                            src={profile.avatarUrl}
                             alt="Avatar"
                             style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
                         />
