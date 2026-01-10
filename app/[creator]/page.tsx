@@ -267,7 +267,7 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                                     </div>
 
                                     <Button
-                                        onClick={() => handleSubscribe(tier.id)}
+                                        onClick={() => handleSubscribe(i)}
                                         disabled={loading}
                                         style={{
                                             width: '100%',
