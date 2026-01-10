@@ -96,6 +96,14 @@ export const SUBSCRIPTION_ABI = [
         ],
         "stateMutability": "view",
         "type": "function"
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     }
 ];
 

@@ -6,8 +6,7 @@ import Card from '../../components/Card';
 import Input from '../../components/Input';
 import { useAccount, useReadContract, useWriteContract, useBalance, usePublicClient } from 'wagmi';
 import { parseEther, formatEther, parseAbiItem } from 'viem';
-import { SUBSCRIPTION_FACTORY_ABI, SUBSCRIPTION_ABI } from '@/utils/abis';
-import { FACTORY_ADDRESS } from '@/utils/addresses';
+import { FACTORY_ABI, SUBSCRIPTION_ABI, FACTORY_ADDRESS } from '@/utils/abis';
 import { supabase } from '@/utils/supabase';
 
 export default function EarningsPage() {
@@ -18,9 +17,9 @@ export default function EarningsPage() {
 
     // 1. Get Creator's Contract Address
     const { data: contractAddress } = useReadContract({
-        address: FACTORY_ADDRESS,
-        abi: SUBSCRIPTION_FACTORY_ABI,
-        functionName: 'getSubscriptionContract',
+        address: FACTORY_ADDRESS as `0x${string}`,
+        abi: FACTORY_ABI,
+        functionName: 'getProfile',
         args: [address],
     });
 
