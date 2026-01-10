@@ -25,6 +25,12 @@ export default function Home() {
           </div>
         </div>
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          {/* Search Button */}
+          <button style={{ background: 'transparent', border: 'none', color: '#a1a1aa', fontSize: '1.25rem', cursor: 'pointer', padding: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#fff'} onMouseLeave={(e) => e.currentTarget.style.color = '#a1a1aa'}>
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
           <WalletButton />
         </div>
       </nav>
@@ -102,8 +108,8 @@ export default function Home() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px' }}>
             {/* Card 1 */}
             <Card style={{ padding: 0, height: '400px', background: 'linear-gradient(180deg, rgba(30,41,59,0.5) 0%, rgba(15,23,42,0.8) 100%)', border: '1px solid rgba(139,92,246,0.2)', boxShadow: '0 0 30px rgba(139,92,246,0.1)' }}>
-              {/* Image Placeholder */}
-              <div style={{ height: '240px', background: 'url(https://img.freepik.com/premium-photo/cyberpunk-gaming-character-illustration_665280-45.jpg) center/cover' }}></div>
+              {/* Image: Cyberpunk Gamer / VR */}
+              <div style={{ height: '240px', background: 'url(https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1000&auto=format&fit=crop) center/cover' }}></div>
               <div style={{ padding: '24px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#fff' }}>The Mantle Gamer</h3>
@@ -119,7 +125,8 @@ export default function Home() {
 
             {/* Card 2 */}
             <Card style={{ padding: 0, height: '400px', background: 'linear-gradient(180deg, rgba(30,41,59,0.5) 0%, rgba(15,23,42,0.8) 100%)', border: '1px solid rgba(236,72,153,0.2)', boxShadow: '0 0 30px rgba(236,72,153,0.1)' }}>
-              <div style={{ height: '240px', background: 'url(https://img.freepik.com/premium-photo/anime-girl-listening-music-headphones-neon-light-city-background_1029473-19614.jpg) center/cover' }}></div>
+              {/* Image: Digital Art / Neon Anime Vibe */}
+              <div style={{ height: '240px', background: 'url(https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000&auto=format&fit=crop) center/cover' }}></div>
               <div style={{ padding: '24px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#fff' }}>Art by Luna</h3>
@@ -135,7 +142,8 @@ export default function Home() {
 
             {/* Card 3 */}
             <Card style={{ padding: 0, height: '400px', background: 'linear-gradient(180deg, rgba(30,41,59,0.5) 0%, rgba(15,23,42,0.8) 100%)', border: '1px solid rgba(45,212,191,0.2)', boxShadow: '0 0 30px rgba(45,212,191,0.1)' }}>
-              <div style={{ height: '240px', background: 'url(https://img.freepik.com/premium-photo/pixel-art-character-cyberpunk-city-background_665280-50.jpg) center/cover' }}></div>
+              {/* Image: Blockchain / Abstract Tech */}
+              <div style={{ height: '240px', background: 'url(https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000&auto=format&fit=crop) center/cover' }}></div>
               <div style={{ padding: '24px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#fff' }}>CryptoCrunch</h3>
