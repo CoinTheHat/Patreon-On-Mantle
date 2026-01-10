@@ -43,17 +43,23 @@ export default function Dashboard() {
 
     // When confirmed, save to our DB
     useEffect(() => {
-        if (isConfirmed && address) {
+        if (isConfirmed && address && existingProfile) {
             // Trigger a refetch to update the UI specifically for the deployment step
             refetchProfile();
 
-            // In a real app we'd get the address from the logs, but for now let's re-fetch or assume success
+            // Save the deployed contract address to database
+            const contractAddress = existingProfile as string;
             fetch('/api/creators', {
                 method: 'POST',
-                body: JSON.stringify({ address, name: `Creator ${address.slice(0, 6)}` })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    address,
+                    name: `Creator ${address.slice(0, 6)}`,
+                    contractAddress: contractAddress
+                })
             });
         }
-    }, [isConfirmed, address, refetchProfile]);
+    }, [isConfirmed, address, existingProfile, refetchProfile]);
 
     // If connected but no profile, show onboarding "Become a Creator"
     // BUT user said "no email etc, just wallet".
