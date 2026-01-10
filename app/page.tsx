@@ -100,9 +100,11 @@ export default function Home() {
           </div>
         </div>
 
-        <footer style={{ padding: '60px', textAlign: 'center', color: '#64748b', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          <p>&copy; 2026 Kinship. Built on Mantle.</p>
-        </footer>
+      </main>
+
+      <footer style={{ padding: '60px', textAlign: 'center', color: '#64748b', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <p>&copy; 2026 Kinship. Built on Mantle.</p>
+      </footer>
     </div>
   );
 }
