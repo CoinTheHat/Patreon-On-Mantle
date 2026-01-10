@@ -5,7 +5,7 @@ import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagm
 import Button from '../../components/Button';
 import Card from '../../components/Card';
 import Input from '../../components/Input';
-import { SUBSCRIPTION_ABI } from '../../utils/abis';
+import { SUBSCRIPTION_ABI } from '@/utils/abis';
 import { parseEther } from 'viem';
 
 // NOTE: We need the deployed contract address. In a real app we'd fetch it from the graph or Factory.

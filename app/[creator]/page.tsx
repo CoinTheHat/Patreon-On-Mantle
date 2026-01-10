@@ -5,7 +5,7 @@ import Button from '../components/Button';
 import Card from '../components/Card';
 import { useRouter } from 'next/navigation';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { SUBSCRIPTION_ABI } from '../../utils/abis';
+import { SUBSCRIPTION_ABI } from '@/utils/abis';
 import { parseEther } from 'viem';
 
 export default function CreatorPage({ params }: { params: Promise<{ creator: string }> }) {

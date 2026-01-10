@@ -6,7 +6,7 @@ import Button from '../components/Button';
 import Card from '../components/Card';
 import WalletButton from '../components/WalletButton';
 import { useRouter } from 'next/navigation';
-import { FACTORY_ABI, FACTORY_ADDRESS } from '../../utils/abis';
+import { FACTORY_ABI, FACTORY_ADDRESS } from '@/utils/abis';
 import { Address } from 'viem';
 
 export default function Dashboard() {
@@ -28,7 +28,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         if (existingProfile && existingProfile !== '0x0000000000000000000000000000000000000000') {
-            setDeployedAddress(existingProfile as string);
+            setDeployedAddress(existingProfile as Address);
         }
     }, [existingProfile]);
 
