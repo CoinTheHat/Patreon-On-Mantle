@@ -1,13 +1,76 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
 import Input from '../../components/Input';
+import { useAccount, useReadContract, useWriteContract, useBalance } from 'wagmi';
+import { parseEther, formatEther } from 'viem';
+import { SUBSCRIPTION_FACTORY_ABI, SUBSCRIPTION_ABI } from '@/utils/abis';
+import { FACTORY_ADDRESS } from '@/utils/addresses';
+import { supabase } from '@/utils/supabase';
 
 export default function EarningsPage() {
+    const { address } = useAccount();
     const [withdrawOpen, setWithdrawOpen] = useState(false);
     const [amount, setAmount] = useState('');
+    const [revenue, setRevenue] = useState('0.00');
+
+    // 1. Get Creator's Contract Address
+    const { data: contractAddress } = useReadContract({
+        address: FACTORY_ADDRESS,
+        abi: SUBSCRIPTION_FACTORY_ABI,
+        functionName: 'getSubscriptionContract',
+        args: [address],
+    });
+
+    // 2. Get Contract Balance (Available to Withdraw)
+    const { data: balanceData, refetch: refetchBalance } = useBalance({
+        address: contractAddress as `0x${string}`,
+    });
+
+    const { writeContract, isPending, isSuccess } = useWriteContract();
+
+    // 3. Fetch Revenue from DB
+    useEffect(() => {
+        const fetchRevenue = async () => {
+            if (!address) return;
+            const { data } = await supabase
+                .from('subscriptions')
+                .select('price')
+                .eq('creatorAddress', address);
+
+            if (data) {
+                // Assuming price is stored as "10 MNT" string, we parse it.
+                // Or simplified: iterate and sum.
+                let total = 0;
+                data.forEach(sub => {
+                    const val = parseFloat(sub.price.split(' ')[0]);
+                    if (!isNaN(val)) total += val;
+                });
+                setRevenue(total.toFixed(2));
+            }
+        };
+        fetchRevenue();
+    }, [address]);
+
+    const handleWithdraw = () => {
+        if (!contractAddress) return;
+        writeContract({
+            address: contractAddress as `0x${string}`,
+            abi: SUBSCRIPTION_ABI,
+            functionName: 'withdraw',
+            args: [],
+        }, {
+            onSuccess: () => {
+                setWithdrawOpen(false);
+                setTimeout(refetchBalance, 3000); // refresh balance after delay
+            }
+        });
+    };
+
+    const displayBalance = balanceData ? parseFloat(formatEther(balanceData.value)).toFixed(2) : '0.00';
+    const symbol = balanceData?.symbol || 'MNT';
 
     return (
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
@@ -19,7 +82,7 @@ export default function EarningsPage() {
                 <Button onClick={() => setWithdrawOpen(true)}>Withdraw Balance</Button>
             </header>
 
-            {/* Withdraw Modal (Simulated) */}
+            {/* Withdraw Modal */}
             {withdrawOpen && (
                 <div style={{
                     position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
@@ -30,44 +93,30 @@ export default function EarningsPage() {
                         <p style={{ color: '#a1a1aa', marginBottom: '24px', fontSize: '0.875rem' }}>Transfer your earnings to your wallet.</p>
 
                         <div style={{ marginBottom: '24px' }}>
-                            <label style={{ fontSize: '0.875rem', color: '#a1a1aa', marginBottom: '8px', display: 'block' }}>Asset</label>
-                            <select style={{ width: '100%', padding: '12px', background: '#1a1d24', border: '1px solid #2e333d', borderRadius: '8px', color: '#fff', marginBottom: '16px' }}>
-                                <option>MNT (Native)</option>
-                                <option>USDC (Mantle)</option>
-                            </select>
-
                             <label style={{ fontSize: '0.875rem', color: '#a1a1aa', marginBottom: '8px', display: 'block' }}>Amount</label>
                             <div style={{ display: 'flex', gap: '8px' }}>
                                 <Input
                                     value={amount}
                                     onChange={(e: any) => setAmount(e.target.value)}
-                                    placeholder="0.00"
+                                    placeholder={displayBalance}
                                     type="number"
+                                    disabled={true} // For MVP, we only support full withdrawal often, or user can input. Contract withdraw() withdraws ALL compatible funds.
                                 />
-                                <Button variant="secondary" onClick={() => setAmount('245.50')} style={{ fontSize: '0.75rem' }}>Max</Button>
+                                {/* The contract withdraw function withdraws EVERYTHING. So input is purely visual or disabled. */}
                             </div>
+                            <p style={{ fontSize: '0.75rem', color: '#eab308', marginTop: '8px' }}>
+                                Note: This action withdraws the entire available balance.
+                            </p>
                             <div style={{ textAlign: 'right', fontSize: '0.75rem', color: '#a1a1aa', marginTop: '4px' }}>
-                                Available: <span style={{ color: '#65b3ad' }}>245.50 MNT</span>
-                            </div>
-                        </div>
-
-                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px', marginBottom: '24px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: '4px' }}>
-                                <span style={{ color: '#a1a1aa' }}>Network Fee</span>
-                                <span>~0.002 MNT</span>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
-                                <span style={{ color: '#a1a1aa' }}>Est. Arrival</span>
-                                <span>~10 seconds</span>
+                                Available: <span style={{ color: '#65b3ad' }}>{displayBalance} {symbol}</span>
                             </div>
                         </div>
 
                         <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
                             <Button variant="outline" onClick={() => setWithdrawOpen(false)}>Cancel</Button>
-                            <Button onClick={() => {
-                                alert(`Simulating withdrawal of ${amount} MNT...`);
-                                setWithdrawOpen(false);
-                            }}>Confirm Withdraw</Button>
+                            <Button onClick={handleWithdraw} disabled={isPending}>
+                                {isPending ? 'Processing...' : 'Confirm Withdraw'}
+                            </Button>
                         </div>
                     </Card>
                 </div>
@@ -78,41 +127,22 @@ export default function EarningsPage() {
                     <div style={{ position: 'relative', zIndex: 1 }}>
                         <p style={{ color: '#65b3ad', fontSize: '0.875rem', marginBottom: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Available Balance</p>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                            <h3 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', textShadow: '0 0 20px rgba(101,179,173,0.3)' }}>245.50</h3>
-                            <span style={{ fontSize: '1rem', color: '#a1a1aa' }}>MNT</span>
+                            <h3 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', textShadow: '0 0 20px rgba(101,179,173,0.3)' }}>{displayBalance}</h3>
+                            <span style={{ fontSize: '1rem', color: '#a1a1aa' }}>{symbol}</span>
                         </div>
                     </div>
-                    {/* Abstract Glow in Card */}
                     <div style={{ position: 'absolute', top: '-50%', right: '-50%', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(101,179,173,0.2) 0%, transparent 70%)', filter: 'blur(20px)' }}></div>
                 </Card>
 
-                {/* Mini Chart Card */}
                 <Card style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
                         <div>
-                            <p style={{ color: '#a1a1aa', fontSize: '0.875rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Revenue History</p>
-                            <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>1,204.00 MNT <span style={{ fontSize: '0.875rem', color: '#65b3ad', fontWeight: 'normal' }}>(+12% this week)</span></h3>
+                            <p style={{ color: '#a1a1aa', fontSize: '0.875rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Total Revenue</p>
+                            <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{revenue} MNT</h3>
                         </div>
-                        <select style={{ background: 'transparent', border: '1px solid #2e333d', borderRadius: '8px', color: '#a1a1aa', fontSize: '0.875rem', padding: '4px 8px' }}>
-                            <option>Last 7 Days</option>
-                        </select>
-                    </div>
-
-                    {/* CSS Bar Chart */}
-                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: '12px', height: '100px', paddingTop: '16px' }}>
-                        {[35, 50, 25, 60, 45, 80, 65].map((val, i) => (
-                            <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                                <div style={{
-                                    width: '100%',
-                                    height: `${val}%`,
-                                    background: i === 6 ? 'linear-gradient(to top, #65b3ad, #a5f3fc)' : '#2e333d',
-                                    borderRadius: '4px',
-                                    transition: 'height 1s ease',
-                                    boxShadow: i === 6 ? '0 0 10px rgba(101,179,173,0.5)' : 'none'
-                                }}></div>
-                                <span style={{ fontSize: '0.75rem', color: '#52525b' }}>{['M', 'T', 'W', 'T', 'F', 'S', 'S'][i]}</span>
-                            </div>
-                        ))}
+                        <div style={{ fontSize: '0.875rem', color: '#a1a1aa' }}>
+                            Lifetime Earnings based on Subscriptions
+                        </div>
                     </div>
                 </Card>
             </div>
@@ -129,11 +159,10 @@ export default function EarningsPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style={{ borderBottom: '1px solid #2e333d' }}>
-                            <td style={{ padding: '16px' }}>2026-01-08</td>
-                            <td style={{ padding: '16px', fontWeight: 'bold', color: '#fff' }}>500.00 MNT</td>
-                            <td style={{ padding: '16px', fontFamily: 'monospace' }}>0x123...456</td>
-                            <td style={{ padding: '16px' }}><a href="#" style={{ color: '#65b3ad' }}>0xabc...def ↗</a></td>
+                        <tr>
+                            <td colSpan={4} style={{ padding: '32px', textAlign: 'center', color: '#52525b' }}>
+                                No withdrawals found yet.
+                            </td>
                         </tr>
                     </tbody>
                 </table>
