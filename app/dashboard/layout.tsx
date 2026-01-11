@@ -32,12 +32,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     if (!mounted) return null; // or a skeleton loader
 
+    const isCreator = profile?.contractAddress;
+
     const menuItems = [
         { label: 'Home', path: '/dashboard', icon: '🏠' },
-        { label: 'Membership', path: '/dashboard/membership', icon: '💎' },
-        { label: 'Posts', path: '/dashboard/posts', icon: '📝' }, // Future
-        { label: 'Audience', path: '/dashboard/audience', icon: '👥' },
-        { label: 'Earnings', path: '/dashboard/earnings', icon: '💰' },
+        ...(isCreator ? [
+            { label: 'Membership', path: '/dashboard/membership', icon: '💎' },
+            { label: 'Posts', path: '/dashboard/posts', icon: '📝' },
+            { label: 'Audience', path: '/dashboard/audience', icon: '👥' },
+            { label: 'Earnings', path: '/dashboard/earnings', icon: '💰' },
+        ] : []),
         { label: 'Settings', path: '/dashboard/settings', icon: '⚙️' },
     ];
 
@@ -140,10 +144,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     )}
                     <div style={{ overflow: 'hidden' }}>
                         <p style={{ fontWeight: 'bold', fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#fff' }}>
-                            {mounted && profile?.name ? profile.name : 'Creator'}
+                            {mounted && profile?.name ? profile.name : 'Guest'}
                         </p>
-                        <p style={{ fontSize: '0.7rem', color: '#65b3ad', fontFamily: 'monospace' }}>
-                            {mounted && address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Connect'}
+                        <p style={{ fontSize: '0.7rem', color: isCreator ? '#65b3ad' : '#f59e0b', fontFamily: 'monospace' }}>
+                            {mounted && address
+                                ? (isCreator ? 'Verified Creator' : 'Setup Required')
+                                : 'Connect'}
                         </p>
                     </div>
                 </div>
