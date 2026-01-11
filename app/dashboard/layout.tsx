@@ -200,9 +200,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 border: '1px solid rgba(239, 68, 68, 0.2)',
                                 borderRadius: '24px',
                                 transition: 'all 0.2s',
-                                fontSize: '1.2rem',
+                                fontSize: '1rem',
                                 fontWeight: 'bold',
-                                padding: '16px'
+                                padding: '14px'
                             }}
                             onMouseEnter={(e: any) => {
                                 e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
