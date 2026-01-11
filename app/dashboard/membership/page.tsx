@@ -108,7 +108,7 @@ export default function MembershipPage() {
 
                         {editingIndex === index ? (
                             // Edit Mode
-                            <div style={{ display: 'grid', gap: '20px', padding: '8px' }}>
+                            <div style={{ display: 'grid', gap: '20px', padding: '24px' }}>
                                 <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
                                     <Input label="Tier Name" value={tier.name} onChange={(e: any) => {
                                         const newTiers = [...tiers];
@@ -175,7 +175,7 @@ export default function MembershipPage() {
                             </div>
                         ) : (
                             // View Mode
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: tier.active === false ? 0.5 : 1 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: tier.active === false ? 0.5 : 1, padding: '24px' }}>
                                 <div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
                                         <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#fff' }}>{tier.name}</h3>

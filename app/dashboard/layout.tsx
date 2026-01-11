@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Button from '../components/Button';
 import WalletButton from '../components/WalletButton';
-import { useAccount } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 import { supabase } from '@/utils/supabase';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
     const { address } = useAccount();
+    const { disconnect } = useDisconnect();
     const [mounted, setMounted] = useState(false);
     const [profile, setProfile] = useState<any>(null);
 
@@ -78,11 +79,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <h2 style={{
                         fontSize: '1.8rem',
                         fontWeight: '900',
-                        background: 'linear-gradient(to right, #4cc9f0, #fff)',
+                        background: 'linear-gradient(to right, #22d3ee, #67e8f9)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         cursor: 'pointer',
-                        textShadow: '0 0 20px rgba(76, 201, 240, 0.5)'
+                        textShadow: '0 0 20px rgba(34, 211, 238, 0.5)'
                     }} onClick={() => router.push('/')}>Kinship</h2>
                 </div>
 
@@ -102,42 +103,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             outline: 'none',
                             transition: 'all 0.3s'
                         }}
-                        onFocus={(e) => e.target.style.borderColor = '#9d4edd'}
+                        onFocus={(e) => e.target.style.borderColor = '#22d3ee'}
                         onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                     />
                     <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>🔍</span>
                 </div>
 
-                {/* Creator Profile Preview */}
-                <div style={{
-                    marginBottom: '40px',
-                    padding: '16px',
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.05), transparent)',
-                    borderRadius: '16px',
-                    border: '1px solid rgba(255,255,255,0.05)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px'
-                }}>
-                    {mounted && profile?.avatarUrl ? (
-                        <img
-                            src={profile.avatarUrl}
-                            alt="Avatar"
-                            style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(255,255,255,0.1)' }}
-                        />
-                    ) : (
-                        <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#2e333d', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            👻
-                        </div>
-                    )}
-                    <div style={{ overflow: 'hidden' }}>
-                        <p style={{ fontWeight: 'bold', fontSize: '1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {mounted && profile?.name ? profile.name : 'Creator'}
-                        </p>
-                        <p style={{ fontSize: '0.75rem', color: '#a1a1aa', fontFamily: 'monospace' }}>
-                            {mounted && address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Connect Wallet'}
-                        </p>
-                    </div>
+                {/* Log Out Section */}
+                <div style={{ marginBottom: '40px' }}>
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            disconnect();
+                            router.push('/');
+                        }}
+                        style={{ width: '100%', justifyContent: 'center', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+                    >
+                        Log Out
+                    </Button>
                 </div>
 
                 {/* Menu */}

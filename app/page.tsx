@@ -30,7 +30,7 @@ export default function Home() {
       {/* Navbar - Reference Match */}
       <nav style={{ padding: '24px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1400px', margin: '0 auto', width: '100%', position: 'relative', zIndex: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '48px' }}>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#fff', letterSpacing: '-0.02em' }}>Kinship</h1>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', background: 'linear-gradient(to right, #22d3ee, #67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.02em', textShadow: '0 0 10px rgba(34, 211, 238, 0.5)' }}>Kinship</h1>
           <div style={{ display: 'flex', gap: '32px', fontSize: '0.95rem', color: '#a1a1aa', fontWeight: '500' }}>
             <span onClick={() => router.push('/explore')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#fff'} onMouseLeave={(e) => e.currentTarget.style.color = '#a1a1aa'}>Explore</span>
             <span onClick={() => document.getElementById('featured')?.scrollIntoView({ behavior: 'smooth' })} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#fff'} onMouseLeave={(e) => e.currentTarget.style.color = '#a1a1aa'}>Featured</span>
