@@ -204,18 +204,24 @@ export default function Dashboard() {
             )}
 
             {/* Quick Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '48px' }}>
-                <Card>
-                    <p style={{ color: '#a1a1aa', fontSize: '0.875rem', marginBottom: '8px' }}>Active Members</p>
-                    <h3 style={{ fontSize: '2.5rem', fontWeight: 'bold' }}>{stats.activeMembers}</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '48px' }}>
+                <Card variant="neon-blue" noHover>
+                    <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.875rem', marginBottom: '8px' }}>Active Members</p>
+                    <p style={{ fontSize: '2.5rem', fontWeight: 'bold', textShadow: '0 0 20px rgba(76, 201, 240, 0.5)' }}>
+                        {stats.activeMembers}
+                    </p>
                 </Card>
-                <Card>
-                    <p style={{ color: '#a1a1aa', fontSize: '0.875rem', marginBottom: '8px' }}>Monthly Revenue</p>
-                    <h3 style={{ fontSize: '2.5rem', fontWeight: 'bold' }}>${stats.monthlyRevenue}</h3>
+                <Card variant="neon-pink" noHover>
+                    <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.875rem', marginBottom: '8px' }}>Monthly Revenue</p>
+                    <p style={{ fontSize: '2.5rem', fontWeight: 'bold', textShadow: '0 0 20px rgba(247, 37, 133, 0.5)' }}>
+                        ${stats.monthlyRevenue}
+                    </p>
                 </Card>
-                <Card>
-                    <p style={{ color: '#a1a1aa', fontSize: '0.875rem', marginBottom: '8px' }}>Total Withdrawals</p>
-                    <h3 style={{ fontSize: '2.5rem', fontWeight: 'bold' }}>${stats.totalWithdrawals}</h3>
+                <Card variant="neon-green" noHover>
+                    <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.875rem', marginBottom: '8px' }}>Total Withdrawals</p>
+                    <p style={{ fontSize: '2.5rem', fontWeight: 'bold', textShadow: '0 0 20px rgba(56, 176, 0, 0.5)' }}>
+                        ${stats.totalWithdrawals}
+                    </p>
                 </Card>
             </div>
 

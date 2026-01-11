@@ -20,8 +20,8 @@ export default function Home() {
           <div style={{ display: 'flex', gap: '32px', fontSize: '0.95rem', color: '#a1a1aa', fontWeight: '500' }}>
             <span onClick={() => router.push('/explore')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#fff'} onMouseLeave={(e) => e.currentTarget.style.color = '#a1a1aa'}>Explore</span>
             <span onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#fff'} onMouseLeave={(e) => e.currentTarget.style.color = '#a1a1aa'}>How it Works</span>
-            <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#fff'} onMouseLeave={(e) => e.currentTarget.style.color = '#a1a1aa'}>Featured</span>
-            <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#fff'} onMouseLeave={(e) => e.currentTarget.style.color = '#a1a1aa'}>Pricing</span>
+            <span onClick={() => document.getElementById('featured')?.scrollIntoView({ behavior: 'smooth' })} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#fff'} onMouseLeave={(e) => e.currentTarget.style.color = '#a1a1aa'}>Featured</span>
+            <span onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#fff'} onMouseLeave={(e) => e.currentTarget.style.color = '#a1a1aa'}>Pricing</span>
           </div>
         </div>
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
@@ -61,6 +61,31 @@ export default function Home() {
           <p style={{ marginTop: '24px', fontSize: '0.875rem', color: '#64748b' }}>Payments settle on Mantle • Withdraw anytime • No platform lock-in</p>
         </div>
 
+        {/* Featured Section */}
+        <div id="featured" style={{ width: '100%', maxWidth: '1200px', marginBottom: '140px', position: 'relative' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', textAlign: 'center', marginBottom: '48px', color: '#fff' }}>Featured Creators</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
+            {/* Mock Featured Cards for MVP */}
+            {[1, 2, 3].map((i) => (
+              <Card key={i} variant="glass" style={{ cursor: 'pointer' }} onClick={() => router.push('/explore')}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+                  <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: 'linear-gradient(45deg, #8b5cf6, #2dd4bf)' }}></div>
+                  <div>
+                    <h4 style={{ fontWeight: 'bold', color: '#fff' }}>Creator {i}</h4>
+                    <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>Creating Web3 Art</p>
+                  </div>
+                </div>
+                <p style={{ color: '#cbd5e1', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                  Exclusive behind-the-scenes content and NFT drops for my inner circle. Join the movement.
+                </p>
+              </Card>
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '40px' }}>
+            <Button variant="outline" onClick={() => router.push('/explore')}>View All Creators</Button>
+          </div>
+        </div>
+
         {/* How It Works - Visual Reference Match */}
         <div id="how-it-works" style={{ width: '100%', maxWidth: '1200px', marginBottom: '140px', position: 'relative' }}>
           <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', textAlign: 'center', marginBottom: '16px', color: '#fff' }}>How it Works</h2>
@@ -97,6 +122,27 @@ export default function Home() {
               <h3 style={{ fontWeight: 'bold', fontSize: '1.25rem', marginBottom: '8px', color: '#fff' }}>Exclusive Content Unlocks</h3>
               <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Instant access verified on-chain.</p>
             </div>
+          </div>
+        </div>
+
+        {/* Pricing Section */}
+        <div id="pricing" style={{ width: '100%', maxWidth: '1000px', marginBottom: '100px', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '24px', color: '#fff' }}>Simple, Transparent Pricing</h2>
+          <p style={{ color: '#94a3b8', fontSize: '1.1rem', marginBottom: '56px', maxWidth: '600px', margin: '0 auto 56px' }}>
+            We believe creators should keep what they earn. Kinship takes 0% platform fees during our beta.
+          </p>
+
+          <div style={{ display: 'flex', gap: '32px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Card variant="glass" style={{ flex: 1, maxWidth: '350px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '16px', color: '#94a3b8' }}>Platform Fee</h3>
+              <p style={{ fontSize: '4rem', fontWeight: '800', color: '#fff', marginBottom: '16px' }}>0%</p>
+              <p style={{ color: '#94a3b8' }}>We only make money if you do.<br />(Future protocol fee: 2%)</p>
+            </Card>
+            <Card variant="neon-blue" style={{ flex: 1, maxWidth: '350px' }}>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '16px', color: '#fff' }}>Gas Fees</h3>
+              <p style={{ fontSize: '4rem', fontWeight: '800', color: '#fff', marginBottom: '16px', textShadow: '0 0 20px rgba(76,201,240,0.5)' }}>~$0.01</p>
+              <p style={{ color: 'rgba(255,255,255,0.8)' }}>Powered by Mantle Network's<br />ultra-low transaction costs.</p>
+            </Card>
           </div>
         </div>
 
