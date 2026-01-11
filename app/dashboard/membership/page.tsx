@@ -19,6 +19,15 @@ export default function MembershipPage() {
     const [tiers, setTiers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [contractAddress, setContractAddress] = useState<string | null>(null);
+    const [pendingTier, setPendingTier] = useState<any>(null);
+
+    // Fallback: Read from Factory if DB is slow
+    const { data: factoryProfile } = useReadContract({
+        address: FACTORY_ADDRESS as `0x${string}`,
+        abi: FACTORY_ABI,
+        functionName: 'getProfile',
+        args: [address],
+    });
 
     const { data: hash, writeContract } = useWriteContract();
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
@@ -26,18 +35,29 @@ export default function MembershipPage() {
     // Fetch Tiers & Contract Address
     useEffect(() => {
         if (!address) return;
-        fetch(`/api/creators`)
-            .then(res => res.json())
-            .then(creators => {
+
+        const fetchProfile = async () => {
+            try {
+                const res = await fetch(`/api/creators`);
+                const creators = await res.json();
                 const me = creators.find((c: any) => c.address === address);
+
                 if (me?.contractAddress) {
                     setContractAddress(me.contractAddress);
+                } else if (factoryProfile && factoryProfile !== '0x0000000000000000000000000000000000000000') {
+                    // Fallback to Factory data
+                    setContractAddress(factoryProfile as string);
                 }
-            });
+            } catch (e) {
+                console.error("Profile fetch error", e);
+            }
+        };
+
+        fetchProfile();
 
         // Load local tiers for display
         fetch(`/api/tiers?address=${address}`).then(res => res.json()).then(setTiers).finally(() => setLoading(false));
-    }, [address]);
+    }, [address, factoryProfile]);
 
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
