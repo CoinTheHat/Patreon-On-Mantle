@@ -162,31 +162,40 @@ export default function EarningsPage() {
                 </div>
             )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '48px' }}>
-                <Card variant="neon-green" style={{ position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'relative', zIndex: 1 }}>
-                        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.875rem', marginBottom: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Available Balance</p>
-                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                            <h3 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', textShadow: '0 0 20px rgba(56, 176, 0, 0.5)' }}>{displayBalance}</h3>
-                            <span style={{ fontSize: '1rem', color: '#a1a1aa' }}>{symbol}</span>
+            <Card variant="glass" style={{ marginBottom: '48px', padding: '0', overflow: 'hidden' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', divideX: '1px solid rgba(255,255,255,0.05)' }}>
+                    {/* Available Balance */}
+                    <div style={{ padding: '32px', position: 'relative' }}>
+                        <div style={{ position: 'relative', zIndex: 1 }}>
+                            <p style={{ color: '#a1a1aa', fontSize: '0.875rem', marginBottom: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Available Balance</p>
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                                <h3 style={{ fontSize: '3rem', fontWeight: 'bold', color: '#fff', textShadow: '0 0 30px rgba(56, 189, 248, 0.3)' }}>{displayBalance}</h3>
+                                <span style={{ fontSize: '1.2rem', color: '#65b3ad', fontWeight: 'bold' }}>{symbol}</span>
+                            </div>
                         </div>
+                        {/* Glow */}
+                        <div style={{ position: 'absolute', top: '-20%', right: '-20%', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%)', filter: 'blur(40px)' }}></div>
                     </div>
-                    {/* Subtle background flair */}
-                    <div style={{ position: 'absolute', top: '-50%', right: '-50%', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(56, 176, 0, 0.15) 0%, transparent 70%)', filter: 'blur(40px)' }}></div>
-                </Card>
 
-                <Card style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
-                        <div>
-                            <p style={{ color: '#a1a1aa', fontSize: '0.875rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Total Revenue</p>
-                            <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{revenue} MNT</h3>
-                        </div>
-                        <div style={{ fontSize: '0.875rem', color: '#a1a1aa' }}>
-                            Lifetime Earnings based on Subscriptions
+                    {/* Total Revenue */}
+                    <div style={{ padding: '32px', borderLeft: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
+                        <div style={{ position: 'relative', zIndex: 1 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                <div>
+                                    <p style={{ color: '#a1a1aa', fontSize: '0.875rem', marginBottom: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Total Revenue</p>
+                                    <h3 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#fff' }}>{revenue} MNT</h3>
+                                </div>
+                                <div style={{ background: 'rgba(255,255,255,0.05)', padding: '8px 12px', borderRadius: '12px' }}>
+                                    📈
+                                </div>
+                            </div>
+                            <p style={{ fontSize: '0.875rem', color: '#64748b', marginTop: '16px' }}>
+                                Lifetime earnings from all subscriptions.
+                            </p>
                         </div>
                     </div>
-                </Card>
-            </div>
+                </div>
+            </Card>
 
             <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '16px' }}>Payout History</h3>
             <Card style={{ padding: '0', overflow: 'hidden' }}>

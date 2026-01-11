@@ -76,7 +76,7 @@ export default function AudiencePage() {
                 {/* Filters */}
                 <div style={{ padding: '24px', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', display: 'flex', gap: '16px' }}>
                     <div style={{ flex: 1 }}>
-                        <Input placeholder="Search by address..." value={search} onChange={(e: any) => setSearch(e.target.value)} style={{ borderRadius: '24px', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)' }} />
+                        <Input placeholder="Search by address..." value={search} onChange={(e: any) => setSearch(e.target.value)} style={{ borderRadius: '20px', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', padding: '14px 20px', fontSize: '1rem' }} />
                     </div>
                     <select
                         value={filterStatus}

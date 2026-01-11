@@ -120,44 +120,57 @@ export default function SettingsPage() {
                                     placeholder="Tell your fans what you create..."
                                     style={{
                                         width: '100%',
-                                        padding: '12px 16px',
-                                        background: '#1a1d24',
-                                        border: '1px solid #2e333d',
-                                        borderRadius: '8px',
+                                        padding: '16px',
+                                        background: 'rgba(0, 0, 0, 0.2)',
+                                        border: '1px solid rgba(255,255,255,0.1)',
+                                        borderRadius: '16px',
                                         color: '#fff',
-                                        minHeight: '100px',
+                                        minHeight: '120px',
                                         fontFamily: 'inherit',
-                                        resize: 'vertical'
+                                        fontSize: '1rem',
+                                        resize: 'vertical',
+                                        outline: 'none',
+                                        transition: 'all 0.2s'
+                                    }}
+                                    onFocus={(e) => {
+                                        e.target.style.borderColor = 'rgba(157, 78, 221, 0.5)';
+                                        e.target.style.boxShadow = '0 0 15px rgba(157, 78, 221, 0.1)';
+                                    }}
+                                    onBlur={(e) => {
+                                        e.target.style.borderColor = 'rgba(255,255,255,0.1)';
+                                        e.target.style.boxShadow = 'none';
                                     }}
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                         <Input
                             label="Twitter / X"
                             value={socials.twitter}
                             onChange={(e: any) => setSocials({ ...socials, twitter: e.target.value })}
                             placeholder="@handle"
+                            style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', padding: '14px' }}
                         />
                         <Input
                             label="Website"
                             value={socials.website}
                             onChange={(e: any) => setSocials({ ...socials, website: e.target.value })}
                             placeholder="https://..."
+                            style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', padding: '14px' }}
                         />
                     </div>
 
-                    <div style={{ paddingTop: '24px', borderTop: '1px solid #2e333d', display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button onClick={handleSave} disabled={saving}>
+                    <div style={{ paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button onClick={handleSave} disabled={saving} style={{ borderRadius: '16px', padding: '12px 32px' }}>
                             {saving ? 'Saving...' : 'Save Changes'}
                         </Button>
                     </div>
                 </div>
             </Card>
 
-            <Card style={{ marginBottom: '24px' }}>
+            <Card style={{ marginBottom: '24px' }} variant="glass">
                 <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '16px', color: '#fff' }}>Payment Settings</h2>
                 <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
                     <div>
@@ -165,7 +178,16 @@ export default function SettingsPage() {
                         <select
                             value={payoutToken}
                             onChange={(e) => setPayoutToken(e.target.value)}
-                            style={{ background: '#1a1d24', border: '1px solid #2e333d', padding: '12px 16px', borderRadius: '8px', color: '#fff', minWidth: '200px' }}
+                            style={{
+                                background: 'rgba(0, 0, 0, 0.2)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                padding: '14px 16px',
+                                borderRadius: '16px',
+                                color: '#fff',
+                                minWidth: '200px',
+                                outline: 'none',
+                                cursor: 'pointer'
+                            }}
                         >
                             <option value="MNT">Native MNT</option>
                             <option value="USDC">USDC (Mantle)</option>
