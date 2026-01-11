@@ -177,8 +177,8 @@ export default function Dashboard() {
             <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '32px' }}>Dashboard</h1>
 
             {/* Onboarding Progress */}
-            {progress < 100 && (
-                <Card style={{ marginBottom: '48px', border: '1px solid #2e333d', background: 'linear-gradient(180deg, rgba(26,29,36,0) 0%, rgba(101,179,173,0.05) 100%)' }}>
+            {(progress < 100 || !profile?.contractAddress) && (
+                <Card style={{ marginBottom: '48px', border: '1px solid #2e333d', background: '#1a1d24' }}>
                     <div style={{ marginBottom: '24px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '8px' }}>
                             <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Setup Progress</h2>
