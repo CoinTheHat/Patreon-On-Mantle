@@ -182,6 +182,33 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
     const memberTierId = memberData ? Number((memberData as any)[1]) : -1;
     // Note: If user is not member, tierId might be 0 but isActive/expiry matters.
     // relying on isSubscribed for valid active status, and memberTierId for level.
+    const memberExpiry = memberData ? Number((memberData as any)[0]) : 0;
+
+    // Auto-Sync: If on-chain says active, but maybe DB missed it, force a sync.
+    useEffect(() => {
+        if (!address || !creatorContractAddress || !memberData) return;
+
+        const now = Math.floor(Date.now() / 1000);
+        if (memberExpiry > now) {
+            // User is active on chain. Ensure DB knows.
+            setIsSubscribed(true);
+
+            // We only trigger this once per load effectively, but standard upsert is safe.
+            // Ideally check if we need to? For now just upsert to be safe.
+            fetch('/api/subscriptions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    subscriberAddress: address,
+                    creatorAddress: creatorContractAddress,
+                    tierId: memberTierId, // Sync the correct tier from chain
+                    expiry: memberExpiry
+                })
+            }).then(res => {
+                if (res.ok) console.log("Synced membership from chain to DB");
+            }).catch(e => console.error("Sync error", e));
+        }
+    }, [address, creatorContractAddress, memberData, memberExpiry, memberTierId]);
 
     const canViewPost = (post: any) => {
         if (post.isPublic) return true;
