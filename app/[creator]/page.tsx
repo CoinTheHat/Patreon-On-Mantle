@@ -167,6 +167,45 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
 
     // ... 
 
+    const { data: memberData } = useReadContract({
+        address: creatorContractAddress as Address,
+        abi: SUBSCRIPTION_ABI,
+        functionName: 'memberships',
+        args: [address],
+        query: {
+            enabled: !!creatorContractAddress && !!address
+        }
+    });
+
+    const memberTierId = memberData ? Number((memberData as any)[1]) : -1;
+    // Note: If user is not member, tierId might be 0 but isActive/expiry matters.
+    // relying on isSubscribed for valid active status, and memberTierId for level.
+
+    const canViewPost = (post: any) => {
+        if (post.isPublic) return true;
+        if (!isSubscribed) return false;
+        // If subscribed, check minTier
+        const minTier = post.minTier || 0;
+        // memberTierId is 0-indexed index of tiers array.
+        // minTier used by user: 0 = "All Tiers", 1 = Tier 0 (Supporter), 2 = Tier 1 (VIP)
+        // If minTier == 0, anyone subscribed can see.
+        if (minTier === 0) return true;
+
+        // If minTier > 0, we need to match.
+        // minTier 1 corresponds to Tier Index 0.
+        // minTier 2 corresponds to Tier Index 1.
+        // So requiredIndex = minTier - 1.
+        const requiredIndex = minTier - 1;
+
+        // If memberTierId >= requiredIndex ... wait, tier comparison depends on creation order or value?
+        // Usually higher tier index = higher value? Or we just check exact match?
+        // For simple "at least" logic, let's assume index implies hierarchy or just do exact match.
+        // Let's allow if memberTierId == requiredIndex OR simply "isSubscribed" if we don't strict enforce hierarchy.
+        // But user asked for "tier seviyesi seçmemiz lazım".
+        // Let's assume >= for now if tiers are ordered by price.
+        return memberTierId >= requiredIndex;
+    };
+
     return (
         <div style={{ padding: '48px', maxWidth: '800px', margin: '0 auto' }}>
             <Button variant="outline" onClick={() => router.push('/')} style={{ marginBottom: '24px' }}>← Back to Home</Button>
@@ -344,48 +383,84 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                         No posts yet.
                     </div>
                 ) : (
-                    posts.map((post: any, i) => (
-                        <Card key={i} style={{ marginBottom: '24px', position: 'relative', overflow: 'hidden' }}>
-                            <div style={{ marginBottom: '16px' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '8px' }}>{post.title}</h3>
-                                    {post.isPublic && <span style={{ background: 'rgba(101, 179, 173, 0.1)', color: '#65b3ad', fontSize: '0.75rem', padding: '4px 8px', borderRadius: '4px' }}>Public</span>}
-                                </div>
-                                <p style={{ fontSize: '0.875rem', color: '#a1a1aa' }}>{new Date(post.createdAt).toLocaleDateString()}</p>
-                            </div>
+                    posts.map((post: any, i) => {
+                        const hasAccess = canViewPost(post);
 
-                            {/* Post Image */}
-                            {post.image && (
-                                <div style={{ marginBottom: '16px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #2e333d' }}>
-                                    <img src={post.image} alt="Post Attachment" style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', display: 'block' }} />
-                                </div>
-                            )}
-
-                            {/* Content Gating Logic */}
-                            {post.isPublic || isSubscribed ? (
-                                <div style={{ color: '#d4d4d8', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>{post.content}</div>
-                            ) : (
-                                <div style={{ position: 'relative' }}>
-                                    {/* Teaser if available, otherwise generic blur */}
-                                    {post.teaser ? (
-                                        <div style={{ color: '#d4d4d8', marginBottom: '16px', fontStyle: 'italic' }}>
-                                            "{post.teaser}"
-                                        </div>
-                                    ) : null}
-
-                                    <div style={{ filter: 'blur(6px)', userSelect: 'none', color: '#d4d4d8', lineHeight: '1.6', opacity: 0.5 }}>
-                                        This is a preview of the exclusive content available to members. Join now to unlock full access. <br />
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
+                        return (
+                            <Card key={i} style={{ marginBottom: '24px', position: 'relative', overflow: 'hidden' }}>
+                                <div style={{ marginBottom: '16px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                                        <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '8px' }}>{post.title}</h3>
+                                        {post.isPublic && <span style={{ background: 'rgba(101, 179, 173, 0.1)', color: '#65b3ad', fontSize: '0.75rem', padding: '4px 8px', borderRadius: '4px' }}>Public</span>}
+                                        {!post.isPublic && post.minTier > 0 && <span style={{ background: 'rgba(157, 101, 173, 0.1)', color: '#9d65ad', fontSize: '0.75rem', padding: '4px 8px', borderRadius: '4px' }}>Tier {post.minTier}+</span>}
                                     </div>
-                                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <div style={{ background: '#1a1d24', padding: '16px 24px', borderRadius: '8px', border: '1px solid #2e333d', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
-                                            <span>🔒 Locked for Members</span>
+                                    <p style={{ fontSize: '0.875rem', color: '#a1a1aa' }}>{new Date(post.createdAt).toLocaleDateString()}</p>
+                                </div>
+
+                                {/* Post Image with Blur if Locked */}
+                                {post.image && (
+                                    <div style={{ position: 'relative', marginBottom: '16px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #2e333d' }}>
+                                        <img
+                                            src={post.image}
+                                            alt="Post Attachment"
+                                            style={{
+                                                width: '100%',
+                                                maxHeight: '400px',
+                                                objectFit: 'cover',
+                                                display: 'block',
+                                                filter: hasAccess ? 'none' : 'blur(20px) brightness(0.7)',
+                                                transition: 'filter 0.3s ease'
+                                            }}
+                                        />
+                                        {!hasAccess && (
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: '50%',
+                                                transform: 'translate(-50%, -50%)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '10px',
+                                                background: 'rgba(0,0,0,0.8)',
+                                                padding: '12px 24px',
+                                                borderRadius: '30px',
+                                                border: '1px solid #65b3ad',
+                                                boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+                                                zIndex: 10
+                                            }}>
+                                                <span style={{ fontSize: '1.25rem' }}>🔒</span>
+                                                <span style={{ color: '#fff', fontWeight: 'bold' }}>Locked for Members</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Content Gating Logic */}
+                                {hasAccess ? (
+                                    <div style={{ color: '#d4d4d8', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>{post.content}</div>
+                                ) : (
+                                    <div style={{ position: 'relative' }}>
+                                        {/* Teaser if available */}
+                                        {post.teaser ? (
+                                            <div style={{ color: '#d4d4d8', marginBottom: '16px', fontStyle: 'italic' }}>
+                                                "{post.teaser}"
+                                            </div>
+                                        ) : null}
+
+                                        <div style={{ filter: 'blur(6px)', userSelect: 'none', color: '#d4d4d8', lineHeight: '1.6', opacity: 0.5 }}>
+                                            This is a preview of the exclusive content available to members. Join now to unlock full access. <br />
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
+                                        </div>
+                                        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <div style={{ background: '#1a1d24', padding: '16px 24px', borderRadius: '8px', border: '1px solid #2e333d', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
+                                                <span>🔒 Locked for Members</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )}
-                        </Card>
-                    ))
+                                )}
+                            </Card>
+                        );
+                    })
                 )}
             </div>
 

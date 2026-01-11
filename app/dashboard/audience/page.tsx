@@ -142,11 +142,7 @@ export default function AudiencePage() {
                                     {loading ? 'Loading...' : (
                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
                                             <p>{address ? "No supporters found yet." : "Please connect your wallet."}</p>
-                                            {address && (
-                                                <Button onClick={generateDemoData} variant="secondary" style={{ fontSize: '0.8rem' }}>
-                                                    ✨ Generate Demo Data for Me
-                                                </Button>
-                                            )}
+                                            <p>{address ? "No supporters found yet." : "Please connect your wallet."}</p>
                                         </div>
                                     )}
                                 </td>
