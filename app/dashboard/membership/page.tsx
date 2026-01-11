@@ -61,7 +61,7 @@ export default function MembershipPage() {
                     address: contractAddress as `0x${string}`,
                     abi: SUBSCRIPTION_ABI,
                     functionName: 'createTier',
-                    args: [tier.name, parseEther(tier.price.toString()), BigInt(tier.duration) * 86400n]
+                    args: [tier.name, parseEther(tier.price.toString()), BigInt(tier.duration) * BigInt(86400)]
                 });
             } catch (e) {
                 console.error("Chain write failed", e);
