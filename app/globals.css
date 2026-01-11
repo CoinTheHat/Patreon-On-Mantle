@@ -1,14 +1,17 @@
 /* Global Reset & Base Styles */
 :root {
-  --background: #0b0d11;
-  /* Deep dark bg */
+  --background: #030014;
+  /* Deep Space Black/Violet */
   --foreground: #ffffff;
-  --primary: #8b5cf6;
-  /* Purple */
-  --accent: #14b8a6;
-  /* Teal */
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --primary: #9d4edd;
+  /* Neon Purple */
+  --secondary: #d90429;
+  /* Deep Red/Pink */
+  --accent: #4cc9f0;
+  /* Neon Cyan */
+  --glass-border: rgba(255, 255, 255, 0.1);
   --glass-bg: rgba(255, 255, 255, 0.03);
+  --neon-glow: 0 0 10px rgba(76, 201, 240, 0.5), 0 0 20px rgba(157, 78, 221, 0.3);
 }
 
 * {
@@ -20,13 +23,14 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  /* Cyberpunk Deep Mesh Gradient */
+  /* Premium Cosmic Mesh Gradient */
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15), transparent 40%),
-    radial-gradient(circle at 90% 50%, rgba(20, 184, 166, 0.15), transparent 40%),
-    radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.1), transparent 50%);
-  background-size: 150% 150%;
-  animation: gradient-move 20s ease infinite alternate;
+    radial-gradient(circle at 15% 50%, rgba(72, 12, 168, 0.15), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(67, 97, 238, 0.15), transparent 25%),
+    radial-gradient(circle at 50% 50%, rgba(247, 37, 133, 0.05), transparent 50%);
+  background-size: 100% 100%;
+  /* Static or slow moving */
+  background-attachment: fixed;
   min-height: 100vh;
   font-family: var(--font-geist-sans), sans-serif;
   overflow-x: hidden;
