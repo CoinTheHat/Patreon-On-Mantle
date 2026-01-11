@@ -1,27 +1,39 @@
-export default function Card({ children, className = '', noHover = false, ...props }: any) {
-    const styles: any = {
-        background: 'rgba(26, 29, 36, 0.4)', // More transparent for glass feel
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        border: '1px solid rgba(101, 179, 173, 0.1)', // Subtle teal tint on border
-        borderRadius: '16px',
+export default function Card({ children, className = '', noHover = false, variant = 'glass', ...props }: any) {
+    const baseStyles: any = {
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        borderRadius: '20px',
         padding: '24px',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        transition: 'transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease',
+        transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
         position: 'relative',
         overflow: 'hidden',
         ...props.style
     };
 
-    // Hover effect logic handled via className or inline styles if we were using CSS-in-JS fully.
-    // Since we are using inline styles mostly, we'll add a simple class for hover if needed or just rely on the parent passing hover transforms.
-    // But to make it "cafcaf" universally:
+    const variants: any = {
+        glass: {
+            background: 'rgba(18, 18, 26, 0.6)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+        },
+        'neon-blue': {
+            background: 'linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(0,0,0,0.4))',
+            border: '1px solid rgba(76, 201, 240, 0.3)',
+            boxShadow: '0 0 15px rgba(76, 201, 240, 0.2), inset 0 0 20px rgba(76, 201, 240, 0.05)',
+        },
+        'neon-pink': {
+            background: 'linear-gradient(135deg, rgba(247, 37, 133, 0.1), rgba(0,0,0,0.4))',
+            border: '1px solid rgba(247, 37, 133, 0.3)',
+            boxShadow: '0 0 15px rgba(247, 37, 133, 0.2), inset 0 0 20px rgba(247, 37, 133, 0.05)',
+        },
+        'neon-green': {
+            background: 'linear-gradient(135deg, rgba(56, 176, 0, 0.1), rgba(0,0,0,0.4))',
+            border: '1px solid rgba(56, 176, 0, 0.3)',
+            boxShadow: '0 0 15px rgba(56, 176, 0, 0.2), inset 0 0 20px rgba(56, 176, 0, 0.05)',
+        }
+    };
 
-    // We will apply a className that we defined in globals.css or just add a helper here.
-    // Ideally we use a wrapper, but for MVP speed let's just use the style.
-
-    // Actually, let's add a "group" class and rely on globals if we can, or just keep it simple.
-    // Let's add an explicit "card-hover" class if not disabled.
+    const styles = { ...baseStyles, ...variants[variant] };
 
     return (
         <div
@@ -29,29 +41,39 @@ export default function Card({ children, className = '', noHover = false, ...pro
             className={`${className} ${!noHover ? 'card-interactive' : ''}`}
             onMouseEnter={(e) => {
                 if (noHover) return;
-                e.currentTarget.style.transform = 'translateY(-6px) scale(1.01)';
-                e.currentTarget.style.boxShadow = '0 20px 30px -5px rgba(0, 0, 0, 0.2), 0 0 30px rgba(101, 179, 173, 0.3)';
-                e.currentTarget.style.borderColor = 'rgba(101, 179, 173, 0.6)';
+                e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
+                if (variant === 'glass') {
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.4)';
+                } else if (variant === 'neon-blue') {
+                    e.currentTarget.style.boxShadow = '0 0 30px rgba(76, 201, 240, 0.4), inset 0 0 30px rgba(76, 201, 240, 0.1)';
+                } else if (variant === 'neon-pink') {
+                    e.currentTarget.style.boxShadow = '0 0 30px rgba(247, 37, 133, 0.4), inset 0 0 30px rgba(247, 37, 133, 0.1)';
+                } else if (variant === 'neon-green') {
+                    e.currentTarget.style.boxShadow = '0 0 30px rgba(56, 176, 0, 0.4), inset 0 0 30px rgba(56, 176, 0, 0.1)';
+                }
             }}
             onMouseLeave={(e) => {
                 if (noHover) return;
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
-                e.currentTarget.style.borderColor = 'rgba(101, 179, 173, 0.1)';
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                // Reset to original variant style (hacky but works for inline)
+                // In production use CSS classes!
+                const v = variants[variant];
+                e.currentTarget.style.borderColor = v.border.split(' ')[2] + ' ' + v.border.split(' ')[3] + ' ' + v.border.split(' ')[4]; // Reset border color roughly
+                // Actually safer to just clear manual overrides and let React/CSS handle, but for this:
+                e.currentTarget.style.boxShadow = v.boxShadow;
+                e.currentTarget.style.borderColor = variant === 'glass' ? 'rgba(255, 255, 255, 0.08)' :
+                    variant === 'neon-blue' ? 'rgba(76, 201, 240, 0.3)' :
+                        variant === 'neon-pink' ? 'rgba(247, 37, 133, 0.3)' :
+                            'rgba(56, 176, 0, 0.3)';
             }}
             {...props}
         >
-            {/* Top Shine Effect */}
+            {/* Top Shine */}
             <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '1px',
-                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
-                opacity: 0.5
+                position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)', opacity: 0.5
             }}></div>
-
             {children}
         </div>
     );
