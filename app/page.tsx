@@ -361,15 +361,17 @@ export default function Home() {
           </div>
         </section>
 
-        <footer style={{ padding: '80px var(--padding-x)', borderTop: '1px solid #e5e7eb', textAlign: 'center', background: '#fff', color: '#000' }}>
-          <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '24px' }}>Backr</h2>
-          <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', color: '#52525b', marginBottom: '48px' }}>
-            <span style={{ cursor: 'pointer' }}>Terms</span>
-            <span style={{ cursor: 'pointer' }}>Privacy</span>
-            <span style={{ cursor: 'pointer' }}>Community Guidelines</span>
-          </div>
-          <p style={{ color: '#a1a1aa', fontSize: '0.9rem' }}>© 2024 Backr Platform. Built on Mantle.</p>
-        </footer>
+      </main>
+
+      <footer style={{ padding: '80px var(--padding-x)', borderTop: '1px solid #e5e7eb', textAlign: 'center', background: '#fff', color: '#000' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '24px' }}>Backr</h2>
+        <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', color: '#52525b', marginBottom: '48px' }}>
+          <span style={{ cursor: 'pointer' }}>Terms</span>
+          <span style={{ cursor: 'pointer' }}>Privacy</span>
+          <span style={{ cursor: 'pointer' }}>Community Guidelines</span>
+        </div>
+        <p style={{ color: '#a1a1aa', fontSize: '0.9rem' }}>© 2024 Backr Platform. Built on Mantle.</p>
+      </footer>
     </div>
   );
 }
