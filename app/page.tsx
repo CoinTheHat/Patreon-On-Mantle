@@ -98,7 +98,7 @@ export default function Home() {
       {/* Navbar */}
       <nav className="nav-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1400px', margin: '0 auto', width: '100%', position: 'relative', zIndex: 50 }}>
         {/* Logo */}
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', background: 'linear-gradient(to right, #22d3ee, #67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.02em', zIndex: 51, position: 'relative' }}>Kinship</h1>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', background: 'linear-gradient(to right, #22d3ee, #67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.02em', zIndex: 51, position: 'relative' }}>Backr</h1>
 
         {/* Desktop Links */}
         <div className="nav-links desktop-only" style={{ fontSize: '0.95rem', color: '#a1a1aa', fontWeight: '500', alignItems: 'center' }}>
@@ -338,7 +338,7 @@ export default function Home() {
       </main>
 
       <footer style={{ padding: '60px', textAlign: 'center', color: '#64748b', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-        <p>&copy; 2026 Kinship. Built on Mantle.</p>
+        <p>&copy; 2026 Backr. Built on Mantle.</p>
       </footer>
     </div>
   );

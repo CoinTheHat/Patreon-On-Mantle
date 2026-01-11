@@ -120,7 +120,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <header className="mobile-header">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <button onClick={() => setIsSidebarOpen(true)} style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '1.5rem', cursor: 'pointer', padding: '4px' }}>☰</button>
-                    <span style={{ fontWeight: 'bold', fontSize: '1.2rem', background: 'linear-gradient(to right, #22d3ee, #67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Kinship</span>
+                    <span style={{ fontWeight: 'bold', fontSize: '1.2rem', background: 'linear-gradient(to right, #22d3ee, #67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Backr</span>
                 </div>
                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#1a1d24', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     {profile?.avatarUrl ? <img src={profile.avatarUrl} style={{ width: '100%', height: '100%', borderRadius: '50%' }} /> : '👤'}
@@ -155,7 +155,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 color: '#fff',
                                 letterSpacing: '-0.02em',
                                 cursor: 'pointer'
-                            }} onClick={() => router.push('/')}>Kinship</h2>
+                            }} onClick={() => router.push('/')}>Backr</h2>
                         </div>
                         {/* Close button for mobile */}
                         <button className="mobile-only" onClick={() => setIsSidebarOpen(false)} style={{ background: 'transparent', border: 'none', color: '#a1a1aa', fontSize: '1.5rem', display: 'none' }}>✕</button>

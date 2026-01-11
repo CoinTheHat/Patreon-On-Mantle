@@ -23,7 +23,7 @@ export default function SupporterLayout({ children }: { children: React.ReactNod
                     style={{ fontSize: '1.5rem', fontWeight: 'bold', background: 'linear-gradient(to right, #65b3ad, #fff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', cursor: 'pointer' }}
                     onClick={() => router.push('/')}
                 >
-                    Kinship
+                    Backr
                 </h1>
 
                 <div style={{ display: 'flex', gap: '32px' }}>
