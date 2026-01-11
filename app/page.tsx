@@ -30,13 +30,37 @@ export default function Home() {
       <style dangerouslySetInnerHTML={{
         __html: `
         @media (max-width: 768px) {
-          .nav-container { padding: 16px !important; flex-wrap: wrap; gap: 16px; }
-          .hero-title { fontSize: 3rem !important; }
-          .hero-desc { fontSize: 1.1rem !important; }
-          .steps-container { flexDirection: column; alignItems: center; gap: 40px !important; }
+          .nav-container { 
+            padding: 16px !important; 
+            flex-direction: column; 
+            gap: 20px; 
+            align-items: center !important;
+          }
+          .nav-container > div {
+             width: 100%;
+             justify-content: center;
+          }
+          .hero-title { 
+            fontSize: 3rem !important; 
+            line-height: 1.1 !important;
+            word-wrap: break-word;
+          }
+          .hero-desc { 
+            fontSize: 1rem !important; 
+            padding: 0 16px;
+          }
+          .steps-container { 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 40px !important; 
+          }
           .desktop-only { display: none !important; }
           .hide-mobile { display: none !important; }
-          .nav-links { display: none !important; } /* Hide nav links on mobile for simplicity or use hamburger */
+          .nav-links { display: none !important; }
+          
+          /* Force centering and width constraints on mobile */
+          main { padding: 0 16px !important; overflow-x: hidden; }
+          main > div { max-width: 100% !important; }
         }
         @keyframes gradientMove {
           0% { background-position: 0% 50%; }
@@ -78,7 +102,7 @@ export default function Home() {
         {/* Hero Section */}
         <div style={{ maxWidth: '1000px', textAlign: 'center', marginBottom: '120px', position: 'relative', zIndex: 2 }}>
           {/* Glow behind text */}
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '400px', background: 'radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%)', filter: 'blur(80px)', zIndex: -1 }}></div>
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '800px', height: '400px', background: 'radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%)', filter: 'blur(80px)', zIndex: -1 }}></div>
 
           <h2 className="hero-title" style={{ fontSize: '6rem', fontWeight: '900', lineHeight: '1', marginBottom: '40px', letterSpacing: '-0.04em', color: '#fff', textShadow: '0 0 40px rgba(139,92,246,0.3)' }}>
             Support Creators.<br />
