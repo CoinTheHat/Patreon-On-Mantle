@@ -237,31 +237,66 @@ export default function Home() {
             filter: 'blur(100px)', zIndex: 0
           }}></div>
 
-          {/* Floating Visuals - Light Mode */}
-          <div className="hero-visual visual-left">
-            <div style={{ height: '180px', background: 'linear-gradient(45deg, #FF0080, #7928CA)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {/* Floating Visuals - Denser & Richer */}
+
+          {/* Top Left - Podcast */}
+          <div className="hero-visual visual-left" style={{ top: '15%', left: '5%', width: '220px', animationDelay: '0s' }}>
+            <div style={{ height: '160px', background: 'linear-gradient(45deg, #FF0080, #7928CA)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{ fontSize: '3rem' }}>🎙️</span>
             </div>
             <div style={{ padding: '16px' }}>
               <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Future Talk</div>
-              <div style={{ fontSize: '0.8rem', color: '#52525b' }}>Podcast • 12k Members</div>
+              <div style={{ fontSize: '0.8rem', color: '#52525b' }}>Podcast • 12k</div>
             </div>
           </div>
 
-          <div className="hero-visual visual-right">
-            <div style={{ height: '200px', background: 'url(https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=260&auto=format&fit=crop) center/cover' }}></div>
+          {/* Middle Right - Art */}
+          <div className="hero-visual visual-right" style={{ top: '25%', right: '5%', width: '240px', animationDelay: '1s' }}>
+            <div style={{ height: '180px', background: 'url(https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=260&auto=format&fit=crop) center/cover' }}></div>
             <div style={{ padding: '16px' }}>
               <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Neon City</div>
-              <div style={{ fontSize: '0.8rem', color: '#52525b' }}>Digital Art • 8.5k Members</div>
+              <div style={{ fontSize: '0.8rem', color: '#52525b' }}>Digital Art • 8.5k</div>
             </div>
           </div>
 
-          <div className="hero-visual visual-bottom-left">
-            <div style={{ height: '140px', background: 'linear-gradient(to right, #00C9FF, #92FE9D)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontSize: '3rem' }}>🎮</span>
+          {/* Bottom Left - Gaming */}
+          <div className="hero-visual visual-bottom-left" style={{ bottom: '15%', left: '12%', width: '200px', animationDelay: '2s' }}>
+            <div style={{ height: '130px', background: 'linear-gradient(to right, #00C9FF, #92FE9D)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '2.5rem' }}>🎮</span>
             </div>
             <div style={{ padding: '12px' }}>
               <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Pro Gamer Tips</div>
+            </div>
+          </div>
+
+          {/* NEW: Top Right - Writing */}
+          <div className="hero-visual visual-top-right desktop-only" style={{ top: '12%', right: '18%', width: '180px', animation: 'float-slow 9s ease-in-out infinite', animationDelay: '1.5s' }}>
+            <div style={{ height: '120px', background: '#FFD700', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '2.5rem' }}>✍️</span>
+            </div>
+            <div style={{ padding: '12px' }}>
+              <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Daily Essays</div>
+            </div>
+          </div>
+
+          {/* NEW: Bottom Right - Music */}
+          <div className="hero-visual visual-bottom-right desktop-only" style={{ bottom: '20%', right: '15%', width: '210px', animation: 'float 7s ease-in-out infinite', animationDelay: '0.5s' }}>
+            <div style={{ height: '140px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '2.5rem' }}>🎵</span>
+            </div>
+            <div style={{ padding: '12px' }}>
+              <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>Indie Vibes</div>
+              <div style={{ fontSize: '0.75rem', color: '#52525b' }}>Early Access</div>
+            </div>
+          </div>
+
+          {/* NEW: Extreme Left Bottom - Video */}
+          <div className="hero-visual visual-ex-left desktop-only" style={{ bottom: '35%', left: '2%', width: '160px', animation: 'float-right 8s ease-in-out infinite', animationDelay: '3s' }}>
+            <div style={{ height: '100px', background: '#ff758c', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '2rem' }}>🎬</span>
+            </div>
+            <div style={{ padding: '10px' }}>
+              <div style={{ fontWeight: 'bold', fontSize: '0.8rem' }}>Behind Scenes</div>
             </div>
           </div>
 
