@@ -17,7 +17,7 @@ export default function MyMembershipsPage() {
         if (!address) return;
         setLoading(true);
         // Fetch subscriptions where I am the subscriber
-        fetch(`/api/subscriptions?subscriber=${address}`)
+        fetch(`/api/subscriptions?subscriber=${address.toLowerCase()}`)
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data)) setMemberships(data);

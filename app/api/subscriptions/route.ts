@@ -3,8 +3,8 @@ import { supabase } from '@/utils/supabase';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
-    const subscriber = searchParams.get('subscriber');
-    const creator = searchParams.get('creator');
+    const subscriber = searchParams.get('subscriber')?.toLowerCase();
+    const creator = searchParams.get('creator')?.toLowerCase();
 
     let query = supabase.from('subscriptions').select('*, creators(*)');
 
@@ -30,8 +30,8 @@ export async function POST(request: Request) {
     const { subscriberAddress, creatorAddress, tierId, expiry } = body;
 
     const { data, error } = await supabase.from('subscriptions').upsert({
-        subscriberAddress,
-        creatorAddress,
+        subscriberAddress: subscriberAddress.toLowerCase(),
+        creatorAddress: creatorAddress.toLowerCase(),
         tierId,
         expiry: new Date(expiry * 1000).toISOString(), // Convert unix timestamp to ISO
         "createdAt": new Date().toISOString()
