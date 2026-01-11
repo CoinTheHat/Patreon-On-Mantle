@@ -211,6 +211,41 @@ export default function SettingsPage() {
                     <span style={{ fontSize: '0.75rem', color: '#65b3ad', background: 'rgba(101, 179, 173, 0.1)', padding: '4px 8px', borderRadius: '4px' }}>Connected on Mantle Mainnet</span>
                 </div>
             </Card>
+
+            <Card style={{ marginTop: '24px', border: '1px solid rgba(239, 68, 68, 0.3)', background: 'rgba(239, 68, 68, 0.05)' }}>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '16px', color: '#ef4444' }}>Danger Zone</h2>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                        <p style={{ fontWeight: 'bold', color: '#fff' }}>Reset Contract Link</p>
+                        <p style={{ fontSize: '0.875rem', color: '#a1a1aa' }}>Use this if you need to re-deploy your contract (e.g. after a platform update).</p>
+                    </div>
+                    <Button
+                        variant="secondary"
+                        onClick={async () => {
+                            if (confirm('Are you sure? This will disconnect your current contract from your profile setup. You will need to re-deploy.')) {
+                                try {
+                                    const res = await fetch('/api/creators', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            address,
+                                            contractAddress: null // Reset contract address
+                                        })
+                                    });
+                                    if (res.ok) {
+                                        window.location.reload();
+                                    } else {
+                                        alert('Failed to reset.');
+                                    }
+                                } catch (e) { console.error(e); alert('Error resetting.'); }
+                            }
+                        }}
+                        style={{ background: '#ef4444', color: '#fff', border: 'none' }}
+                    >
+                        Reset & Re-Deploy
+                    </Button>
+                </div>
+            </Card>
         </div>
     );
 }
