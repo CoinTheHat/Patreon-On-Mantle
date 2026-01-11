@@ -52,16 +52,30 @@ export default function Home() {
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '60px', padding: '0 24px', position: 'relative' }}>
 
         {/* Hero Section */}
-        <div style={{ maxWidth: '900px', textAlign: 'center', marginBottom: '120px', position: 'relative', zIndex: 2 }}>
+        <div style={{ maxWidth: '1000px', textAlign: 'center', marginBottom: '120px', position: 'relative', zIndex: 2 }}>
           {/* Glow behind text */}
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '300px', background: 'radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%)', filter: 'blur(60px)', zIndex: -1 }}></div>
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '400px', background: 'radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%)', filter: 'blur(80px)', zIndex: -1 }}></div>
 
-          <h2 style={{ fontSize: '5.5rem', fontWeight: '800', lineHeight: '1.05', marginBottom: '32px', letterSpacing: '-0.04em', color: '#fff' }}>
+          <h2 style={{ fontSize: '6rem', fontWeight: '900', lineHeight: '1', marginBottom: '40px', letterSpacing: '-0.04em', color: '#fff', textShadow: '0 0 40px rgba(139,92,246,0.3)' }}>
             Support Creators.<br />
-            <span style={{ background: 'linear-gradient(to right, #c084fc, #2dd4bf)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Directly. On-Chain.</span>
+            <span style={{
+              background: 'linear-gradient(to right, #c084fc, #6366f1, #2dd4bf)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundSize: '200% 200%',
+              animation: 'gradientMove 5s ease infinite'
+            }}>Directly. On-Chain.</span>
           </h2>
-          <p style={{ fontSize: '1.25rem', color: '#94a3b8', marginBottom: '56px', maxWidth: '600px', margin: '0 auto 56px', lineHeight: '1.6' }}>
-            The Web3 membership platform for communities that value transparency, ownership, and culture over speculation. Built on Mantle.
+          <style dangerouslySetInnerHTML={{
+            __html: `
+            @keyframes gradientMove {
+              0% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
+            }
+          `}} />
+          <p style={{ fontSize: '1.5rem', color: '#cbd5e1', marginBottom: '56px', maxWidth: '750px', margin: '0 auto 56px', lineHeight: '1.6', fontWeight: '400' }}>
+            The Web3 membership platform for communities that value <strong style={{ color: '#fff' }}>transparency</strong>, <strong style={{ color: '#fff' }}>ownership</strong>, and <strong style={{ color: '#fff' }}>culture</strong> over speculation. <span style={{ opacity: 0.8 }}>Built on Mantle.</span>
           </p>
 
           <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', alignItems: 'center' }}>
