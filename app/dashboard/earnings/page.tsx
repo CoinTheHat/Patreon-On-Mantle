@@ -163,15 +163,16 @@ export default function EarningsPage() {
             )}
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '48px' }}>
-                <Card style={{ background: 'linear-gradient(135deg, rgba(101, 179, 173, 0.1) 0%, rgba(26, 29, 36, 0.4) 100%)', border: '1px solid #65b3ad', position: 'relative', overflow: 'hidden' }}>
+                <Card variant="neon-green" style={{ position: 'relative', overflow: 'hidden' }}>
                     <div style={{ position: 'relative', zIndex: 1 }}>
-                        <p style={{ color: '#65b3ad', fontSize: '0.875rem', marginBottom: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Available Balance</p>
+                        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.875rem', marginBottom: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Available Balance</p>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                            <h3 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', textShadow: '0 0 20px rgba(101,179,173,0.3)' }}>{displayBalance}</h3>
+                            <h3 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', textShadow: '0 0 20px rgba(56, 176, 0, 0.5)' }}>{displayBalance}</h3>
                             <span style={{ fontSize: '1rem', color: '#a1a1aa' }}>{symbol}</span>
                         </div>
                     </div>
-                    <div style={{ position: 'absolute', top: '-50%', right: '-50%', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(101,179,173,0.2) 0%, transparent 70%)', filter: 'blur(20px)' }}></div>
+                    {/* Subtle background flair */}
+                    <div style={{ position: 'absolute', top: '-50%', right: '-50%', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(56, 176, 0, 0.15) 0%, transparent 70%)', filter: 'blur(40px)' }}></div>
                 </Card>
 
                 <Card style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column' }}>
