@@ -21,7 +21,7 @@ export default function WalletButton() {
     // Fetch user profile on connect
     useEffect(() => {
         if (address) {
-            fetch('/api/creators')
+            fetch('/api/creators?includePending=true')
                 .then(res => res.json())
                 .then(creators => {
                     const found = creators.find((c: any) => c.address === address);

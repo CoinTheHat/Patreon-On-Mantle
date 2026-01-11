@@ -1,15 +1,20 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/utils/supabase';
 
-export async function GET() {
+export async function GET(request: Request) {
+    const { searchParams } = new URL(request.url);
+    const includePending = searchParams.get('includePending') === 'true';
+
     const { data: creators, error } = await supabase.from('creators').select('*');
 
     if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // Filter out creators who haven't deployed a contract yet
-    const filteredCreators = creators?.filter(c => c.contractAddress && c.contractAddress.length > 0) || [];
+    // Filter out creators who haven't deployed a contract yet, unless includePending is set
+    const filteredCreators = includePending
+        ? creators
+        : (creators?.filter(c => c.contractAddress && c.contractAddress.length > 0) || []);
 
     return NextResponse.json(filteredCreators);
 }
