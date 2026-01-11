@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
 
-export default function ExplorePage() {
+function ExploreContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const query = searchParams.get('q')?.toLowerCase() || '';
@@ -74,12 +74,6 @@ export default function ExplorePage() {
                             ) : (
                                 <>
                                     <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '16px', color: '#fff' }}>Featured Creators <span style={{ fontSize: '0.75rem', background: '#65b3ad', color: '#000', padding: '2px 8px', borderRadius: '4px', verticalAlign: 'middle' }}>PROMOTED</span></h3>
-                                    {/* Fake/Skeleton Creators for Visual Vibe */}
-                                    {[1, 2, 3].map((_, i) => (
-                                        <Card key={i} noHover={true} style={{ opacity: 0.7, filter: 'grayscale(0.5)' }}>
-                                            {/* ... skeleton content ... */}
-                                        </Card>
-                                    ))}
                                 </>
                             )}
                         </div>
@@ -87,5 +81,13 @@ export default function ExplorePage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function ExplorePage() {
+    return (
+        <Suspense fallback={<div style={{ padding: '48px', textAlign: 'center', color: '#fff' }}>Loading search...</div>}>
+            <ExploreContent />
+        </Suspense>
     );
 }
