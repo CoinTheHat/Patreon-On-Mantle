@@ -205,8 +205,22 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                     expiry: memberExpiry
                 })
             }).then(res => {
-                if (res.ok) console.log("Synced membership from chain to DB");
-            }).catch(e => console.error("Sync error", e));
+                if (res.ok) {
+                    console.log("Synced membership from chain to DB");
+                    showToast('Membership synced from blockchain! ✅', 'success');
+                } else {
+                    res.json().then(err => {
+                        console.error("Sync API Error", err);
+                        // Don't spam error toast if it's just a duplicate key race condition
+                        if (!err.error?.includes('duplicate')) {
+                            showToast(`Sync warning: ${err.error?.substring(0, 30)}`, 'error');
+                        }
+                    });
+                }
+            }).catch(e => {
+                console.error("Sync error", e);
+                // silent fail on network error to not annoy
+            });
         }
     }, [address, creatorContractAddress, memberData, memberExpiry, memberTierId]);
 
