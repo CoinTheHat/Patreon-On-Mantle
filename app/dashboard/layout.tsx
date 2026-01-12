@@ -58,13 +58,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         return (
             <div style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                height: '100vh', background: '#fff', color: '#000', textAlign: 'center'
+                height: '100vh', background: 'var(--color-bg-page)', color: 'var(--color-text-primary)', textAlign: 'center'
             }}>
-                <div style={{ marginBottom: '24px', padding: '32px', background: '#fafafa', borderRadius: '24px', border: '1px solid #e5e7eb', maxWidth: '400px', margin: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
-                    <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '16px' }}>Dashboard Access</h1>
-                    <p style={{ color: '#52525b', marginBottom: '32px' }}>Connect your wallet to manage your creator page.</p>
+                <div className="card-surface" style={{ padding: '32px', maxWidth: '400px', margin: '16px' }}>
+                    <h1 className="text-h1" style={{ marginBottom: '16px' }}>Dashboard Access</h1>
+                    <p className="text-body" style={{ color: 'var(--color-text-secondary)', marginBottom: '32px' }}>Connect your wallet to manage your creator page.</p>
                     <WalletButton />
-                    <Button variant="outline" style={{ marginTop: '24px', width: '100%', justifyContent: 'center', borderRadius: '12px' }} onClick={() => router.push('/')}>
+                    <Button variant="outline" style={{ marginTop: '24px', width: '100%', justifyContent: 'center' }} onClick={() => router.push('/')}>
                         Return Home
                     </Button>
                 </div>
@@ -73,13 +73,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
 
     return (
-        <div style={{ display: 'flex', minHeight: '100vh', background: '#fff', color: '#000', fontFamily: 'var(--font-geist-sans)' }}>
+        <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg-page)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-family)' }}>
             <style dangerouslySetInnerHTML={{
                 __html: `
                 .dashboard-sidebar {
-                    width: 260px;
-                    border-right: 1px solid #e5e7eb;
-                    background: #f9fafb;
+                    width: var(--sidebar-width);
+                    border-right: 1px solid var(--color-border);
+                    background: var(--color-bg-surface);
                     display: flex;
                     flex-direction: column;
                     position: fixed;
@@ -91,11 +91,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 
                 .main-content {
                     flex: 1;
-                    margin-left: 260px;
+                    margin-left: var(--sidebar-width);
                     min-height: 100vh;
                     display: flex;
                     flex-direction: column;
-                    background: #fff;
+                    background: var(--color-bg-page);
                 }
 
                 @media (max-width: 1024px) {
@@ -107,9 +107,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 .nav-item {
                     padding: 10px 16px;
                     margin: 2px 12px;
-                    border-radius: 8px;
+                    border-radius: var(--radius-sm);
                     cursor: pointer;
-                    color: #52525b;
+                    color: var(--color-text-secondary);
                     font-weight: 500;
                     display: flex;
                     align-items: center;
@@ -117,8 +117,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     font-size: 0.95rem;
                     transition: all 0.2s;
                 }
-                .nav-item:hover { background: #e4e4e7; color: #000; }
-                .nav-item.active { background: #e5e7eb; color: #000; font-weight: 600; }
+                .nav-item:hover { background: var(--color-bg-page); color: var(--color-text-primary); }
+                .nav-item.active { background: var(--color-primary-light); color: var(--color-primary); font-weight: 600; }
             `}} />
 
             {/* Mobile Header */}
@@ -131,19 +131,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             padding: 16px 24px;
                             justify-content: space-between;
                             align-items: center;
-                            border-bottom: 1px solid #e5e7eb;
+                            border-bottom: 1px solid var(--color-border);
                             position: sticky;
                             top: 0;
-                            background: #fff;
+                            background: var(--color-bg-surface);
                             z-index: 40;
                         }
                     }
                  `}} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <button onClick={() => setIsSidebarOpen(true)} style={{ background: 'none', border: 'none', color: '#000', fontSize: '1.5rem' }}>☰</button>
+                    <button onClick={() => setIsSidebarOpen(true)} style={{ background: 'none', border: 'none', color: 'var(--color-text-primary)', fontSize: '1.5rem' }}>☰</button>
                     <span style={{ fontWeight: 'bold' }}>Backr Dashboard</span>
                 </div>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#000' }}></div>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--color-text-primary)' }}></div>
             </div>
 
             {/* Sidebar */}
@@ -154,17 +154,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         onClick={() => router.push('/')}
                     >
                         {/* Logo */}
-                        <div style={{ width: '32px', height: '32px', background: '#000', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: '32px', height: '32px', background: 'var(--color-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <div style={{ width: '14px', height: '14px', background: '#fff', borderRadius: '2px' }}></div>
                         </div>
-                        <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#000' }}>Backr</div>
-                        <span style={{ fontSize: '0.7rem', padding: '2px 6px', background: '#f3f4f6', borderRadius: '4px', color: '#52525b', border: '1px solid #e5e7eb', marginLeft: 'auto' }}>STUDIO</span>
+                        <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>Backr</div>
+                        <span style={{ fontSize: '0.7rem', padding: '2px 6px', background: 'var(--color-bg-page)', borderRadius: '4px', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)', marginLeft: 'auto' }}>STUDIO</span>
                     </div>
 
                     {/* Quick Action */}
                     <Button
                         onClick={() => router.push('/dashboard/posts')}
-                        style={{ width: '100%', justifyContent: 'center', borderRadius: '9999px', marginBottom: '24px', fontWeight: '600', background: '#000', color: '#fff', border: 'none' }}
+                        style={{ width: '100%', justifyContent: 'center', borderRadius: '9999px', marginBottom: '24px' }}
                     >
                         + Create Post
                     </Button>
@@ -186,17 +186,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </div>
 
                 {/* User Profile at Bottom */}
-                <div style={{ marginTop: 'auto', padding: '24px', borderTop: '1px solid #e5e7eb' }}>
+                <div style={{ marginTop: 'auto', padding: '24px', borderTop: '1px solid var(--color-border)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                        <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: profile?.avatarUrl ? `url(${profile.avatarUrl}) center/cover` : '#e5e7eb', border: '1px solid #e5e7eb' }}></div>
+                        <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: profile?.avatarUrl ? `url(${profile.avatarUrl}) center/cover` : 'var(--color-bg-page)', border: '1px solid var(--color-border)' }}></div>
                         <div style={{ overflow: 'hidden' }}>
-                            <div style={{ fontSize: '0.9rem', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#000' }}>{displayName}</div>
-                            <div style={{ fontSize: '0.75rem', color: '#71717a' }}>{address.slice(0, 6)}...{address.slice(-4)}</div>
+                            <div style={{ fontSize: '0.9rem', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--color-text-primary)' }}>{displayName}</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>{address.slice(0, 6)}...{address.slice(-4)}</div>
                         </div>
                     </div>
                     <button
                         onClick={() => { disconnect(); router.push('/'); }}
-                        style={{ background: 'none', border: 'none', color: '#71717a', fontSize: '0.85rem', cursor: 'pointer', padding: 0 }}
+                        style={{ background: 'none', border: 'none', color: 'var(--color-text-secondary)', fontSize: '0.85rem', cursor: 'pointer', padding: 0 }}
                     >
                         Log Out
                     </button>
@@ -204,7 +204,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     {/* Mobile Close */}
                     <button
                         onClick={() => setIsSidebarOpen(false)}
-                        style={{ display: 'none', marginTop: '16px', width: '100%', padding: '12px', background: '#f3f4f6', border: 'none', color: '#000', borderRadius: '8px' }}
+                        style={{ display: 'none', marginTop: '16px', width: '100%', padding: '12px', background: 'var(--color-bg-page)', border: 'none', color: 'var(--color-text-primary)', borderRadius: '8px' }}
                         className="mobile-close"
                     >
                         Close Menu
@@ -223,17 +223,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             {/* Content Area */}
             <main className="main-content">
-                <header style={{ padding: '24px 40px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff' }}>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#000' }}>
+                <header style={{ padding: '24px 40px', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--color-bg-surface)' }}>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>
                         {menuItems.find(i => i.path === pathname)?.label || 'Dashboard'}
                     </h2>
                     <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
                         {/* Network Status / Etc */}
-                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e' }}></div>
-                        <span style={{ fontSize: '0.85rem', color: '#71717a' }}>Mantle Network</span>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-success)' }}></div>
+                        <span style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>Mantle Network</span>
                     </div>
                 </header>
-                <div style={{ padding: '40px', maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
+                <div style={{ padding: '40px', maxWidth: 'var(--max-width-page)', width: '100%', margin: '0 auto' }}>
                     {children}
                 </div>
             </main>

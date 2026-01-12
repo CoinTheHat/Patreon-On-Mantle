@@ -110,7 +110,7 @@ export default function Dashboard() {
     if (!isConnected) {
         return (
             <div style={{ padding: '48px', textAlign: 'center' }}>
-                <h2 className="text-h2" style={{ marginBottom: '24px' }}>Please Connect Wallet</h2>
+                <h2 className="text-h2" style={{ marginBottom: '24px', color: 'var(--color-text-primary)' }}>Please Connect Wallet</h2>
                 <WalletButton />
             </div>
         );
@@ -120,11 +120,11 @@ export default function Dashboard() {
         return (
             <div style={{ maxWidth: '600px', margin: '48px auto', textAlign: 'center' }}>
                 {ToastComponent}
-                <h1 className="text-h1" style={{ marginBottom: '24px' }}>Welcome, Creator!</h1>
+                <h1 className="text-h1" style={{ marginBottom: '24px', color: 'var(--color-text-primary)' }}>Welcome, Creator!</h1>
                 <p className="text-body" style={{ color: 'var(--color-text-secondary)', marginBottom: '32px' }}>Let's set up your profile to start receiving payments on Mantle.</p>
                 <Card padding="lg">
                     <div style={{ marginBottom: '24px' }}>
-                        <p style={{ marginBottom: '8px', fontWeight: 'bold' }}>Wallet Connected</p>
+                        <p style={{ marginBottom: '8px', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>Wallet Connected</p>
                         <p style={{ fontFamily: 'monospace', color: 'var(--color-primary)' }}>{address}</p>
                     </div>
                     <Button
@@ -171,13 +171,20 @@ export default function Dashboard() {
 
             {/* Warning if no contract */}
             {!profile?.contractAddress && !isConfirming && (
-                <div style={{ marginBottom: '32px', padding: '16px 24px', background: '#FFFBEB', border: '1px solid #FCD34D', borderRadius: 'var(--radius-md)', color: '#92400E', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{
+                    marginBottom: '32px', padding: '16px 24px',
+                    background: 'rgba(245, 158, 11, 0.1)',
+                    border: '1px solid var(--color-warning)',
+                    borderRadius: 'var(--radius-md)',
+                    color: 'var(--color-warning)',
+                    display: 'flex', alignItems: 'center', gap: '16px'
+                }}>
                     <span style={{ fontSize: '1.5rem' }}>⚠️</span>
                     <div>
                         <div style={{ fontWeight: 'bold' }}>Action Required</div>
                         <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>You need to deploy your contract to start accepting memberships.</div>
                     </div>
-                    <Button onClick={handleDeploy} size="sm" style={{ marginLeft: 'auto', background: '#F59E0B', color: '#fff', border: 'none' }}>Deploy Contract</Button>
+                    <Button onClick={handleDeploy} size="sm" style={{ marginLeft: 'auto', background: 'var(--color-warning)', color: '#fff', border: 'none' }}>Deploy Contract</Button>
                 </div>
             )}
 
@@ -214,8 +221,8 @@ export default function Dashboard() {
                         <Card padding="md" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--color-primary-light)', borderColor: 'var(--color-primary)' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                 <span style={{ fontSize: '1.5rem' }}>🎉</span>
-                                <div>
-                                    <div style={{ fontWeight: 700, color: 'var(--color-primary-hover)' }}>You're all set up!</div>
+                                <div style={{ color: 'var(--color-primary-hover)' }}>
+                                    <div style={{ fontWeight: 700 }}>You're all set up!</div>
                                     <div className="text-caption" style={{ color: 'var(--color-primary-hover)' }}>Your page is ready to accept members.</div>
                                 </div>
                             </div>
@@ -224,7 +231,7 @@ export default function Dashboard() {
                     ) : (
                         <Card padding="none" style={{ overflow: 'hidden' }}>
                             <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <h3 className="text-h3">Getting Started</h3>
+                                <h3 className="text-h3" style={{ color: 'var(--color-text-primary)' }}>Getting Started</h3>
                                 <div style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>{Math.round(progress)}% Complete</div>
                             </div>
 
@@ -372,7 +379,7 @@ export default function Dashboard() {
                                 onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-primary)'; e.currentTarget.style.background = 'var(--color-bg-surface-hover)'; }}
                                 onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.background = 'var(--color-bg-surface)'; }}
                             >
-                                <span style={{ fontSize: '1.2rem', background: '#F3F4F6', padding: '8px', borderRadius: '8px' }}>👀</span>
+                                <span style={{ fontSize: '1.2rem', background: 'var(--color-bg-page)', padding: '8px', borderRadius: '8px' }}>👀</span>
                                 <div style={{ flex: 1 }}>
                                     <div style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>Public Page</div>
                                     <div className="text-caption">See what others see</div>
@@ -383,10 +390,10 @@ export default function Dashboard() {
                     </Card>
 
                     {/* Resources/Help (Optional extra placeholder) */}
-                    <Card padding="md" style={{ background: 'linear-gradient(135deg, var(--color-primary-light) 0%, #fff 100%)' }}>
-                        <h4 style={{ fontWeight: 600, marginBottom: '8px' }}>Need Help?</h4>
-                        <p className="text-body-sm" style={{ marginBottom: '12px' }}>Check out our creator guide to grow your audience.</p>
-                        <Button variant="outline" size="sm" style={{ background: '#fff' }}>Read Guide</Button>
+                    <Card padding="md" style={{ background: 'linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-bg-surface) 100%)', border: '1px solid var(--color-primary-light)' }}>
+                        <h4 style={{ fontWeight: 600, marginBottom: '8px', color: 'var(--color-text-primary)' }}>Need Help?</h4>
+                        <p className="text-body-sm" style={{ marginBottom: '12px', color: 'var(--color-text-secondary)' }}>Check out our creator guide to grow your audience.</p>
+                        <Button variant="outline" size="sm" style={{ background: 'var(--color-bg-surface)' }}>Read Guide</Button>
                     </Card>
 
                 </div>

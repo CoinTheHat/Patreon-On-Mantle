@@ -17,11 +17,11 @@ export default function SupporterLayout({ children }: { children: React.ReactNod
     ];
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#0f1115', color: '#fff' }}>
-            <nav style={{ padding: '0 24px', height: '64px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', background: '#0f1115', position: 'sticky', top: 0, zIndex: 50 }}>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#fff', color: '#000' }}>
+            <nav style={{ padding: '0 24px', height: '64px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e5e7eb', background: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(12px)', position: 'sticky', top: 0, zIndex: 50 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
                     <h1
-                        style={{ fontSize: '1.25rem', fontWeight: 'bold', background: 'linear-gradient(to right, #22d3ee, #67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', cursor: 'pointer', letterSpacing: '-0.02em' }}
+                        style={{ fontSize: '1.25rem', fontWeight: 'bold', background: '#000', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', cursor: 'pointer', letterSpacing: '-0.02em' }}
                         onClick={() => router.push('/')}
                     >
                         Backr
@@ -34,7 +34,7 @@ export default function SupporterLayout({ children }: { children: React.ReactNod
                                 onClick={() => router.push(item.path)}
                                 style={{
                                     cursor: 'pointer',
-                                    color: pathname === item.path ? '#fff' : '#a1a1aa',
+                                    color: pathname === item.path ? '#000' : '#71717a',
                                     fontWeight: pathname === item.path ? '600' : '500',
                                     fontSize: '0.9rem',
                                     transition: 'color 0.2s'
@@ -48,7 +48,7 @@ export default function SupporterLayout({ children }: { children: React.ReactNod
 
                 <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
                     {isConnected && (
-                        <Button variant="outline" onClick={() => router.push('/dashboard')} style={{ fontSize: '0.85rem', padding: '8px 16px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>Create</Button>
+                        <Button variant="outline" onClick={() => router.push('/dashboard')} style={{ fontSize: '0.85rem', padding: '8px 16px', borderRadius: '20px', border: '1px solid #e5e7eb', color: '#000' }}>Create</Button>
                     )}
                     <WalletButton />
                 </div>
