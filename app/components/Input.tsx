@@ -8,16 +8,16 @@ export default function Input({ label, ...props }: any) {
 
     const labelStyle = {
         fontSize: '0.875rem',
-        color: '#a1a1aa',
-        fontWeight: '500',
+        color: '#52525b',
+        fontWeight: '600',
     };
 
     const inputStyle = {
-        background: '#0f1115',
-        border: '1px solid #2e333d',
+        background: '#fff',
+        border: '1px solid #e4e4e7',
         borderRadius: '8px',
         padding: '12px 16px',
-        color: '#fff',
+        color: '#000',
         fontSize: '1rem',
         outline: 'none',
         transition: 'border-color 0.2s ease',
@@ -29,8 +29,8 @@ export default function Input({ label, ...props }: any) {
             {label && <label style={labelStyle}>{label}</label>}
             <input
                 style={{ ...inputStyle, ...props.style }}
-                onFocus={(e) => e.target.style.borderColor = '#65b3ad'}
-                onBlur={(e) => e.target.style.borderColor = '#2e333d'}
+                onFocus={(e) => e.target.style.borderColor = '#000'}
+                onBlur={(e) => e.target.style.borderColor = '#e4e4e7'}
                 {...props}
             />
         </div>

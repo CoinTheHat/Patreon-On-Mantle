@@ -30,32 +30,27 @@ export default function Button({ children, onClick, variant = 'primary', classNa
     };
 
     if (variant === 'primary') {
-        styles.background = 'linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(20, 184, 166, 0.2) 100%)';
+        styles.background = '#000';
         styles.color = '#fff';
-        styles.boxShadow = '0 0 15px rgba(139, 92, 246, 0.3), inset 0 0 10px rgba(139, 92, 246, 0.1)';
-        styles.border = '1px solid rgba(139, 92, 246, 0.5)';
-        styles.backdropFilter = 'blur(10px)';
+        styles.border = '1px solid #000';
     } else if (variant === 'secondary') {
-        styles.background = 'rgba(255, 255, 255, 0.05)';
-        styles.color = '#fff';
-        styles.border = '1px solid rgba(255, 255, 255, 0.1)';
-        styles.backdropFilter = 'blur(10px)';
+        styles.background = '#fff';
+        styles.color = '#000';
+        styles.border = '1px solid #e4e4e7';
     } else if (variant === 'outline') {
         styles.background = 'transparent';
-        styles.color = '#14b8a6';
-        styles.border = '1px solid #14b8a6';
+        styles.color = '#000';
+        styles.border = '1px solid #e4e4e7';
     }
 
     const handleMouseEnter = (e: any) => {
         if (props.disabled) return;
         if (variant === 'primary') {
             e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 0 25px rgba(139, 92, 246, 0.6), inset 0 0 20px rgba(139, 92, 246, 0.2)';
-            e.currentTarget.style.border = '1px solid rgba(139, 92, 246, 0.8)';
-        } else {
-            e.currentTarget.style.borderColor = '#8b5cf6';
-            e.currentTarget.style.color = '#fff';
-            e.currentTarget.style.background = 'rgba(139, 92, 246, 0.1)';
+            e.currentTarget.style.background = '#333';
+        } else if (variant === 'secondary' || variant === 'outline') {
+            e.currentTarget.style.borderColor = '#000';
+            e.currentTarget.style.background = '#f4f4f5';
         }
     };
 
@@ -63,11 +58,13 @@ export default function Button({ children, onClick, variant = 'primary', classNa
         if (props.disabled) return;
         if (variant === 'primary') {
             e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 0 15px rgba(139, 92, 246, 0.3), inset 0 0 10px rgba(139, 92, 246, 0.1)';
-            e.currentTarget.style.border = '1px solid rgba(139, 92, 246, 0.5)';
+            e.currentTarget.style.background = '#000';
         } else if (variant === 'secondary') {
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+            e.currentTarget.style.borderColor = '#e4e4e7';
+            e.currentTarget.style.background = '#fff';
+        } else if (variant === 'outline') {
+            e.currentTarget.style.borderColor = '#e4e4e7';
+            e.currentTarget.style.background = 'transparent';
         }
     };
 
