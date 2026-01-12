@@ -10,6 +10,11 @@
   --color-primary-light: #effcfb;
   /* Very subtle teal tint */
 
+  --color-brand-blue: #5865F2;
+  /* New Patron-like Blue */
+  --color-brand-salmon: #FF908B;
+  /* Accent Salmon */
+
   --color-accent: #1FBCAD;
   /* Keep accent teal as requested for uniformity */
   --color-accent-light: #effcfb;
@@ -56,6 +61,7 @@
 
   /* Typography */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--font-playfair), serif;
 }
 
 /* Reset & Base */
