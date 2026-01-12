@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import Button from '../components/Button';
 import Card from '../components/Card';
+import SectionHeader from '../components/SectionHeader';
 import WalletButton from '../components/WalletButton';
 import { useRouter } from 'next/navigation';
 import { FACTORY_ABI, FACTORY_ADDRESS } from '@/utils/abis';
@@ -171,56 +172,69 @@ export default function Dashboard() {
     const progress = (completedSteps / steps.length) * 100;
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <div className="page-container">
+            <SectionHeader
+                title="Overview"
+                description="Welcome back! Here's what's happening with your page."
+            />
+
             {/* Warning if no contract */}
             {!profile?.contractAddress && !isConfirming && (
-                <div style={{ marginBottom: '32px', padding: '16px 24px', background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.2)', borderRadius: '12px', color: '#854d0e', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ marginBottom: '32px', padding: '16px 24px', background: '#FFFBEB', border: '1px solid #FCD34D', borderRadius: 'var(--radius-md)', color: '#92400E', display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <span style={{ fontSize: '1.5rem' }}>⚠️</span>
                     <div>
                         <div style={{ fontWeight: 'bold' }}>Action Required</div>
                         <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>You need to deploy your contract to start accepting memberships.</div>
                     </div>
-                    <Button onClick={handleDeploy} style={{ marginLeft: 'auto', background: '#eab308', color: '#000', border: 'none' }}>Deploy Now</Button>
+                    <Button onClick={handleDeploy} size="sm" style={{ marginLeft: 'auto', background: '#F59E0B', color: '#fff', border: 'none' }}>Deploy Contract</Button>
                 </div>
             )}
 
             {/* Stats Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '48px' }}>
-                <Card style={{ padding: '24px', background: '#fff', border: '1px solid #e4e4e7', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-                    <div style={{ fontSize: '0.9rem', color: '#52525b', marginBottom: '8px', fontWeight: '600' }}>Active Members</div>
-                    <div style={{ fontSize: '3rem', fontWeight: 'bold', letterSpacing: '-0.02em', color: '#000' }}>{stats.activeMembers}</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '48px' }}>
+                <Card padding="lg">
+                    <div className="text-body-sm" style={{ marginBottom: '8px', fontWeight: 600 }}>Active Members</div>
+                    <div className="text-h1" style={{ color: 'var(--color-text-primary)' }}>{stats.activeMembers}</div>
                 </Card>
-                <Card style={{ padding: '24px', background: '#fff', border: '1px solid #e4e4e7', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-                    <div style={{ fontSize: '0.9rem', color: '#52525b', marginBottom: '8px', fontWeight: '600' }}>Monthly Income</div>
-                    <div style={{ fontSize: '3rem', fontWeight: 'bold', letterSpacing: '-0.02em', color: '#000' }}>${stats.monthlyRevenue}</div>
+                <Card padding="lg">
+                    <div className="text-body-sm" style={{ marginBottom: '8px', fontWeight: 600 }}>Monthly Income</div>
+                    <div className="text-h1" style={{ color: 'var(--color-text-primary)' }}>${stats.monthlyRevenue}</div>
                 </Card>
-                <Card style={{ padding: '24px', background: '#fff', border: '1px solid #e4e4e7', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-                    <div style={{ fontSize: '0.9rem', color: '#52525b', marginBottom: '8px', fontWeight: '600' }}>30-Day Growth</div>
-                    <div style={{ fontSize: '3rem', fontWeight: 'bold', letterSpacing: '-0.02em', color: '#22c55e' }}>+0%</div>
+                <Card padding="lg">
+                    <div className="text-body-sm" style={{ marginBottom: '8px', fontWeight: 600 }}>30-Day Growth</div>
+                    <div className="text-h1" style={{ color: 'var(--color-success)' }}>+0%</div>
                 </Card>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px' }}>
                 {/* Main: Getting Started */}
                 <div>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '24px' }}>Getting Started</h3>
-                    <div style={{ background: '#fff', border: '1px solid #e4e4e7', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+                    <h3 className="text-h3" style={{ marginBottom: '24px' }}>Getting Started</h3>
+                    <Card padding="none" style={{ overflow: 'hidden' }}>
                         {steps.map((step, i) => (
-                            <div key={i} style={{ padding: '20px 24px', borderBottom: '1px solid #f4f4f5', display: 'flex', alignItems: 'center', gap: '16px', opacity: step.done ? 0.5 : 1 }}>
+                            <div key={i} style={{
+                                padding: '20px 24px',
+                                borderBottom: i < steps.length - 1 ? '1px solid var(--color-border)' : 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '16px',
+                                opacity: step.done ? 0.6 : 1,
+                                background: step.done ? 'var(--color-bg-page)' : 'transparent'
+                            }}>
                                 <div style={{
                                     width: '24px', height: '24px', borderRadius: '50%',
-                                    border: step.done ? 'none' : '2px solid #a1a1aa',
-                                    background: step.done ? '#22c55e' : 'transparent',
+                                    border: step.done ? 'none' : '2px solid var(--color-border)',
+                                    background: step.done ? 'var(--color-success)' : 'transparent',
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                     color: '#fff', fontSize: '14px', fontWeight: 'bold'
                                 }}>
                                     {step.done && '✓'}
                                 </div>
-                                <div style={{ flex: 1, fontWeight: step.done ? 'normal' : '600', textDecoration: step.done ? 'line-through' : 'none', color: '#000' }}>{step.label}</div>
+                                <div style={{ flex: 1, fontWeight: step.done ? 'normal' : '600', textDecoration: step.done ? 'line-through' : 'none', color: 'var(--color-text-primary)' }}>{step.label}</div>
                                 {!step.done && (
                                     <Button
                                         variant="outline"
-                                        style={{ fontSize: '0.8rem', padding: '6px 16px', border: '1px solid #000', color: '#000' }}
+                                        size="sm"
                                         onClick={() => {
                                             if (i === 1) handleDeploy();
                                             if (i === 2) router.push('/dashboard/membership');
@@ -233,19 +247,16 @@ export default function Dashboard() {
                                 )}
                             </div>
                         ))}
-                        <div style={{ padding: '20px 24px', background: '#fafafa', textAlign: 'center', color: '#71717a', fontSize: '0.9rem' }}>
-                            {Math.round(progress)}% Complete
-                        </div>
-                    </div>
+                    </Card>
                 </div>
 
                 {/* Side: Quick Links */}
                 <div>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '24px' }}>Quick Actions</h3>
+                    <h3 className="text-h3" style={{ marginBottom: '24px' }}>Quick Actions</h3>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        <Button variant="secondary" onClick={() => router.push('/dashboard/posts')} style={{ justifyContent: 'flex-start', padding: '16px' }}>📝 Write a Post</Button>
-                        <Button variant="secondary" onClick={() => router.push('/dashboard/membership')} style={{ justifyContent: 'flex-start', padding: '16px' }}>💎 Edit Tiers</Button>
-                        <Button variant="secondary" onClick={() => router.push(`/${address}`)} style={{ justifyContent: 'flex-start', padding: '16px' }}>👀 View Public Page</Button>
+                        <Button variant="secondary" onClick={() => router.push('/dashboard/posts')} style={{ justifyContent: 'flex-start', width: '100%' }}>📝 Write a Post</Button>
+                        <Button variant="secondary" onClick={() => router.push('/dashboard/membership')} style={{ justifyContent: 'flex-start', width: '100%' }}>💎 Edit Tiers</Button>
+                        <Button variant="secondary" onClick={() => router.push(`/${address}`)} style={{ justifyContent: 'flex-start', width: '100%' }}>👀 View Public Page</Button>
                     </div>
                 </div>
             </div>
