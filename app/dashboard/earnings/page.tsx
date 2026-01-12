@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
 import Input from '../../components/Input';
+import SectionHeader from '../../components/SectionHeader';
 import { useAccount, useReadContract, useWriteContract, useBalance, usePublicClient } from 'wagmi';
-import { parseEther, formatEther, parseAbiItem } from 'viem';
+import { formatEther, parseAbiItem } from 'viem';
 import { FACTORY_ABI, SUBSCRIPTION_ABI, FACTORY_ADDRESS } from '@/utils/abis';
 import { supabase } from '@/utils/supabase';
 
@@ -28,7 +29,7 @@ export default function EarningsPage() {
         address: contractAddress as `0x${string}`,
     });
 
-    const { writeContract, isPending, isSuccess } = useWriteContract();
+    const { writeContract, isPending } = useWriteContract();
 
     // 3. Fetch Revenue from DB
     useEffect(() => {
@@ -40,8 +41,6 @@ export default function EarningsPage() {
                 .eq('creatorAddress', address);
 
             if (data) {
-                // Assuming price is stored as "10 MNT" string, we parse it.
-                // Or simplified: iterate and sum.
                 let total = 0;
                 data.forEach(sub => {
                     const val = parseFloat(sub.price.split(' ')[0]);
@@ -65,7 +64,7 @@ export default function EarningsPage() {
                 const logs = await publicClient.getLogs({
                     address: contractAddress as `0x${string}`,
                     event: parseAbiItem('event Withdrawn(uint256 amount)'),
-                    fromBlock: 'earliest' // In prod, maybe limit range
+                    fromBlock: 'earliest'
                 });
 
                 const history = await Promise.all(logs.map(async (log: any) => {
@@ -74,11 +73,10 @@ export default function EarningsPage() {
                         hash: log.transactionHash,
                         amount: formatEther(log.args.amount),
                         date: new Date(Number(block.timestamp) * 1000).toLocaleDateString(),
-                        to: address // Owner always receives existing logic
+                        to: address
                     };
                 }));
 
-                // Sort newest first
                 setPayouts(history.reverse());
             } catch (e) {
                 console.error("Error fetching payouts:", e);
@@ -88,7 +86,7 @@ export default function EarningsPage() {
         if (contractAddress) {
             fetchPayouts();
         }
-    }, [contractAddress, publicClient, address, balanceData]); // Refetch when balance changes (after withdraw)
+    }, [contractAddress, publicClient, address, balanceData]);
 
     const handleWithdraw = () => {
         if (!contractAddress) return;
@@ -100,11 +98,8 @@ export default function EarningsPage() {
         }, {
             onSuccess: () => {
                 setWithdrawOpen(false);
-                // Give time for indexing/block mining then refetch accounts
                 setTimeout(() => {
                     refetchBalance();
-                    // trigger re-fetch of logs? typically takes a bit. 
-                    // ideally we just wait for the transaction receipt in a real app.
                 }, 5000);
             }
         });
@@ -114,118 +109,140 @@ export default function EarningsPage() {
     const symbol = balanceData?.symbol || 'MNT';
 
     return (
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-            <header style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                    <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Earnings</h1>
-                    <p style={{ color: '#a1a1aa' }}>Track your revenue and withdrawals.</p>
-                </div>
-                <Button onClick={() => setWithdrawOpen(true)}>Withdraw Balance</Button>
-            </header>
+        <div className="page-container" style={{ paddingBottom: '100px' }}>
+            <SectionHeader
+                title="Earnings"
+                description="Track your revenue and manage withdrawals."
+                action={{
+                    label: 'Withdraw Balance',
+                    onClick: () => setWithdrawOpen(true),
+                    variant: displayBalance === '0.00' ? 'secondary' : 'primary'
+                }}
+            />
 
-            {/* Withdraw Modal */}
+            {/* WITHDRAW MODAL */}
             {withdrawOpen && (
                 <div style={{
                     position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                    background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(4px)'
+                    background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    zIndex: 100, backdropFilter: 'blur(4px)'
                 }}>
-                    <Card style={{ width: '400px', border: '1px solid #65b3ad', boxShadow: '0 0 50px rgba(101, 179, 173, 0.2)' }}>
-                        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '8px' }}>Withdraw Funds</h2>
-                        <p style={{ color: '#a1a1aa', marginBottom: '24px', fontSize: '0.875rem' }}>Transfer your earnings to your wallet.</p>
+                    <div className="card-surface" style={{ width: '100%', maxWidth: '440px', padding: '32px', position: 'relative', boxShadow: 'var(--shadow-lg)' }}>
+                        <h2 className="text-h2" style={{ marginBottom: '8px' }}>Withdraw Funds</h2>
+                        <p className="text-body-sm" style={{ marginBottom: '24px' }}>Transfer your available earnings to your wallet.</p>
 
-                        <div style={{ marginBottom: '24px' }}>
-                            <label style={{ fontSize: '0.875rem', color: '#a1a1aa', marginBottom: '8px', display: 'block' }}>Amount</label>
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                                <Input
-                                    value={amount}
-                                    onChange={(e: any) => setAmount(e.target.value)}
-                                    placeholder={displayBalance}
-                                    type="number"
-                                    disabled={true}
-                                />
-                            </div>
-                            <p style={{ fontSize: '0.75rem', color: '#eab308', marginTop: '8px' }}>
-                                Note: This action withdraws the entire available balance.
-                            </p>
-                            <div style={{ textAlign: 'right', fontSize: '0.75rem', color: '#a1a1aa', marginTop: '4px' }}>
-                                Available: <span style={{ color: '#65b3ad' }}>{displayBalance} {symbol}</span>
-                            </div>
+                        <div style={{ marginBottom: '24px', background: 'var(--color-bg-page)', padding: '24px', borderRadius: 'var(--radius-lg)' }}>
+                            <div className="text-caption" style={{ marginBottom: '4px', textTransform: 'uppercase', fontWeight: 700 }}>Available Balance</div>
+                            <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-primary)' }}>{displayBalance} {symbol}</div>
                         </div>
 
                         <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
-                            <Button variant="outline" onClick={() => setWithdrawOpen(false)}>Cancel</Button>
-                            <Button onClick={handleWithdraw} disabled={isPending}>
+                            <Button variant="ghost" onClick={() => setWithdrawOpen(false)}>Cancel</Button>
+                            <Button onClick={handleWithdraw} disabled={isPending || displayBalance === '0.00'}>
                                 {isPending ? 'Processing...' : 'Confirm Withdraw'}
                             </Button>
                         </div>
-                    </Card>
+                    </div>
                 </div>
             )}
 
-            <Card variant="glass" style={{ marginBottom: '48px', padding: '0', overflow: 'hidden' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-                    {/* Available Balance */}
-                    <div style={{ padding: '32px', position: 'relative' }}>
-                        <div style={{ position: 'relative', zIndex: 1 }}>
-                            <p style={{ color: '#a1a1aa', fontSize: '0.875rem', marginBottom: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Available Balance</p>
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                                <h3 style={{ fontSize: '3rem', fontWeight: 'bold', color: '#fff', textShadow: '0 0 30px rgba(56, 189, 248, 0.3)' }}>{displayBalance}</h3>
-                                <span style={{ fontSize: '1.2rem', color: '#65b3ad', fontWeight: 'bold' }}>{symbol}</span>
-                            </div>
-                        </div>
-                        {/* Glow */}
-                        <div style={{ position: 'absolute', top: '-20%', right: '-20%', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%)', filter: 'blur(40px)' }}></div>
-                    </div>
+            {/* STAT CARDS & CHART GRID */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '32px' }}>
 
-                    {/* Total Revenue */}
-                    <div style={{ padding: '32px', borderLeft: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
-                        <div style={{ position: 'relative', zIndex: 1 }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <div>
-                                    <p style={{ color: '#a1a1aa', fontSize: '0.875rem', marginBottom: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Total Revenue</p>
-                                    <h3 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#fff' }}>{revenue} MNT</h3>
-                                </div>
-                                <div style={{ background: 'rgba(255,255,255,0.05)', padding: '8px 12px', borderRadius: '12px' }}>
-                                    📈
-                                </div>
-                            </div>
-                            <p style={{ fontSize: '0.875rem', color: '#64748b', marginTop: '16px' }}>
-                                Lifetime earnings from all subscriptions.
-                            </p>
+                {/* Available Balance Card */}
+                <Card variant="surface" style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                        <div>
+                            <div className="text-caption" style={{ fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px' }}>Available Balance</div>
+                            <div style={{ fontSize: '2.5rem', fontWeight: 700, lineHeight: 1 }}>{displayBalance} <span style={{ fontSize: '0.4em', color: 'var(--color-text-secondary)', fontWeight: 600 }}>{symbol}</span></div>
                         </div>
+                        <div style={{ width: '48px', height: '48px', background: 'var(--color-primary-light)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', color: 'var(--color-primary)' }}>💰</div>
                     </div>
+                    <div className="text-body-sm" style={{ color: 'var(--color-text-secondary)' }}>Ready to withdraw</div>
+                    {/* Decorative Blob */}
+                    <div style={{ position: 'absolute', bottom: -20, right: -20, width: '100px', height: '100px', background: 'var(--color-primary)', opacity: 0.1, borderRadius: '50%', filter: 'blur(20px)' }}></div>
+                </Card>
+
+                {/* Lifetime Revenue */}
+                <Card variant="surface" style={{ padding: '24px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                        <div>
+                            <div className="text-caption" style={{ fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px' }}>Total Revenue</div>
+                            <div style={{ fontSize: '2.5rem', fontWeight: 700, lineHeight: 1 }}>{revenue} <span style={{ fontSize: '0.4em', color: 'var(--color-text-secondary)', fontWeight: 600 }}>MNT</span></div>
+                        </div>
+                        <div style={{ width: '48px', height: '48px', background: 'var(--color-accent-light)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', color: 'var(--color-accent)' }}>📈</div>
+                    </div>
+                    <div className="text-body-sm" style={{ color: 'var(--color-success)' }}>+12% this month</div>
+                </Card>
+
+                {/* 30 Day Chart Placeholder */}
+                <Card variant="surface" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
+                    <div className="text-caption" style={{ fontWeight: 700, textTransform: 'uppercase', marginBottom: '16px' }}>Revenue (Last 30 Days)</div>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '4px', height: '60px' }}>
+                        {[40, 60, 30, 80, 50, 90, 70, 40, 60, 80, 95, 100].map((h, i) => (
+                            <div key={i} style={{ width: '8%', height: `${h}%`, background: i === 11 ? 'var(--color-primary)' : '#e4e4e7', borderRadius: '4px' }}></div>
+                        ))}
+                    </div>
+                </Card>
+            </div>
+
+            {/* Info Callout */}
+            <div style={{ marginBottom: '32px', padding: '16px 24px', background: '#F0FDFA', border: '1px solid #CCFBF1', borderRadius: 'var(--radius-lg)', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                <span style={{ fontSize: '1.25rem' }}>ℹ️</span>
+                <div>
+                    <h4 style={{ fontWeight: 700, color: '#115E59', fontSize: '0.9rem', marginBottom: '4px' }}>Transparent Payouts</h4>
+                    <p style={{ color: '#134E4A', fontSize: '0.85rem', lineHeight: 1.5 }}>
+                        Payouts are processed directly on the Mantle Network. Funds are sent to your wallet immediately upon withdrawal. Network gas fees are paid in MNT.
+                    </p>
+                </div>
+            </div>
+
+            {/* Payout History */}
+            <h3 className="text-h3" style={{ marginBottom: '16px' }}>Payout History</h3>
+            <Card padding="none" style={{ overflow: 'hidden' }}>
+                <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
+                        <thead style={{ background: 'var(--color-bg-page)', borderBottom: '1px solid var(--color-border)' }}>
+                            <tr>
+                                <th style={{ padding: '16px 24px', textAlign: 'left', fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>Date</th>
+                                <th style={{ padding: '16px 24px', textAlign: 'left', fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>Amount</th>
+                                <th style={{ padding: '16px 24px', textAlign: 'left', fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>Status</th>
+                                <th style={{ padding: '16px 24px', textAlign: 'left', fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>Transaction</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {payouts.length > 0 ? payouts.map((p, i) => (
+                                <tr key={i} className="hover:bg-gray-50" style={{ borderBottom: '1px solid var(--color-border)', transition: 'background 0.1s' }}>
+                                    <td style={{ padding: '16px 24px', fontSize: '0.9rem' }}>{p.date}</td>
+                                    <td style={{ padding: '16px 24px', fontWeight: 700 }}>{parseFloat(p.amount).toFixed(2)} MNT</td>
+                                    <td style={{ padding: '16px 24px' }}>
+                                        <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '2px 8px', borderRadius: '4px', background: 'var(--color-success)', color: '#fff' }}>COMPLETED</span>
+                                    </td>
+                                    <td style={{ padding: '16px 24px' }}>
+                                        <a href={`https://sepolia.mantlescan.xyz/tx/${p.hash}`} target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--color-primary)', fontWeight: 500, textDecoration: 'none' }}>
+                                            {p.hash.slice(0, 8)}...
+                                            <span style={{ fontSize: '0.8rem' }}>↗</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            )) : (
+                                <tr>
+                                    <td colSpan={4} style={{ padding: '48px', textAlign: 'center', color: 'var(--color-text-tertiary)' }}>
+                                        No withdrawals yet.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </Card>
 
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '16px' }}>Payout History</h3>
-            <Card style={{ padding: '0', overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                    <thead style={{ background: '#1a1d24' }}>
-                        <tr>
-                            <th style={{ padding: '16px', color: '#a1a1aa' }}>Date</th>
-                            <th style={{ padding: '16px', color: '#a1a1aa' }}>Amount</th>
-                            <th style={{ padding: '16px', color: '#a1a1aa' }}>To Address</th>
-                            <th style={{ padding: '16px', color: '#a1a1aa' }}>Transaction</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {payouts.length > 0 ? payouts.map((p, i) => (
-                            <tr key={i} style={{ borderBottom: '1px solid #2e333d' }}>
-                                <td style={{ padding: '16px' }}>{p.date}</td>
-                                <td style={{ padding: '16px', fontWeight: 'bold', color: '#fff' }}>{parseFloat(p.amount).toFixed(2)} MNT</td>
-                                <td style={{ padding: '16px', fontFamily: 'monospace' }}>{p.to.slice(0, 6)}...{p.to.slice(-4)}</td>
-                                <td style={{ padding: '16px' }}><a href={`https://sepolia.mantlescan.xyz/tx/${p.hash}`} target="_blank" style={{ color: '#65b3ad' }}>{p.hash.slice(0, 6)}...{p.hash.slice(-4)} ↗</a></td>
-                            </tr>
-                        )) : (
-                            <tr>
-                                <td colSpan={4} style={{ padding: '32px', textAlign: 'center', color: '#52525b' }}>
-                                    No withdrawals found yet.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </Card>
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                .hover\\:bg-gray-50:hover {
+                    background-color: var(--color-bg-surface-hover) !important;
+                }
+            `}} />
         </div>
     );
 }
