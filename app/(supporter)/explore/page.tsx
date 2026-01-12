@@ -128,7 +128,7 @@ function ExploreContent() {
                             </div>
 
                             <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #f4f4f5', display: 'flex', gap: '16px', fontSize: '0.85rem', color: '#71717a' }}>
-                                <span><strong>{Math.floor(Math.random() * 500) + 10}</strong> Patrons</span>
+                                <span><strong>{Math.floor(Math.random() * 500) + 10}</strong> Backrs</span>
                                 <span>Creating <strong>Video</strong></span>
                             </div>
                         </div>

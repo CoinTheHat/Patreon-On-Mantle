@@ -13,6 +13,22 @@ export default function StudioOverview() {
     const router = useRouter();
     const [checklistVisible, setChecklistVisible] = useState(true);
 
+    const [stats, setStats] = useState({ totalRevenue: 0, activeMembers: 0, monthlyRecurring: 0 });
+
+    useEffect(() => {
+        if (!address) return;
+        fetch(`/api/stats?address=${address}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data) setStats({
+                    totalRevenue: data.totalRevenue || 0,
+                    activeMembers: data.activeMembers || 0,
+                    monthlyRecurring: data.monthlyRecurring || 0
+                });
+            })
+            .catch(err => console.error('Failed to fetch stats', err));
+    }, [address]);
+
     const checklistItems = [
         { label: 'Connect Wallet', done: true },
         { label: 'Set Display Name', done: true },
@@ -70,8 +86,8 @@ export default function StudioOverview() {
                         <span className="text-caption" style={{ fontWeight: 700, textTransform: 'uppercase', color: 'var(--color-text-tertiary)' }}>Total Revenue</span>
                         <span style={{ fontSize: '1.25rem' }}>💰</span>
                     </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1, marginBottom: '8px' }}>{formatPrice(1240.50)}</div>
-                    <div className="text-body-sm" style={{ color: 'var(--color-success)' }}>+12% from last month</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1, marginBottom: '8px' }}>{formatPrice(stats.totalRevenue)}</div>
+                    <div className="text-body-sm" style={{ color: 'var(--color-success)' }}>+0% from last month</div>
                 </Card>
 
                 <Card variant="surface" style={{ padding: '24px' }}>
@@ -79,8 +95,8 @@ export default function StudioOverview() {
                         <span className="text-caption" style={{ fontWeight: 700, textTransform: 'uppercase', color: 'var(--color-text-tertiary)' }}>Active Members</span>
                         <span style={{ fontSize: '1.25rem' }}>👥</span>
                     </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1, marginBottom: '8px' }}>142</div>
-                    <div className="text-body-sm" style={{ color: 'var(--color-success)' }}>+5 new this week</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1, marginBottom: '8px' }}>{stats.activeMembers}</div>
+                    <div className="text-body-sm" style={{ color: 'var(--color-success)' }}>+0 new this week</div>
                 </Card>
 
                 <Card variant="surface" style={{ padding: '24px' }}>
@@ -88,7 +104,7 @@ export default function StudioOverview() {
                         <span className="text-caption" style={{ fontWeight: 700, textTransform: 'uppercase', color: 'var(--color-text-tertiary)' }}>Monthly Recurring</span>
                         <span style={{ fontSize: '1.25rem' }}>📅</span>
                     </div>
-                    <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1, marginBottom: '8px' }}>{formatPrice(450)}</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 800, lineHeight: 1, marginBottom: '8px' }}>{formatPrice(stats.monthlyRecurring)}</div>
                     <div className="text-body-sm" style={{ color: 'var(--color-text-tertiary)' }}>Estimated revenue</div>
                 </Card>
             </div>
