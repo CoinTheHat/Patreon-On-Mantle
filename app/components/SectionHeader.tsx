@@ -9,6 +9,7 @@ interface SectionHeaderProps {
         onClick: () => void;
         icon?: React.ReactNode;
         variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+        disabled?: boolean;
     };
     children?: React.ReactNode; // For custom actions
 }
@@ -23,7 +24,12 @@ export default function SectionHeader({ title, description, action, children }: 
             <div style={{ display: 'flex', gap: '12px' }}>
                 {children}
                 {action && (
-                    <Button onClick={action.onClick} variant={action.variant || "primary"} leftIcon={action.icon}>
+                    <Button
+                        onClick={action.onClick}
+                        variant={action.variant || "primary"}
+                        leftIcon={action.icon}
+                        disabled={action.disabled}
+                    >
                         {action.label}
                     </Button>
                 )}
