@@ -4,11 +4,12 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
     error?: string;
     helperText?: string;
+    containerStyle?: React.CSSProperties;
 }
 
-export default function Input({ label, error, helperText, style, ...props }: InputProps) {
+export default function Input({ label, error, helperText, style, containerStyle, ...props }: InputProps) {
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%', marginBottom: '16px', ...containerStyle }}>
             {label && (
                 <label style={{
                     fontSize: '0.875rem',

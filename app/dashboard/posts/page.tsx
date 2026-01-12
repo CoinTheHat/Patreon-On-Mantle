@@ -260,14 +260,15 @@ export default function PostsPage() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
 
                     {/* Left: Filter & Search */}
-                    <div style={{ display: 'flex', gap: '16px', flex: 1, minWidth: '300px', alignItems: 'center' }}>
-                        <div style={{ position: 'relative', flex: 1, maxWidth: '320px' }}>
-                            <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>🔍</span>
+                    <div style={{ display: 'flex', gap: '16px', flex: 1, minWidth: '300px', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <div style={{ position: 'relative', flex: 1, maxWidth: '320px', minWidth: '200px' }}>
+                            <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5, zIndex: 1 }}>🔍</span>
                             <Input
                                 placeholder="Search library..."
                                 value={searchQuery}
                                 onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                                style={{ paddingLeft: '36px', margin: 0, height: '40px', background: '#fff' }}
+                                style={{ paddingLeft: '36px', height: '40px', background: '#fff' }}
+                                containerStyle={{ marginBottom: 0 }}
                             />
                         </div>
 
@@ -298,7 +299,7 @@ export default function PostsPage() {
             </div>
 
             {/* TABLE LIST VIEW */}
-            <Card padding="none" style={{ overflow: 'hidden', background: '#fff', border: '1px solid var(--color-border)' }}>
+            <Card padding="none" style={{ overflow: 'visible', background: '#fff', border: '1px solid var(--color-border)' }}>
                 <div style={{ overflowX: 'auto' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
                         <thead style={{ background: 'var(--color-bg-page)', borderBottom: '1px solid var(--color-border)' }}>

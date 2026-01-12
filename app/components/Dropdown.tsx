@@ -9,7 +9,7 @@ export default function Dropdown({ trigger, children }: DropdownProps) {
     const [open, setOpen] = React.useState(false);
 
     return (
-        <div style={{ position: 'relative' }} onMouseLeave={() => setOpen(false)}>
+        <div style={{ position: 'relative', display: 'inline-block' }} onMouseLeave={() => setOpen(false)}>
             <div onClick={() => setOpen(!open)} style={{ cursor: 'pointer' }}>
                 {trigger}
             </div>
