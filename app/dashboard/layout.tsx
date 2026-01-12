@@ -72,6 +72,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         );
     }
 
+    const currentTitle = menuItems.find(i => i.path === pathname)?.label || 'Dashboard';
+
     return (
         <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg-page)', color: 'var(--color-text-primary)', fontFamily: 'var(--font-family)' }}>
             <style dangerouslySetInnerHTML={{
@@ -86,6 +88,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     top: 0;
                     bottom: 0;
                     z-index: 50;
+                    left: 0;
                     transition: transform 0.3s ease;
                 }
                 
@@ -105,9 +108,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 }
 
                 .nav-item {
-                    padding: 10px 16px;
-                    margin: 2px 12px;
-                    border-radius: var(--radius-sm);
+                    padding: 12px 18px;
+                    margin: 4px 0;
                     cursor: pointer;
                     color: var(--color-text-secondary);
                     font-weight: 500;
@@ -116,9 +118,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     gap: 12px;
                     font-size: 0.95rem;
                     transition: all 0.2s;
+                    border-left: 3px solid transparent;
                 }
                 .nav-item:hover { background: var(--color-bg-page); color: var(--color-text-primary); }
-                .nav-item.active { background: var(--color-primary-light); color: var(--color-primary); font-weight: 600; }
+                .nav-item.active { 
+                    background: var(--color-primary-light); 
+                    color: var(--color-primary); 
+                    font-weight: 600; 
+                    border-left: 3px solid var(--color-primary);
+                }
             `}} />
 
             {/* Mobile Header */}
@@ -141,20 +149,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                  `}} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <button onClick={() => setIsSidebarOpen(true)} style={{ background: 'none', border: 'none', color: 'var(--color-text-primary)', fontSize: '1.5rem' }}>☰</button>
-                    <span style={{ fontWeight: 'bold' }}>Backr Dashboard</span>
+                    <span style={{ fontWeight: 'bold' }}>Backr Studio</span>
                 </div>
                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--color-text-primary)' }}></div>
             </div>
 
             {/* Sidebar */}
             <aside className={`dashboard-sidebar ${isSidebarOpen ? 'open' : ''}`}>
-                <div style={{ padding: '24px' }}>
+                <div style={{ padding: '24px 24px 12px' }}>
                     <div
                         style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', marginBottom: '32px' }}
                         onClick={() => router.push('/')}
                     >
                         {/* Logo */}
-                        <div style={{ width: '32px', height: '32px', background: 'var(--color-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: '32px', height: '32px', background: 'var(--color-primary)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <div style={{ width: '14px', height: '14px', background: '#fff', borderRadius: '2px' }}></div>
                         </div>
                         <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>Backr</div>
@@ -162,22 +170,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </div>
 
                     {/* Quick Action */}
-                    <Button
-                        onClick={() => router.push('/dashboard/posts')}
-                        style={{ width: '100%', justifyContent: 'center', borderRadius: '9999px', marginBottom: '24px' }}
-                    >
-                        + Create Post
-                    </Button>
+                    <div style={{ marginBottom: '24px' }}>
+                        <Button
+                            onClick={() => router.push('/dashboard/posts')}
+                            style={{ width: '100%', justifyContent: 'center', borderRadius: '12px' }}
+                        >
+                            + Create Post
+                        </Button>
+                    </div>
 
                     {/* Menu */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                         {menuItems.map(item => (
                             <div
                                 key={item.path}
                                 className={`nav-item ${pathname === item.path ? 'active' : ''}`}
                                 onClick={() => router.push(item.path)}
                             >
-                                <span style={{ opacity: 0.7 }}>{item.icon}</span>
+                                <span style={{ opacity: 0.8, fontSize: '1.1rem' }}>{item.icon}</span>
                                 {item.label}
                                 {item.external && <span style={{ marginLeft: 'auto', fontSize: '0.7rem', opacity: 0.5 }}>↗</span>}
                             </div>
@@ -186,8 +196,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </div>
 
                 {/* User Profile at Bottom */}
-                <div style={{ marginTop: 'auto', padding: '24px', borderTop: '1px solid var(--color-border)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <div style={{ marginTop: 'auto', padding: '16px 24px', borderTop: '1px solid var(--color-border)', background: 'var(--color-bg-surface)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                         <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: profile?.avatarUrl ? `url(${profile.avatarUrl}) center/cover` : 'var(--color-bg-page)', border: '1px solid var(--color-border)' }}></div>
                         <div style={{ overflow: 'hidden' }}>
                             <div style={{ fontSize: '0.9rem', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--color-text-primary)' }}>{displayName}</div>
@@ -198,7 +208,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         onClick={() => { disconnect(); router.push('/'); }}
                         style={{ background: 'none', border: 'none', color: 'var(--color-text-secondary)', fontSize: '0.85rem', cursor: 'pointer', padding: 0 }}
                     >
-                        Log Out
+                        Sign Out
                     </button>
 
                     {/* Mobile Close */}
@@ -223,16 +233,42 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             {/* Content Area */}
             <main className="main-content">
-                <header style={{ padding: '24px 40px', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--color-bg-surface)' }}>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--color-text-primary)' }}>
-                        {menuItems.find(i => i.path === pathname)?.label || 'Dashboard'}
-                    </h2>
-                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                        {/* Network Status / Etc */}
-                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-success)' }}></div>
-                        <span style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>Mantle Network</span>
+                {/* Topbar */}
+                <header style={{
+                    padding: '16px 40px',
+                    borderBottom: '1px solid var(--color-border)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    background: 'var(--color-bg-surface)',
+                    height: 'var(--header-height)',
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 30
+                }}>
+                    {/* Left: Breadcrumb / Context */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-text-secondary)', fontSize: '0.9rem' }}>
+                        <span style={{ cursor: 'pointer' }} onClick={() => router.push('/dashboard')}>Studio</span>
+                        <span style={{ color: 'var(--color-text-tertiary)' }}>/</span>
+                        <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>{currentTitle}</span>
+                    </div>
+
+                    {/* Right: Network Status + Profile/Wallet */}
+                    <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+                        {/* Network Pill */}
+                        <div style={{
+                            display: 'flex', alignItems: 'center', gap: '8px',
+                            padding: '6px 12px', borderRadius: '20px',
+                            background: 'var(--color-bg-page)', border: '1px solid var(--color-border)',
+                            fontSize: '0.85rem', fontWeight: 500
+                        }}>
+                            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-success)' }}></div>
+                            <span>Mantle Network</span>
+                        </div>
                     </div>
                 </header>
+
+                {/* Page Content */}
                 <div style={{ padding: '40px', maxWidth: 'var(--max-width-page)', width: '100%', margin: '0 auto' }}>
                     {children}
                 </div>
