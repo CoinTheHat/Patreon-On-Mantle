@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAccount } from 'wagmi';
+import ChatMockup from './components/ChatMockup';
 
 export default function Home() {
   const router = useRouter();
@@ -20,38 +21,27 @@ export default function Home() {
         /* Typography */
         .headline-serif {
             font-family: var(--font-serif);
-            font-weight: 400; /* Editorial style */
+            font-weight: 400;
             letter-spacing: -0.02em;
         }
 
         /* Hero */
         .hero-section {
-          background: linear-gradient(135deg, #7FA1F7 0%, #5865F2 100%); /* Brand Blue Gradient */
+          background: linear-gradient(135deg, #7FA1F7 0%, #5865F2 100%);
           min-height: 90vh;
           padding: 120px var(--padding-x) 100px;
           position: relative;
           color: #fff;
           display: flex;
           align-items: center;
-          overflow: hidden;
+          overflow: visible;
         }
 
         .hero-title {
-            font-size: clamp(3.5rem, 8vw, 6.5rem);
-            line-height: 0.95;
-            margin-bottom: 32px;
+            font-size: clamp(2.5rem, 7vw, 5.5rem);
+            line-height: 1.05;
+            margin-bottom: 24px;
         }
-
-        /* Floating Images Collage */
-        .collage-img {
-            position: absolute;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease;
-            object-fit: cover;
-            z-index: 1;
-        }
-        .collage-img:hover { z-index: 10; transform: scale(1.05); }
 
         /* Phone App Mockup */
         .phone-mockup {
@@ -86,23 +76,31 @@ export default function Home() {
         }
         .btn-dark { background: #000; color: #fff; }
         .btn-dark:hover { transform: scale(1.05); background: #222; }
-        .btn-light { background: #fff; color: #000; }
-        .btn-light:hover { transform: scale(1.05); background: #f0f0f0; }
+        .btn-light-outline { background: transparent; color: #000; border: 2px solid #000; }
+        .btn-light-outline:hover { background: rgba(0,0,0,0.05); }
 
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+        
+        @media (max-width: 768px) {
+            .hero-grid { grid-template-columns: 1fr !important; }
+            .collage-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .chat-section-grid { grid-template-columns: 1fr !important; }
+        }
       `}} />
 
-      {/* Navigation - Transparent on Blue */}
+      {/* Navigation */}
       <nav className="nav-container" style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 50, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div className="headline-serif" style={{ fontSize: '1.5rem', fontWeight: 'bold', cursor: 'pointer', color: '#000' }} onClick={() => router.push('/')}>
           Backr
         </div>
         <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-          <span className="headline-serif" style={{ cursor: 'pointer', color: '#000', fontSize: '1.1rem' }} onClick={() => router.push('/explore')}>Find Creators</span>
           {isConnected ? (
             <button onClick={() => router.push('/dashboard')} className="btn-pill btn-dark" style={{ fontSize: '0.9rem', padding: '12px 24px' }}>Dashboard</button>
           ) : (
-            <button onClick={() => router.push('/dashboard')} className="btn-pill btn-light" style={{ fontSize: '0.9rem', padding: '12px 24px', border: '1px solid #000' }}>Log In</button>
+            <>
+              <span style={{ cursor: 'pointer', fontWeight: '600', fontSize: '1rem' }} onClick={() => router.push('/explore')}>Find Creators</span>
+              <button onClick={() => router.push('/dashboard')} className="btn-pill btn-dark" style={{ fontSize: '0.9rem', padding: '12px 24px' }}>Get Started</button>
+            </>
           )}
         </div>
       </nav>
@@ -110,71 +108,145 @@ export default function Home() {
       <main>
         {/* HERO SECTION */}
         <section className="hero-section">
-          <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%', display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '48px', alignItems: 'center', zIndex: 10 }}>
+          <div className="hero-grid" style={{ maxWidth: '1400px', margin: '0 auto', width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center', zIndex: 10 }}>
 
             {/* Left: Text Content */}
             <div>
               <h1 className="hero-title headline-serif">
-                Creativity<br />powered<br />by <span style={{ fontStyle: 'italic' }}>fandom</span>
+                Turning passions into <span style={{ fontStyle: 'italic' }}>businesses</span>
               </h1>
-              <p style={{ fontSize: '1.35rem', lineHeight: '1.6', maxWidth: '540px', marginBottom: '48px', opacity: 0.95 }}>
-                Backr is the best place to build community with your biggest fans, share exclusive work, and turn your passion into a lasting creative business.
-              </p>
-              <button className="btn-pill btn-dark" onClick={() => router.push('/dashboard')}>
-                Get Started
-              </button>
-            </div>
 
-            {/* Right: Abstract Collage Visuals */}
-            <div style={{ position: 'relative', height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {/* Phone App Mockup centered */}
-              <div style={{ position: 'relative', zIndex: 5, transform: 'rotate(-4deg)', animation: 'float 6s ease-in-out infinite' }}>
-                <div className="phone-mockup">
-                  <div className="phone-screen">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px', fontSize: '0.8rem', color: '#888' }}>
-                      <span>9:41</span><span>Signal</span>
-                    </div>
-                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '4px' }}>Insights</h3>
-                    <div style={{ color: '#888', fontSize: '0.9rem', marginBottom: '32px' }}>This Month</div>
-
-                    <div style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '8px' }}>$16,414</div>
-                    <div style={{ color: '#4ade80' }}>+12% vs last month</div>
-
-                    <div style={{ marginTop: '48px', height: '120px', display: 'flex', alignItems: 'flex-end', gap: '8px' }}>
-                      {[30, 45, 35, 60, 50, 70, 65, 85].map((h, i) => (
-                        <div key={i} style={{ flex: 1, background: i === 7 ? '#fff' : '#333', height: `${h}%`, borderRadius: '4px' }}></div>
-                      ))}
-                    </div>
-                  </div>
+              {/* Value Props */}
+              <div style={{ marginTop: '48px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <div>
+                  <h3 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '8px' }}>More ways to earn</h3>
+                  <p style={{ fontSize: '1.05rem', lineHeight: '1.6', opacity: 0.95 }}>
+                    Build lasting revenue streams with memberships, exclusive content, and direct fan support.
+                  </p>
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '8px' }}>Unlock growth</h3>
+                  <p style={{ fontSize: '1.05rem', lineHeight: '1.6', opacity: 0.95 }}>
+                    Get powerful analytics, community tools, and tap into a growing creator ecosystem.
+                  </p>
                 </div>
               </div>
 
-              {/* Floating Elements around phone */}
-              <img src="/images/home_visuals/music.png" className="collage-img" style={{ top: '10%', right: '0%', width: '180px', height: '240px', transform: 'rotate(6deg)' }} />
-              <img src="/images/home_visuals/art.png" className="collage-img" style={{ bottom: '5%', left: '-10%', width: '200px', height: '200px', transform: 'rotate(-8deg)' }} />
-              <img src="/images/home_visuals/podcast.png" className="collage-img" style={{ top: '0%', left: '0%', width: '160px', height: '160px', borderRadius: '50%', border: '4px solid #fff' }} />
+              <button className="btn-pill btn-dark" style={{ marginTop: '48px' }} onClick={() => router.push('/dashboard')}>
+                Set up shop
+              </button>
+            </div>
+
+            {/* Right: Phone Mockup */}
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ transform: 'rotate(-4deg)', animation: 'float 6s ease-in-out infinite' }}>
+                <div className="phone-mockup">
+                  <div className="phone-screen">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px', fontSize: '0.8rem', color: '#888' }}>
+                      <span>9:41</span><span>●●●●</span>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '16px', marginBottom: '32px', borderBottom: '1px solid #333', paddingBottom: '16px' }}>
+                      {['Membership', 'Shop', 'Earnings', 'Posts'].map((tab, i) => (
+                        <div key={tab} style={{ fontSize: '0.85rem', color: i === 2 ? '#fbbf24' : '#888', fontWeight: i === 2 ? '700' : '400', cursor: 'pointer' }}>{tab}</div>
+                      ))}
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                      <select style={{ background: 'transparent', border: '1px solid #333', color: '#fff', padding: '8px', borderRadius: '8px', fontSize: '0.85rem' }}>
+                        <option>Past year</option>
+                      </select>
+                      <select style={{ background: 'transparent', border: '1px solid #333', color: '#fff', padding: '8px', borderRadius: '8px', fontSize: '0.85rem' }}>
+                        <option>All earnings</option>
+                      </select>
+                    </div>
+
+                    <div style={{ fontSize: '0.85rem', color: '#10b981', marginBottom: '16px' }}>In progress earnings Sept 2023</div>
+                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '32px' }}>$16,414.27</div>
+
+                    <div style={{ height: '120px', display: 'flex', alignItems: 'flex-end', gap: '8px', marginBottom: '24px' }}>
+                      {[30, 45, 35, 60, 50, 70, 65, 85].map((h, i) => (
+                        <div key={i} style={{ flex: 1, background: i === 7 ? '#fbbf24' : '#333', height: `${h}%`, borderRadius: '4px' }}></div>
+                      ))}
+                    </div>
+
+                    <div style={{ fontSize: '0.9rem', fontWeight: '600', marginBottom: '12px' }}>Monthly earnings details</div>
+                    {['Sept 2023 $16,414.27', 'Aug 2023 $14,005.13', 'July 2023 $15,278.41'].map((item, i) => (
+                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #222', fontSize: '0.85rem' }}>
+                        <span>{item.split(' $')[0]}</span>
+                        <span>${item.split(' $')[1]}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* FEATURE HIGHLIGHTS */}
-        <section style={{ padding: '120px var(--padding-x)', background: '#fff' }}>
-          <h2 className="headline-serif" style={{ fontSize: '3.5rem', textAlign: 'center', marginBottom: '80px', color: '#000' }}>
-            Complete creative control.
-          </h2>
+        {/* BLUE SECTION - Create What Excites You */}
+        <section style={{ background: 'linear-gradient(180deg, #a8c0f7 0%, #7FA1F7 100%)', padding: '100px var(--padding-x)', color: '#000' }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
+            <p style={{ fontSize: '1.3rem', lineHeight: '1.7', maxWidth: '800px', margin: '0 auto 48px' }}>
+              Backr is your space to create what excites you most, rough or polished, big or small. Thousands of creators use Backr to share videos, podcasts, writing, art, music, and more with their most passionate fans.
+            </p>
+            <button className="btn-pill btn-dark" onClick={() => router.push('/dashboard')}>
+              Create on your terms
+            </button>
+          </div>
+        </section>
 
-          <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '40px' }}>
-            {[
-              { title: 'Your newsletter', desc: 'Own your list. Reach every fan directly, no algorithms.', color: '#EF4444' },
-              { title: 'Your rules', desc: 'Set your own prices, tiers, and benefits.', color: '#3B82F6' },
-              { title: 'Your community', desc: 'A safe space for your biggest supporters to connect.', color: '#fbbf24' }
-            ].map((item, i) => (
-              <div key={i} style={{ padding: '40px', background: '#f8fafc', borderRadius: '24px' }}>
-                <div style={{ width: '60px', height: '60px', background: item.color, borderRadius: '50%', marginBottom: '24px' }}></div>
-                <h3 className="headline-serif" style={{ fontSize: '2rem', marginBottom: '16px' }}>{item.title}</h3>
-                <p style={{ fontSize: '1.1rem', color: '#52525b', lineHeight: '1.6' }}>{item.desc}</p>
+        {/* CREATORS. FANS. NOTHING IN BETWEEN. */}
+        <section style={{ padding: '120px var(--padding-x)', background: 'linear-gradient(180deg, #7FA1F7 0%, #a8c0f7 100%)' }}>
+          <div className="chat-section-grid" style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
+            <div>
+              <h2 className="headline-serif" style={{ fontSize: 'clamp(3rem, 6vw, 5rem)', lineHeight: '1.05', marginBottom: '32px', color: '#000' }}>
+                Creators. Fans.<br />Nothing in between.
+              </h2>
+              <p style={{ fontSize: '1.15rem', lineHeight: '1.7', color: '#111', marginBottom: '32px' }}>
+                Backr gives you a direct line of access to your fan community, with no ads or gatekeepers in the way.
+              </p>
+              <p style={{ fontSize: '1.15rem', lineHeight: '1.7', color: '#111' }}>
+                Through real-time group chats, comments, DMs, and even directly over email, you can connect more deeply and directly with your community here than anywhere else.
+              </p>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <ChatMockup />
+            </div>
+          </div>
+        </section>
+
+        {/* TESTIMONIAL BANNER */}
+        <section style={{ background: '#1f2937', color: '#fff', padding: '64px var(--padding-x)', textAlign: 'center' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+            <p style={{ fontSize: '1.5rem', lineHeight: '1.6', fontStyle: 'italic', marginBottom: '24px' }}>
+              "Backr provides a space for artists to sustain ourselves by connecting us directly to our own communities."
+            </p>
+            <p style={{ fontSize: '1.1rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '2px', opacity: 0.8 }}>
+              — Creator on Backr
+            </p>
+          </div>
+        </section>
+
+        {/* CREATOR COLLAGE - Creativity powered by fandom */}
+        <section style={{ padding: '120px var(--padding-x)', background: 'linear-gradient(180deg, #d4dff9 0%, #a8c0f7 100%)' }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            <div style={{ position: 'relative', marginBottom: '80px' }}>
+              <h2 className="headline-serif" style={{ fontSize: 'clamp(3.5rem, 7vw, 6rem)', lineHeight: '1.05', color: '#8b5a3c', marginBottom: '80px' }}>
+                Creativity<br />powered<br />by fandom
+              </h2>
+
+              {/* Creator Grid */}
+              <div className="collage-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '48px' }}>
+                <div style={{ aspectRatio: '2/3', borderRadius: '16px', background: 'url(/images/home_visuals/art.png) center/cover', boxShadow: '0 10px 30px rgba(0,0,0,0.15)' }}></div>
+                <div style={{ aspectRatio: '2/3', borderRadius: '16px', background: 'url(/images/home_visuals/music.png) center/cover', boxShadow: '0 10px 30px rgba(0,0,0,0.15)' }}></div>
+                <div style={{ aspectRatio: '2/3', borderRadius: '16px', background: 'url(/images/home_visuals/podcast.png) center/cover', boxShadow: '0 10px 30px rgba(0,0,0,0.15)' }}></div>
               </div>
-            ))}
+            </div>
+
+            <p style={{ fontSize: '1.4rem', lineHeight: '1.6', color: '#8b5a3c', maxWidth: '700px', fontWeight: '500' }}>
+              Backr is the best place to build community with your biggest fans, share exclusive work, and turn your passion into a lasting creative business.
+            </p>
           </div>
         </section>
 

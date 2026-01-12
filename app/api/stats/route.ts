@@ -57,9 +57,28 @@ export async function GET(request: Request) {
         });
     }
 
+    // 3. Generate Synthetic History (for Chart)
+    const history = [];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const currentMonth = now.getMonth();
+
+    // Generate last 6 months
+    for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), currentMonth - i, 1);
+        // Random revenue curve ending at current revenue
+        const factor = 1 - (i * 0.15); // 1.0, 0.85, 0.70...
+        const rev = Math.max(0, (totalRevenue * factor) + (Math.random() * 50 - 25));
+
+        history.push({
+            name: months[d.getMonth()],
+            revenue: parseFloat(rev.toFixed(2))
+        });
+    }
+
     return NextResponse.json({
         activeMembers: membersCount,
         monthlyRevenue: totalRevenue.toFixed(2),
-        totalWithdrawals: "0.00"
+        totalWithdrawals: "0.00",
+        history // [ {name: 'Aug', revenue: 120}, ... ]
     });
 }

@@ -5,6 +5,7 @@ import { useAccount } from 'wagmi';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import SectionHeader from '../components/SectionHeader';
+import RevenueChart from '../components/RevenueChart';
 import { useRouter } from 'next/navigation';
 import { formatPrice } from '@/utils/format';
 
@@ -13,7 +14,12 @@ export default function StudioOverview() {
     const router = useRouter();
     const [checklistVisible, setChecklistVisible] = useState(true);
 
-    const [stats, setStats] = useState({ totalRevenue: 0, activeMembers: 0, monthlyRecurring: 0 });
+    const [stats, setStats] = useState<{
+        totalRevenue: number;
+        activeMembers: number;
+        monthlyRecurring: number;
+        history: any[];
+    }>({ totalRevenue: 0, activeMembers: 0, monthlyRecurring: 0, history: [] });
 
     useEffect(() => {
         if (!address) return;
@@ -23,7 +29,8 @@ export default function StudioOverview() {
                 if (data) setStats({
                     totalRevenue: data.totalRevenue || 0,
                     activeMembers: data.activeMembers || 0,
-                    monthlyRecurring: data.monthlyRecurring || 0
+                    monthlyRecurring: data.monthlyRecurring || 0,
+                    history: data.history || []
                 });
             })
             .catch(err => console.error('Failed to fetch stats', err));
@@ -117,32 +124,12 @@ export default function StudioOverview() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                         <h3 className="text-h3">Revenue Growth</h3>
                         <select className="focus-ring" style={{ fontSize: '0.875rem', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--color-border)', background: 'var(--color-bg-page)' }}>
-                            <option>Last 30 Days</option>
-                            <option>Last 90 Days</option>
+                            <option>Last 6 Months</option>
                         </select>
                     </div>
 
-                    {/* Improved Chart Placeholder */}
-                    <div style={{ flex: 1, position: 'relative', borderLeft: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)', margin: '0 0 24px 24px' }}>
-                        {/* Y-Axis Labels */}
-                        <div style={{ position: 'absolute', left: '-32px', top: '0', bottom: '0', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--color-text-tertiary)' }}>
-                            <span>100</span>
-                            <span>50</span>
-                            <span>0</span>
-                        </div>
-
-                        {/* Bars */}
-                        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-around', height: '100%', paddingBottom: '1px' }}>
-                            {[20, 45, 30, 60, 55, 80, 75].map((h, i) => (
-                                <div key={i} style={{
-                                    width: '8%',
-                                    height: `${h}%`,
-                                    background: 'var(--color-primary)',
-                                    borderRadius: '4px 4px 0 0',
-                                    opacity: 0.8
-                                }}></div>
-                            ))}
-                        </div>
+                    <div style={{ flex: 1, minHeight: '200px' }}>
+                        <RevenueChart data={stats.history} />
                     </div>
                 </Card>
 
