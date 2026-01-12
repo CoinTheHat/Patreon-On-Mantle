@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
+import SectionHeader from '../../components/SectionHeader';
 import Input from '../../components/Input';
 import { useAccount } from 'wagmi';
 

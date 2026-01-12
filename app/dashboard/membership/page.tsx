@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi';
 import Button from '../../components/Button';
 import Card from '../../components/Card';
+import SectionHeader from '../../components/SectionHeader';
 import Input from '../../components/Input';
 import { SUBSCRIPTION_ABI, FACTORY_ABI, FACTORY_ADDRESS } from '@/utils/abis';
 import { parseEther } from 'viem';
