@@ -11,6 +11,7 @@ import { Address } from 'viem';
 import { useToast } from '../components/Toast';
 import confetti from 'canvas-confetti';
 import { formatPrice, formatPlural } from '@/utils/format';
+import CheckoutModal from '../components/CheckoutModal';
 
 export default function CreatorPage({ params }: { params: Promise<{ creator: string }> }) {
     const { creator } = use(params);
@@ -70,38 +71,54 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
     const isSubscribed = memberData ? Number((memberData as any)[0]) > Math.floor(Date.now() / 1000) : false;
     const memberTierId = memberData ? Number((memberData as any)[1]) : -1;
 
+    // Checkout State
+    const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
+    const [selectedTierIndex, setSelectedTierIndex] = useState<number | null>(null);
+    const [checkoutStatus, setCheckoutStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle');
+
     // Subscription Transaction
-    const { data: hash, writeContract } = useWriteContract();
-    const { isSuccess: isSubscribedOnChain } = useWaitForTransactionReceipt({ hash });
+    const { data: hash, writeContract, error: writeError } = useWriteContract();
+    const { isSuccess: isSubscribedOnChain, isLoading: isTxLoading } = useWaitForTransactionReceipt({ hash });
 
     useEffect(() => {
-        if (isSubscribedOnChain) {
+        if (isTxLoading) {
+            setCheckoutStatus('pending');
+        } else if (isSubscribedOnChain) {
+            setCheckoutStatus('success');
             setLoading(false);
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-            showToast('Welcome to the inner circle! 🎉', 'success');
+        } else if (writeError) {
+            setCheckoutStatus('error');
+            setLoading(false);
         }
-    }, [isSubscribedOnChain]);
+    }, [isSubscribedOnChain, isTxLoading, writeError]);
 
-    const handleSubscribe = async (tierId: number) => {
+    const handleSubscribeClick = (tierId: number) => {
         if (!isConnected) return showToast('Please connect your wallet first.', 'error');
         if (!creatorContractAddress) return showToast('Creator contract not found.', 'error');
 
-        const tier = creatorTiers[tierId];
+        setSelectedTierIndex(tierId);
+        setCheckoutStatus('idle');
+        setCheckoutModalOpen(true);
+    };
+
+    const handleConfirmSubscribe = () => {
+        if (selectedTierIndex === null) return;
+        const tier = creatorTiers[selectedTierIndex];
         if (!tier) return;
 
-        setLoading(true);
+        setCheckoutStatus('pending');
         try {
             writeContract({
                 address: creatorContractAddress as `0x${string}`,
                 abi: SUBSCRIPTION_ABI,
                 functionName: 'subscribe',
-                args: [BigInt(tierId)],
+                args: [BigInt(selectedTierIndex)],
                 value: BigInt(parseFloat(tier.price) * 1e18)
             });
         } catch (e) {
             console.error(e);
-            setLoading(false);
-            showToast('Transaction failed.', 'error');
+            setCheckoutStatus('error');
         }
     };
 
@@ -378,7 +395,7 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                                         transition: 'all 0.2s',
                                         position: 'relative'
                                     }}
-                                        onClick={() => handleSubscribe(i)}
+                                        onClick={() => handleSubscribeClick(i)}
                                         onMouseEnter={(e) => {
                                             e.currentTarget.style.borderColor = 'var(--color-primary)';
                                             e.currentTarget.style.transform = 'translateY(-2px)';
@@ -421,6 +438,14 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                     }
                 }
             `}} />
+
+            <CheckoutModal
+                isOpen={checkoutModalOpen}
+                onClose={() => setCheckoutModalOpen(false)}
+                onConfirm={handleConfirmSubscribe}
+                tier={selectedTierIndex !== null ? creatorTiers[selectedTierIndex] : null}
+                status={checkoutStatus}
+            />
         </div>
     );
 }
