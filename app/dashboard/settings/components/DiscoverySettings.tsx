@@ -17,6 +17,7 @@ export default function DiscoverySettings({ address }: DiscoverySettingsProps) {
     // UI State
     const [hashtagSearch, setHashtagSearch] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         if (!address) return;
@@ -67,6 +68,7 @@ export default function DiscoverySettings({ address }: DiscoverySettingsProps) {
         .slice(0, 5);
 
     const handleSave = async () => {
+        setSaving(true);
         try {
             const res = await fetch(`/api/creators/${address}/taxonomy`, {
                 method: 'PATCH',
@@ -78,6 +80,8 @@ export default function DiscoverySettings({ address }: DiscoverySettingsProps) {
         } catch (e) {
             console.error(e);
             alert('Error saving.');
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -88,7 +92,7 @@ export default function DiscoverySettings({ address }: DiscoverySettingsProps) {
 
             {/* Categories */}
             <div className="mb-8">
-                <label className="block text-sm font-semibold uppercase mb-3">Categories (Max 3)</label>
+                <label className="block text-sm font-semibold uppercase mb-3 text-gray-500 tracking-wider">Categories (Max 3)</label>
                 <div className="flex flex-wrap gap-2">
                     {categories.filter(c => c.isActive).map(cat => {
                         const isSelected = selectedCatIds.includes(cat.id);
@@ -96,9 +100,9 @@ export default function DiscoverySettings({ address }: DiscoverySettingsProps) {
                             <button
                                 key={cat.id}
                                 onClick={() => toggleCategory(cat.id)}
-                                className={`px-4 py-2 rounded-full border text-sm font-medium transition-colors ${isSelected
-                                    ? 'bg-blue-600 text-white border-blue-600'
-                                    : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'}`}
+                                className={`px-4 py-2 rounded-full border text-sm font-semibold transition-all shadow-sm ${isSelected
+                                    ? 'bg-blue-600 text-white border-blue-600 shadow-md transform -translate-y-0.5'
+                                    : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}
                             >
                                 {cat.icon} {cat.name}
                             </button>
@@ -109,19 +113,20 @@ export default function DiscoverySettings({ address }: DiscoverySettingsProps) {
 
             {/* Hashtags */}
             <div className="mb-8">
-                <label className="block text-sm font-semibold uppercase mb-3">Hashtags (Max 10)</label>
+                <label className="block text-sm font-semibold uppercase mb-3 text-gray-500 tracking-wider">Hashtags (Max 10)</label>
 
                 {/* Selected Chips */}
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-4 min-h-[32px]">
                     {selectedHashtagIds.map(id => {
                         const tag = hashtags.find(h => h.id === id);
                         return (
-                            <span key={id} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 rounded-lg text-sm text-gray-800">
+                            <span key={id} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-800 font-medium">
                                 #{tag?.label || id}
-                                <button onClick={() => removeHashtag(id)} className="hover:text-red-500 ml-1">×</button>
+                                <button onClick={() => removeHashtag(id)} className="hover:text-red-500 ml-1 font-bold px-1">×</button>
                             </span>
                         );
                     })}
+                    {selectedHashtagIds.length === 0 && <span className="text-sm text-gray-400 italic">No hashtags selected</span>}
                 </div>
 
                 {/* Search Input */}
@@ -132,39 +137,44 @@ export default function DiscoverySettings({ address }: DiscoverySettingsProps) {
                         value={hashtagSearch}
                         onChange={(e) => { setHashtagSearch(e.target.value); setShowSuggestions(true); }}
                         onFocus={() => setShowSuggestions(true)}
-                        className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all shadow-sm"
                     />
 
                     {/* Autocomplete Dropdown */}
                     {showSuggestions && hashtagSearch && (
-                        <div className="absolute z-10 w-full bg-white border rounded-lg mt-1 shadow-lg max-h-48 overflow-y-auto">
+                        <div className="absolute z-50 w-full bg-white border border-gray-200 rounded-xl mt-2 shadow-xl max-h-56 overflow-y-auto">
                             {filteredHashtags.length > 0 ? (
                                 filteredHashtags.map(tag => (
                                     <button
                                         key={tag.id}
                                         onClick={() => addHashtag(tag)}
-                                        className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm flex justify-between"
+                                        className="w-full text-left px-4 py-3 hover:bg-gray-50 text-sm flex justify-between border-b border-gray-50 last:border-none"
                                     >
-                                        <span>#{tag.label}</span>
-                                        {tag.isTrending && <span className="text-xs text-orange-500">🔥 Trending</span>}
+                                        <span className="font-medium">#{tag.label}</span>
+                                        {tag.isTrending && <span className="text-xs text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full font-bold">🔥 Trending</span>}
                                     </button>
                                 ))
                             ) : (
-                                <div className="p-3 text-sm text-gray-500">
-                                    No tags found. <button className="text-blue-600 hover:underline">Create "{hashtagSearch}"?</button>
+                                <div className="p-4 text-sm text-gray-500 text-center">
+                                    No matching tags found.
                                 </div>
                             )}
                         </div>
                     )}
-                    {/* Close suggestions on click outside logic would be here, skipping for simple implementation */}
+                    {/* Backdrop to close suggestions */}
+                    {showSuggestions && (
+                        <div className="fixed inset-0 z-40" onClick={() => setShowSuggestions(false)} style={{ background: 'transparent' }} />
+                    )}
                 </div>
             </div>
 
             <button
                 onClick={handleSave}
-                className="w-full py-2 bg-black text-white rounded-lg hover:bg-gray-800 font-medium transition-colors"
+                disabled={saving}
+                className={`w-full py-3 rounded-lg font-bold transition-all shadow-lg text-white flex items-center justify-center gap-2 
+                    ${saving ? 'bg-gray-400 cursor-not-allowed' : 'bg-black hover:bg-gray-800 hover:transform hover:-translate-y-0.5'}`}
             >
-                Save Discovery Settings
+                {saving ? 'Saving...' : 'Save Discovery Settings'}
             </button>
         </Card>
     );
