@@ -28,31 +28,31 @@ export default function Button({
         alignItems: 'center',
         justifyContent: 'center',
         fontWeight: 600,
-        borderRadius: 'var(--radius-md)',
+        borderRadius: 'var(--radius-full)',
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         border: '1px solid transparent',
         cursor: props.disabled || isLoading ? 'not-allowed' : 'pointer',
         boxShadow: 'none',
         lineHeight: 1,
-        gap: '8px',
+        gap: 'var(--space-2)',
         opacity: props.disabled || isLoading ? 0.6 : 1,
     };
 
     // Size variations
     const sizeStyles = {
         sm: {
-            padding: '8px 12px',
-            fontSize: '0.875rem',
+            padding: '0 var(--space-3)',
+            fontSize: 'var(--text-body-sm)',
             height: '32px',
         },
         md: {
-            padding: '10px 16px',
-            fontSize: '0.925rem',
+            padding: '0 var(--space-4)',
+            fontSize: '0.95rem',
             height: '40px',
         },
         lg: {
-            padding: '14px 24px',
-            fontSize: '1rem',
+            padding: '0 var(--space-6)',
+            fontSize: 'var(--text-body)',
             height: '48px',
         }
     };
