@@ -36,6 +36,7 @@ export default function Button({
         lineHeight: 1,
         gap: 'var(--space-2)',
         opacity: props.disabled || isLoading ? 0.6 : 1,
+        whiteSpace: 'nowrap',
     };
 
     // Size variations

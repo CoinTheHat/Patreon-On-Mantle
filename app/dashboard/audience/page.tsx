@@ -104,7 +104,7 @@ export default function AudiencePage() {
 
                     {/* Bottom Row: Controls */}
                     <div className="filter-controls" style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-                        <div style={{ flex: '1 1 300px', position: 'relative' }}>
+                        <div style={{ flex: '1 1 200px', position: 'relative' }}>
                             <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>🔍</span>
                             <Input
                                 placeholder="Search by address..."
