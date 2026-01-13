@@ -5,46 +5,73 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Button from '../../components/Button';
 import LoadingSkeleton from '../../components/LoadingSkeleton';
 import EmptyState from '../../components/EmptyState';
+import { supabase } from '@/utils/supabase';
 
 function ExploreContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const query = searchParams.get('q')?.toLowerCase() || '';
-    const category = searchParams.get('cat') || '';
+    const categoryId = searchParams.get('cat') || 'All';
+    const hashtag = searchParams.get('tag') || '';
 
     const [creators, setCreators] = useState<any[]>([]);
+    const [categories, setCategories] = useState<any[]>([]);
+    const [trendingTags, setTrendingTags] = useState<any[]>([]);
+    const [assignments, setAssignments] = useState<any[]>([]);
+
     const [loading, setLoading] = useState(true);
-    const [showFilters, setShowFilters] = useState(false);
     const [sortBy, setSortBy] = useState('Trending');
 
-    const categories = ['All', 'Podcasters', 'Video Creators', 'Musicians', 'Visual Artists', 'Writers', 'Gaming', 'Education'];
-    const trendingTags = ['#DeFi', '#GenerativeArt', '#IndieDev', '#PodcastLife', '#Web3Gaming'];
-
+    // Fetch Initial Data
     useEffect(() => {
-        // Simulation of API Latency
-        const timer = setTimeout(() => {
-            fetch('/api/creators')
-                .then(res => res.json())
-                .then(data => {
-                    setCreators(data);
-                    setLoading(false);
-                })
-                .catch(err => {
-                    console.error(err);
-                    setLoading(false);
-                });
-        }, 600);
-        return () => clearTimeout(timer);
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                // Parallel fetching for speed
+                const [creatorsRes, catRes, tagRes, assignRes] = await Promise.all([
+                    fetch('/api/creators').then(r => r.json()),
+                    fetch('/api/taxonomy/categories').then(r => r.json()),
+                    fetch('/api/taxonomy/hashtags').then(r => r.json()),
+                    supabase.from('creatorTaxonomy').select('*') // Direct fetch for assignments for filtering
+                ]);
+
+                if (Array.isArray(creatorsRes)) setCreators(creatorsRes);
+                if (Array.isArray(catRes)) setCategories(catRes);
+                if (Array.isArray(tagRes)) setTrendingTags(tagRes.filter((t: any) => t.isTrending));
+                if (assignRes.data) setAssignments(assignRes.data);
+
+            } catch (e) {
+                console.error("Explore fetch error", e);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
     }, []);
 
+    // Filter Logic
     const filteredCreators = creators.filter(c => {
+        const assignment = assignments.find(a => a.creatorAddress === c.address);
+
+        // 1. Search Query
         const matchesQuery = !query ||
             c.name?.toLowerCase().includes(query) ||
             c.description?.toLowerCase().includes(query) ||
-            c.address?.toLowerCase().includes(query);
+            c.address?.toLowerCase().includes(query) ||
+            (assignment?.hashtagIds?.some((tagId: string) => {
+                const tag = trendingTags.find(t => t.id === tagId); // Inefficient lookup but acceptable for small datasets
+                return tag?.label.toLowerCase().includes(query);
+            }));
 
-        const matchesCategory = !category || category === 'All';
-        return matchesQuery && matchesCategory;
+        // 2. Category Filter
+        const matchesCategory = categoryId === 'All' ||
+            (assignment?.categoryIds?.includes(categoryId));
+
+        // 3. Hashtag Filter (from URL param)
+        const matchesTag = !hashtag ||
+            (assignment?.hashtagIds?.includes(hashtag));
+
+        return matchesQuery && matchesCategory && matchesTag;
     });
 
     const sortedCreators = [...filteredCreators].sort((a, b) => {
@@ -85,6 +112,7 @@ function ExploreContent() {
                     padding: 8px 16px; border-radius: 99px; border: 1px solid var(--color-border);
                     background: var(--color-bg-surface); cursor: pointer; font-size: 0.9rem; font-weight: 500;
                     color: var(--color-text-secondary); transition: all 0.2s; white-space: nowrap;
+                    display: flex; alignItems: center; gap: 6px;
                 }
                 .filter-pill:hover { border-color: var(--color-primary); color: var(--color-primary); }
                 .filter-pill.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
@@ -121,11 +149,13 @@ function ExploreContent() {
                     {/* Trending Tags */}
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', flexWrap: 'wrap' }}>
                         <span style={{ fontSize: '0.85rem', color: 'var(--color-text-tertiary)', fontWeight: 600, display: 'flex', alignItems: 'center' }}>Trending:</span>
-                        {trendingTags.map(tag => (
-                            <button key={tag} className="tag-chip" onClick={() => router.push(`/explore?q=${tag.replace('#', '')}`)}>
-                                {tag}
+                        {trendingTags.length > 0 ? trendingTags.map(tag => (
+                            <button key={tag.id} className="tag-chip" onClick={() => router.push(`/explore?tag=${tag.id}`)}>
+                                #{tag.label}
                             </button>
-                        ))}
+                        )) : (
+                            <span className="text-gray-400 text-sm italic">Loading tags...</span>
+                        )}
                     </div>
                 </div>
             </div>
@@ -136,12 +166,18 @@ function ExploreContent() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap-reverse', gap: '16px' }}>
                         {/* Categories */}
                         <div className="category-scroll" style={{ flex: 1, minWidth: '0' }}>
+                            <button
+                                onClick={() => router.push('/explore')}
+                                className={`filter-pill ${categoryId === 'All' ? 'active' : ''}`}
+                            >
+                                All
+                            </button>
                             {categories.map(cat => (
                                 <button
-                                    key={cat} onClick={() => router.push(cat === 'All' ? '/explore' : `/explore?cat=${cat}`)}
-                                    className={`filter-pill ${(!category && cat === 'All') || category === cat ? 'active' : ''}`}
+                                    key={cat.id} onClick={() => router.push(`/explore?cat=${cat.id}`)}
+                                    className={`filter-pill ${categoryId === cat.id ? 'active' : ''}`}
                                 >
-                                    {cat}
+                                    {cat.icon && <span>{cat.icon}</span>} {cat.name}
                                 </button>
                             ))}
                         </div>
@@ -180,7 +216,7 @@ function ExploreContent() {
                 ) : filteredCreators.length === 0 ? (
                     <EmptyState
                         title="No creators found"
-                        description={`We couldn't find any match for "${query}". Try searching for something else.`}
+                        description={`We couldn't find any match for your filters. Try clearing them.`}
                         actionLabel="Clear Filters"
                         onAction={() => router.push('/explore')}
                     />

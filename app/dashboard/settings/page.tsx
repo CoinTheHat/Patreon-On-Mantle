@@ -7,6 +7,7 @@ import Card from '../../components/Card';
 import Input from '../../components/Input';
 import SectionHeader from '../../components/SectionHeader';
 import { useToast } from '../../components/Toast';
+import DiscoverySettings from './components/DiscoverySettings';
 
 export default function SettingsPage() {
     const { address, isConnected } = useAccount();
@@ -151,7 +152,10 @@ export default function SettingsPage() {
                     </div>
                 </Card>
 
-                {/* 2. LINKS & INTEGRATIONS */}
+                {/* 2. DISCOVERY & TAXONOMY */}
+                <DiscoverySettings address={address || ''} />
+
+                {/* 3. LINKS & INTEGRATIONS */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
                     <Card variant="surface" padding="lg">
                         <h3 className="text-h3" style={{ marginBottom: '24px' }}>Social Links</h3>

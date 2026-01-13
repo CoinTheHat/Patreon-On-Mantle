@@ -51,6 +51,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             { label: 'Payouts', path: '/dashboard/earnings', icon: '💰' },
         ] : []),
         { label: 'Settings', path: '/dashboard/settings', icon: '⚙️' },
+        { label: 'Discover', path: '/dashboard/taxonomy', icon: '🌍' },
     ];
 
     // Access Control: Enforce Wallet Connection
