@@ -104,7 +104,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 @media (max-width: 1024px) {
                     .dashboard-sidebar { transform: translateX(-100%); }
                     .dashboard-sidebar.open { transform: translateX(0); }
-                    .main-content { margin-left: 0; }
+                    .main-content { margin-left: 0 !important; }
                 }
 
                 .nav-item {
