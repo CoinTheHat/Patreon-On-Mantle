@@ -381,5 +381,110 @@ body {
 
 .skeleton-card {
   height: 200px;
-  border-radius: var(--radius-lg);
-}
+
+  /* -----------------------------------------------------------------------------
+   SOFT TRANSITIONS & ANIMATIONS
+   ----------------------------------------------------------------------------- */
+
+  :root {
+    --section-padding-desktop: 96px;
+    --section-padding-mobile: 64px;
+    --transition-slow: 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    --transition-medium: 300ms ease-out;
+  }
+
+  /* Global Background Strategy */
+  .global-page-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(180deg, #F9FAFB 0%, #F3F4F6 100%);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Section Separators (Visual Bridges) */
+  .separator-fade-to-dark {
+    height: 160px;
+    width: 100%;
+    background: linear-gradient(to bottom, transparent 0%, rgba(17, 24, 39, 0.05) 30%, #111827 100%);
+    margin-bottom: -1px;
+    /* Prevent pixel gap */
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .separator-fade-to-light {
+    height: 160px;
+    width: 100%;
+    background: linear-gradient(to bottom, #111827 0%, rgba(17, 24, 39, 0.05) 70%, transparent 100%);
+    margin-top: -1px;
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Scroll Reveal Animation Classes */
+  @keyframes reveal-up {
+    0% {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: opacity, transform;
+  }
+
+  .reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger Delays */
+  .delay-100 {
+    transition-delay: 100ms;
+  }
+
+  .delay-200 {
+    transition-delay: 200ms;
+  }
+
+  .delay-300 {
+    transition-delay: 300ms;
+  }
+
+  /* Micro-interactions */
+  .soft-hover {
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .soft-hover:hover {
+    transform: translateY(-2px) scale(1.005);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  /* Prefers Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-on-scroll {
+      transition: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .global-page-background {
+      position: absolute;
+      /* simple static bg */
+    }
+  }
