@@ -3,7 +3,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Button from '../../components/Button';
-import Card from '../../components/Card';
+import LoadingSkeleton from '../../components/LoadingSkeleton';
+import EmptyState from '../../components/EmptyState';
 
 function ExploreContent() {
     const router = useRouter();
@@ -17,19 +18,23 @@ function ExploreContent() {
     const [sortBy, setSortBy] = useState('Trending');
 
     const categories = ['All', 'Podcasters', 'Video Creators', 'Musicians', 'Visual Artists', 'Writers', 'Gaming', 'Education'];
-    const sortOptions = ['Trending', 'Newest', 'Most Backed', 'Price: Low to High'];
+    const trendingTags = ['#DeFi', '#GenerativeArt', '#IndieDev', '#PodcastLife', '#Web3Gaming'];
 
     useEffect(() => {
-        fetch('/api/creators')
-            .then(res => res.json())
-            .then(data => {
-                setCreators(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false);
-            });
+        // Simulation of API Latency
+        const timer = setTimeout(() => {
+            fetch('/api/creators')
+                .then(res => res.json())
+                .then(data => {
+                    setCreators(data);
+                    setLoading(false);
+                })
+                .catch(err => {
+                    console.error(err);
+                    setLoading(false);
+                });
+        }, 600);
+        return () => clearTimeout(timer);
     }, []);
 
     const filteredCreators = creators.filter(c => {
@@ -42,10 +47,8 @@ function ExploreContent() {
         return matchesQuery && matchesCategory;
     });
 
-    // Mock Sort Logic
     const sortedCreators = [...filteredCreators].sort((a, b) => {
         if (sortBy === 'Newest') return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        if (sortBy === 'Most Backed') return (b.supporterCount || 0) - (a.supporterCount || 0);
         return 0; // Random/Trending
     });
 
@@ -53,225 +56,216 @@ function ExploreContent() {
         <div style={{ minHeight: '100vh', background: 'var(--color-bg-page)' }}>
             <style dangerouslySetInnerHTML={{
                 __html: `
-                .headline-serif { font-family: var(--font-serif); }
                 .explore-grid { 
                     display: grid; 
                     grid-template-columns: 1fr; 
-                    gap: 32px; 
+                    gap: 24px; 
                 }
-                @media (min-width: 640px) { .explore-grid { grid-template-columns: repeat(2, 1fr); } }
+                @media (min-width: 640px) { .explore-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; } }
                 @media (min-width: 1024px) { .explore-grid { grid-template-columns: repeat(3, 1fr); } }
                 
-                .filter-btn {
-                    padding: 8px 16px; border-radius: 99px; border: 1px solid var(--color-border);
-                    background: #fff; cursor: pointer; display: flex; align-items: center; gap: 8px;
-                    transition: all 0.2s; font-size: 0.9rem; font-weight: 500;
+                .tag-chip {
+                    font-size: 0.85rem; padding: 6px 14px; background: rgba(255,255,255,0.6);
+                    border: 1px solid rgba(0,0,0,0.05); border-radius: 20px; color: var(--color-text-secondary);
+                    cursor: pointer; transition: all 0.2s; white-space: nowrap;
                 }
-                .filter-btn:hover { border-color: var(--color-brand-blue); color: var(--color-brand-blue); }
-                .filter-active { background: var(--color-brand-blue); color: #fff; border-color: var(--color-brand-blue); }
+                .tag-chip:hover { background: #fff; transform: translateY(-1px); color: var(--color-brand-blue); }
+                
+                .category-scroll {
+                    display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
+                    scrollbar-width: none; -ms-overflow-style: none;
+                }
+                .category-scroll::-webkit-scrollbar { display: none; }
+                
+                @media (min-width: 1024px) {
+                    .category-scroll { flex-wrap: wrap; overflow-x: visible; }
+                }
+
+                .filter-pill {
+                    padding: 8px 16px; border-radius: 99px; border: 1px solid var(--color-border);
+                    background: var(--color-bg-surface); cursor: pointer; font-size: 0.9rem; font-weight: 500;
+                    color: var(--color-text-secondary); transition: all 0.2s; white-space: nowrap;
+                }
+                .filter-pill:hover { border-color: var(--color-primary); color: var(--color-primary); }
+                .filter-pill.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
             `}} />
 
-            {/* Hero Section */}
+            {/* HERO SECTION */}
             <div style={{
                 background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
-                padding: '60px 0 80px',
-                borderBottom: '1px solid var(--color-border)'
+                padding: '48px 0 64px',
+                borderBottom: '1px solid rgba(0,0,0,0.05)',
+                marginBottom: '-32px'
             }}>
-                <div className="page-container" style={{ textAlign: 'center' }}>
-                    <h1 className="headline-serif" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '16px' }}>
-                        Find your next <span style={{ color: 'var(--color-brand-blue)', fontStyle: 'italic' }}>obsession</span>
+                <div className="page-container" style={{ textAlign: 'center', maxWidth: '800px' }}>
+                    <h1 className="headline-serif" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginBottom: '24px', lineHeight: 1.1 }}>
+                        Discover <span style={{ color: 'var(--color-brand-blue)' }}>creators</span> & communities.
                     </h1>
-                    <p className="text-body" style={{ color: 'var(--color-text-secondary)' }}>
-                        Support independent creators building the future on Mantle.
-                    </p>
-                </div>
-            </div>
 
-            <div className="page-container" style={{ marginTop: '-40px', paddingBottom: '80px', position: 'relative', zIndex: 5 }}>
+                    <div style={{ position: 'relative', maxWidth: '600px', margin: '0 auto 16px' }}>
+                        <input
+                            type="text"
+                            placeholder="Search creators, tags, content..."
+                            defaultValue={query}
+                            className="focus-ring"
+                            onKeyDown={(e) => { if (e.key === 'Enter') router.push(`/explore?q=${e.currentTarget.value}`) }}
+                            style={{
+                                width: '100%', padding: '16px 24px 16px 52px', borderRadius: 'var(--radius-full)',
+                                border: '1px solid rgba(0,0,0,0.1)', boxShadow: '0 8px 30px rgba(0,0,0,0.08)', fontSize: '1.05rem',
+                                outline: 'none'
+                            }}
+                        />
+                        <span style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', fontSize: '1.2rem', opacity: 0.5 }}>🔍</span>
+                    </div>
 
-                {/* Search Bar */}
-                <div style={{ maxWidth: '600px', margin: '0 auto 40px', position: 'relative' }}>
-                    <input
-                        type="text"
-                        placeholder="Search for creators, tags, or content..."
-                        defaultValue={query}
-                        className="focus-ring"
-                        onKeyDown={(e) => { if (e.key === 'Enter') router.push(`/explore?q=${e.currentTarget.value}`) }}
-                        style={{
-                            width: '100%', padding: '16px 24px 16px 50px', borderRadius: 'var(--radius-full)',
-                            border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-lg)', fontSize: '1rem'
-                        }}
-                    />
-                    <span style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', fontSize: '1.2rem', opacity: 0.5 }}>🔍</span>
-                </div>
-
-                {/* Filters Row */}
-                <div style={{
-                    display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '20px', background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)',
-                    marginBottom: '40px', boxShadow: 'var(--shadow-sm)'
-                }}>
-                    <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', maxWidth: '100%', scrollbarWidth: 'none' }}>
-                        {categories.map(cat => (
-                            <button
-                                key={cat} onClick={() => router.push(cat === 'All' ? '/explore' : `/explore?cat=${cat}`)}
-                                className={`filter-btn ${(!category && cat === 'All') || category === cat ? 'filter-active' : ''}`}
-                            >
-                                {cat}
+                    {/* Trending Tags */}
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '0.85rem', color: 'var(--color-text-tertiary)', fontWeight: 600, display: 'flex', alignItems: 'center' }}>Trending:</span>
+                        {trendingTags.map(tag => (
+                            <button key={tag} className="tag-chip" onClick={() => router.push(`/explore?q=${tag.replace('#', '')}`)}>
+                                {tag}
                             </button>
                         ))}
                     </div>
+                </div>
+            </div>
 
-                    <div style={{ display: 'flex', gap: '12px' }}>
-                        <select
-                            value={sortBy} onChange={(e) => setSortBy(e.target.value)}
-                            style={{
-                                padding: '8px 16px', borderRadius: '8px', border: '1px solid var(--color-border)',
-                                cursor: 'pointer', outline: 'none'
-                            }}
-                        >
-                            {sortOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                        </select>
+            <div className="page-container" style={{ paddingBottom: '80px', position: 'relative', zIndex: 10 }}>
+                {/* FILTER TOOLBAR */}
+                <div className="card-surface" style={{ padding: '16px 24px', marginBottom: '32px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap-reverse', gap: '16px' }}>
+                        {/* Categories */}
+                        <div className="category-scroll" style={{ flex: 1, minWidth: '0' }}>
+                            {categories.map(cat => (
+                                <button
+                                    key={cat} onClick={() => router.push(cat === 'All' ? '/explore' : `/explore?cat=${cat}`)}
+                                    className={`filter-pill ${(!category && cat === 'All') || category === cat ? 'active' : ''}`}
+                                >
+                                    {cat}
+                                </button>
+                            ))}
+                        </div>
 
-                        <button
-                            className={`filter-btn ${showFilters ? 'filter-active' : ''}`}
-                            onClick={() => setShowFilters(!showFilters)}
-                        >
-                            ⚙️ Filters
-                        </button>
+                        {/* Tools */}
+                        <div style={{ display: 'flex', gap: '12px', marginLeft: 'auto' }}>
+                            <select
+                                value={sortBy} onChange={(e) => setSortBy(e.target.value)}
+                                style={{
+                                    padding: '8px 16px', borderRadius: '99px', border: '1px solid var(--color-border)',
+                                    cursor: 'pointer', outline: 'none', background: 'var(--color-bg-surface)', fontSize: '0.9rem', fontWeight: 500
+                                }}
+                            >
+                                <option>Trending</option>
+                                <option>Newest</option>
+                                <option>Most Backed</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                {/* Expanded Filters Panel (Mock) */}
-                {showFilters && (
-                    <div style={{
-                        padding: '24px', background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)',
-                        marginBottom: '40px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px'
-                    }}>
-                        <div>
-                            <label style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '8px', display: 'block' }}>Monthly Price</label>
-                            <input type="range" min="0" max="100" style={{ width: '100%' }} />
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
-                                <span>Free</span><span>$100+</span>
-                            </div>
-                        </div>
-                        <div>
-                            <label style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '8px', display: 'block' }}>Language</label>
-                            <select style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
-                                <option>Any</option><option>English</option><option>Español</option><option>Français</option>
-                            </select>
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            <label style={{ fontSize: '0.875rem', fontWeight: 600 }}>Options</label>
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', cursor: 'pointer' }}>
-                                <input type="checkbox" /> Verified Only
-                            </label>
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', cursor: 'pointer' }}>
-                                <input type="checkbox" /> Has Free Tier
-                            </label>
-                        </div>
-                    </div>
-                )}
-
-                {/* Grid */}
+                {/* RESULTS GRID */}
                 {loading ? (
                     <div className="explore-grid">
                         {[1, 2, 3, 4, 5, 6].map(i => (
-                            <div key={i} className="card-surface" style={{ height: '420px' }}>
-                                <div className="skeleton" style={{ height: '140px' }} />
-                                <div style={{ padding: '24px' }}>
-                                    <div className="skeleton skeleton-avatar" style={{ marginTop: '-48px', border: '4px solid #fff' }} />
-                                    <div className="skeleton skeleton-text" style={{ marginTop: '16px', width: '60%' }} />
-                                    <div className="skeleton skeleton-text" style={{ width: '40%' }} />
-                                    <div className="skeleton skeleton-rect" style={{ marginTop: '24px', height: '60px' }} />
+                            <div key={i} className="card-surface" style={{ height: '380px', padding: 0, overflow: 'hidden' }}>
+                                <LoadingSkeleton height="120px" borderRadius={0} />
+                                <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '-40px' }}>
+                                    <LoadingSkeleton variant="circle" width="80px" height="80px" style={{ border: '4px solid #fff' }} />
+                                    <LoadingSkeleton variant="text" width="60%" height="24px" style={{ marginTop: '12px' }} />
+                                    <LoadingSkeleton variant="text" width="80%" height="16px" style={{ marginTop: '8px' }} />
                                 </div>
                             </div>
                         ))}
                     </div>
-                ) : sortedCreators.length === 0 ? (
-                    <div style={{ padding: '80px', textAlign: 'center', background: '#fff', borderRadius: '16px', border: '1px dashed var(--color-border)' }}>
-                        <h3>No creators found</h3>
-                        <p>Try adjusting your search or filters.</p>
-                        <Button variant="outline" onClick={() => router.push('/explore')} style={{ marginTop: '16px' }}>Clear Filters</Button>
-                    </div>
+                ) : filteredCreators.length === 0 ? (
+                    <EmptyState
+                        title="No creators found"
+                        description={`We couldn't find any match for "${query}". Try searching for something else.`}
+                        actionLabel="Clear Filters"
+                        onAction={() => router.push('/explore')}
+                    />
                 ) : (
-                    <div className="explore-grid">
-                        {sortedCreators.map((creator, i) => (
-                            <div
-                                key={i}
-                                className="card-surface hover-lift"
-                                onClick={() => router.push(`/${creator.address}`)}
-                                style={{
-                                    padding: 0, overflow: 'hidden', cursor: 'pointer',
-                                    display: 'flex', flexDirection: 'column'
-                                }}
-                            >
-                                <div style={{ height: '140px', background: creator.coverUrl ? `url(${creator.coverUrl}) center/cover` : `linear-gradient(120deg, #${Math.floor(Math.random() * 16777215).toString(16)} 0%, #eee 100%)` }}></div>
+                    <>
+                        <div className="explore-grid" style={{ marginBottom: '64px' }}>
+                            {sortedCreators.map((creator, i) => (
+                                <div
+                                    key={i}
+                                    className="card-surface hover-lift"
+                                    onClick={() => router.push(`/${creator.address}`)}
+                                    style={{
+                                        padding: 0, overflow: 'hidden', cursor: 'pointer',
+                                        display: 'flex', flexDirection: 'column', position: 'relative'
+                                    }}
+                                >
+                                    {/* Cover */}
+                                    <div style={{ height: '120px', background: creator.coverUrl ? `url(${creator.coverUrl}) center/cover` : `linear-gradient(120deg, var(--color-primary-light) 0%, #fff 100%)` }}></div>
 
-                                <div style={{ padding: '0 24px 24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                    <div style={{ marginTop: '-40px', marginBottom: '12px' }}>
+                                    {/* Content */}
+                                    <div style={{ padding: '0 20px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', flex: 1 }}>
+                                        {/* Avatar */}
                                         <div style={{
-                                            width: '80px', height: '80px', borderRadius: '50%', background: '#fff', padding: '4px',
-                                            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                                            marginTop: '-40px', width: '80px', height: '80px', borderRadius: '50%',
+                                            background: creator.avatarUrl ? `url(${creator.avatarUrl}) center/cover` : '#fff',
+                                            border: '4px solid var(--color-bg-surface)', boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem'
                                         }}>
-                                            <div style={{
-                                                width: '100%', height: '100%', borderRadius: '50%',
-                                                background: creator.avatarUrl ? `url(${creator.avatarUrl}) center/cover` : `#ddd`,
-                                                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem'
-                                            }}>
-                                                {!creator.avatarUrl && (creator.name?.[0] || '👤')}
+                                            {!creator.avatarUrl && (creator.name?.[0] || '👤')}
+                                        </div>
+
+                                        <h3 className="text-h3" style={{ marginTop: '12px', marginBottom: '4px' }}>{creator.name}</h3>
+                                        <p className="text-caption" style={{ marginBottom: '16px', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                            {creator.description || 'Digital creator building on Mantle.'}
+                                        </p>
+
+                                        {/* Stats */}
+                                        <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', width: '100%', justifyContent: 'center' }}>
+                                            <div style={{ textAlign: 'center' }}>
+                                                <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{Math.floor(Math.random() * 500) + 10}</div>
+                                                <div className="text-caption" style={{ fontSize: '0.7rem' }}>Backrs</div>
+                                            </div>
+                                            <div style={{ width: '1px', background: 'var(--color-border)', height: '100%' }}></div>
+                                            <div style={{ textAlign: 'center' }}>
+                                                <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{Math.floor(Math.random() * 50) + 1}</div>
+                                                <div className="text-caption" style={{ fontSize: '0.7rem' }}>Posts</div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '4px' }}>{creator.name || 'Anonymous'}</h3>
-                                    <p className="text-body-sm" style={{ marginBottom: '16px', lineHeight: 1.5, flex: 1 }}>
-                                        {creator.description ? (creator.description.length > 80 ? creator.description.slice(0, 80) + '...' : creator.description) : 'No description provided.'}
-                                    </p>
-
-                                    {/* Stats Row */}
-                                    <div style={{ display: 'flex', gap: '16px', padding: '16px 0', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)', marginBottom: '16px' }}>
-                                        <div>
-                                            <div style={{ fontWeight: 700 }}>{Math.floor(Math.random() * 1000)}</div>
-                                            <div className="text-caption">Backrs</div>
-                                        </div>
-                                        <div>
-                                            <div style={{ fontWeight: 700 }}>{Math.floor(Math.random() * 50)}</div>
-                                            <div className="text-caption">Posts</div>
-                                        </div>
-                                    </div>
-
-                                    {/* Post Previews (Mock Content) */}
-                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-                                        {[1, 2].map(p => (
-                                            <div key={p} style={{
-                                                flex: 1, height: '60px', borderRadius: '8px', background: '#f3f4f6',
-                                                position: 'relative', overflow: 'hidden'
-                                            }}>
-                                                <div style={{
-                                                    width: '100%', height: '100%', background: `linear-gradient(45deg, #e5e7eb, #d1d5db)`,
-                                                    filter: 'blur(4px)', opacity: 0.7
-                                                }}></div>
-                                                <div style={{
-                                                    position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                    background: 'rgba(0,0,0,0.05)'
-                                                }}>
-                                                    <span style={{ fontSize: '12px' }}>🔒</span>
-                                                </div>
+                                        <div style={{ marginTop: 'auto', width: '100%' }}>
+                                            <Button variant="primary" style={{ width: '100%', justifyContent: 'center' }}>View Page</Button>
+                                            <div className="text-caption" style={{ marginTop: '8px', fontSize: '0.75rem' }}>
+                                                Tiers from <span style={{ fontWeight: 700, color: 'var(--color-text-primary)' }}>5 MNT</span>
                                             </div>
-                                        ))}
-                                    </div>
-
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <div className="text-caption" style={{ background: 'var(--color-bg-page)', padding: '4px 8px', borderRadius: '4px' }}>
-                                            Tiers from $5
                                         </div>
-                                        <Button size="sm" variant="outline" style={{ borderColor: 'var(--color-border-hover)' }}>View Page</Button>
                                     </div>
                                 </div>
+                            ))}
+                        </div>
+
+                        {/* Recommended Fallback Block */}
+                        <div style={{
+                            borderTop: '1px solid var(--color-border)',
+                            paddingTop: '48px',
+                            display: 'flex', flexDirection: 'column', gap: '24px'
+                        }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <h2 className="text-h2">New on Backr</h2>
+                                <Button variant="ghost" size="sm">View All</Button>
                             </div>
-                        ))}
-                    </div>
+                            {/* Simple horizontal list or mini-grid */}
+                            <div className="grid-system">
+                                {['0x123', '0x456', '0x789'].map(addr => (
+                                    <div key={addr} style={{ display: 'flex', gap: '16px', alignItems: 'center', padding: '16px', background: '#fff', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)' }}>
+                                        <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#eee' }}></div>
+                                        <div>
+                                            <div style={{ fontWeight: 600 }}>New Creator</div>
+                                            <div className="text-caption">Joined Today</div>
+                                        </div>
+                                        <Button size="sm" variant="secondary" style={{ marginLeft: 'auto' }}>Follow</Button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </>
                 )}
             </div>
         </div>
@@ -280,7 +274,7 @@ function ExploreContent() {
 
 export default function ExplorePage() {
     return (
-        <Suspense fallback={<div style={{ padding: '48px', textAlign: 'center' }}>Loading...</div>}>
+        <Suspense fallback={<div style={{ padding: '80px', textAlign: 'center' }}>Loading...</div>}>
             <ExploreContent />
         </Suspense>
     );
