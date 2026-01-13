@@ -369,80 +369,111 @@ export default function Home() {
           </div>
         </section>
 
-        {/* SECTION 4: PRICING */}
+        {/* SECTION 4: FEES & FEATURES */}
         <section style={{ padding: 'var(--section-padding-desktop)', background: '#111827', color: '#fff', position: 'relative' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'radial-gradient(circle at 50% 0%, #1f2937 0%, #111827 50%)' }}></div>
 
           <div className="page-container" style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-              <h2 className="headline-huge" style={{ color: '#fff', marginBottom: '24px' }}>Simple, transparent pricing</h2>
+              <h2 className="headline-huge" style={{ color: '#fff', marginBottom: '24px' }}>Creators set the price.<br />We take a simple fee.</h2>
               <p style={{ fontSize: '1.25rem', color: '#9ca3af', maxWidth: '600px', margin: '0 auto' }}>
-                We succeed only when you do. No hidden fees, no monthly subscriptions.
+                You choose your tier prices. Backr only charges a transparent platform fee per transaction.
               </p>
             </div>
 
-            {/* Pricing Cards */}
+            {/* Value Cards */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '32px', marginBottom: '80px' }}>
-              {/* Free Plan */}
-              <div style={{ padding: '32px', background: 'rgba(255,255,255,0.05)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '8px' }}>Lite</h3>
-                <div style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '24px' }}>$0<span style={{ fontSize: '1rem', fontWeight: 400, color: '#9ca3af' }}>/mo</span></div>
-                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0', color: '#d1d5db', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <li>✓ Unlimited Posts</li>
-                  <li>✓ Crypto Payments</li>
-                  <li>✓ Basic Analytics</li>
-                </ul>
-                <button className="btn-secondary" style={{ width: '100%', background: 'transparent', color: '#fff', borderColor: 'rgba(255,255,255,0.3)' }}>Start Free</button>
+
+              {/* Card A: Creator Control */}
+              <div className="card-surface" style={{ padding: '32px', background: 'rgba(255,255,255,0.05)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ marginBottom: '24px', flex: 1 }}>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '16px', color: '#fff' }}>You set your prices</h3>
+                  <p style={{ color: '#d1d5db', lineHeight: 1.6, marginBottom: '24px' }}>
+                    Set any price, anytime. Create tiers that work for your community, from free to VIP.
+                  </p>
+                  {/* Illustrative Chips */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    <span style={{ padding: '6px 12px', background: 'rgba(52, 211, 153, 0.1)', border: '1px solid rgba(52, 211, 153, 0.2)', borderRadius: '20px', color: '#34d399', fontSize: '0.85rem' }}>Bronze: 5 MNT</span>
+                    <span style={{ padding: '6px 12px', background: 'rgba(96, 165, 250, 0.1)', border: '1px solid rgba(96, 165, 250, 0.2)', borderRadius: '20px', color: '#60a5fa', fontSize: '0.85rem' }}>Silver: 15 MNT</span>
+                    <span style={{ padding: '6px 12px', background: 'rgba(251, 191, 36, 0.1)', border: '1px solid rgba(251, 191, 36, 0.2)', borderRadius: '20px', color: '#fbbf24', fontSize: '0.85rem' }}>Gold: 50 MNT</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Pro Plan (Highlighted) */}
-              <div style={{ padding: '40px 32px', background: 'var(--brand-blue)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)', transform: 'scale(1.05)', boxShadow: '0 20px 40px rgba(0,0,0,0.3)', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: '#10b981', color: '#fff', padding: '4px 12px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 700 }}>MOST POPULAR</div>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '8px' }}>Pro</h3>
-                <div style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '24px' }}>5%<span style={{ fontSize: '1rem', fontWeight: 400, color: 'rgba(255,255,255,0.8)' }}> fee</span></div>
-                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0', color: '#fff', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <li><strong>Everything in Lite, plus:</strong></li>
-                  <li>✓ Membership Tiers</li>
-                  <li>✓ Email Newsletters</li>
-                  <li>✓ Zero gas fees for fans</li>
-                </ul>
-                <button className="btn-primary" style={{ width: '100%', background: '#fff', color: 'var(--brand-blue)' }}>Start Pro Page</button>
+              {/* Card B: Platform Fee (Highlight) */}
+              <div className="card-surface hover-lift" style={{ padding: '40px 32px', background: 'var(--brand-blue)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)', transform: 'scale(1.05)', boxShadow: '0 20px 40px rgba(0,0,0,0.3)', position: 'relative', zIndex: 10 }}>
+                <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: '#10b981', color: '#fff', padding: '4px 12px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 700 }}>TRANSPARENT</div>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '8px', color: '#fff' }}>Platform Fee</h3>
+                <div style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '8px', lineHeight: 1 }}>5%</div>
+                <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.8)', marginBottom: '24px' }}>
+                  Only on successful payments.<br />No monthly subscription.
+                </p>
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center', color: '#fff' }}><span style={{ color: '#a7f3d0' }}>✓</span> Instant payouts</div>
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center', color: '#fff' }}><span style={{ color: '#a7f3d0' }}>✓</span> Token-gating</div>
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center', color: '#fff' }}><span style={{ color: '#a7f3d0' }}>✓</span> Creator tools</div>
+                </div>
               </div>
 
-              {/* Premium Plan */}
-              <div style={{ padding: '32px', background: 'rgba(255,255,255,0.05)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '8px' }}>Premium</h3>
-                <div style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '24px' }}>Custom</div>
-                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 32px 0', color: '#d1d5db', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <li>✓ Dedicated Success Mgr</li>
-                  <li>✓ API Access</li>
-                  <li>✓ Custom Contracts</li>
-                  <li>✓ White-labeling</li>
+              {/* Card C: Instant Payouts */}
+              <div className="card-surface" style={{ padding: '32px', background: 'rgba(255,255,255,0.05)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '16px', color: '#fff' }}>Instant Payouts</h3>
+                <div style={{ fontSize: '3rem', marginBottom: '16px' }}>⚡</div>
+                <p style={{ color: '#d1d5db', lineHeight: 1.6, marginBottom: '24px' }}>
+                  Settlements happen instantly on Mantle Network.
+                </p>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, color: '#d1d5db', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <li>✓ Funds go to your wallet</li>
+                  <li>✓ No holding periods</li>
+                  <li>✓ Low gas fees</li>
                 </ul>
-                <button className="btn-secondary" style={{ width: '100%', background: 'transparent', color: '#fff', borderColor: 'rgba(255,255,255,0.3)' }}>Contact Sales</button>
               </div>
             </div>
 
-            {/* Comparison Table Mini */}
-            <div style={{ maxWidth: '800px', margin: '0 auto', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '40px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', textAlign: 'center', color: '#d1d5db', fontSize: '0.9rem' }}>
-                <div style={{ textAlign: 'left', fontWeight: 700, color: '#fff' }}>Feature</div>
-                <div style={{ fontWeight: 700, color: '#fff' }}>Backr</div>
-                <div>Patreon</div>
+            {/* Comparison Table */}
+            <div style={{ maxWidth: '900px', margin: '0 auto', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', padding: '40px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <h3 style={{ textAlign: 'center', fontSize: '1.5rem', fontWeight: 700, marginBottom: '32px', color: '#fff' }}>Backr vs. Patreon</h3>
 
-                <div style={{ textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '12px 0' }}>Platform Fee</div>
-                <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '12px 0', color: '#4ade80', fontWeight: 700 }}>5% Flat</div>
-                <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '12px 0' }}>8% - 12%</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr', gap: '16px', fontSize: '0.95rem' }}>
+                {/* Header */}
+                <div style={{ color: '#9ca3af', paddingBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>Feature</div>
+                <div style={{ fontWeight: 700, color: '#fff', textAlign: 'center', paddingBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>Backr</div>
+                <div style={{ color: '#9ca3af', textAlign: 'center', paddingBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>Patreon</div>
 
-                <div style={{ textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '12px 0' }}>Payouts</div>
-                <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '12px 0', color: '#fff', fontWeight: 700 }}>Instant</div>
-                <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '12px 0' }}>Monthly</div>
+                {/* Rows */}
+                <div style={{ color: '#d1d5db', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>Platform Fee</div>
+                <div style={{ color: '#4ade80', fontWeight: 700, textAlign: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>5% Flat</div>
+                <div style={{ color: '#9ca3af', textAlign: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>8% - 12%</div>
 
-                <div style={{ textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '12px 0' }}>Ownership</div>
-                <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '12px 0', color: '#fff', fontWeight: 700 }}>100% You</div>
-                <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '12px 0' }}>Shared</div>
+                <div style={{ color: '#d1d5db', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>Payout Speed</div>
+                <div style={{ color: '#fff', fontWeight: 700, textAlign: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>Instant / Real-time</div>
+                <div style={{ color: '#9ca3af', textAlign: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>Monthly</div>
+
+                <div style={{ color: '#d1d5db', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>Pricing Control</div>
+                <div style={{ color: '#fff', fontWeight: 700, textAlign: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>You set the price</div>
+                <div style={{ color: '#9ca3af', textAlign: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>You set the price</div>
+
+                <div style={{ color: '#d1d5db', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>Payment Rails</div>
+                <div style={{ color: '#fff', fontWeight: 700, textAlign: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>Crypto (Mantle)</div>
+                <div style={{ color: '#9ca3af', textAlign: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>Cards / PayPal</div>
+
+                <div style={{ color: '#d1d5db', padding: '16px 0' }}>Data Ownership</div>
+                <div style={{ color: '#fff', fontWeight: 700, textAlign: 'center', padding: '16px 0' }}>100% You</div>
+                <div style={{ color: '#9ca3af', textAlign: 'center', padding: '16px 0' }}>Platform Mediated</div>
               </div>
             </div>
+
+            {/* CTAs */}
+            <div style={{ textAlign: 'center', marginTop: '64px' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                <button className="btn-primary" onClick={() => router.push('/dashboard')} style={{ background: '#fff', color: '#111827', minWidth: '200px' }}>Create your page</button>
+                <button className="btn-secondary" onClick={() => router.push('/explore')} style={{ background: 'transparent', color: '#fff', borderColor: 'rgba(255,255,255,0.3)', minWidth: '200px' }}>See example setups</button>
+              </div>
+              <p style={{ marginTop: '16px', fontSize: '0.875rem', color: '#6b7280' }}>
+                Set your tier prices in minutes.
+              </p>
+            </div>
+
           </div>
         </section>
 
