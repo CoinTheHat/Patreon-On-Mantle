@@ -22,7 +22,7 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
     const { showToast, ToastComponent } = useToast();
 
     // Tab State
-    const [activeTab, setActiveTab] = useState<'posts' | 'about' | 'collections'>('posts');
+    const [activeTab, setActiveTab] = useState<'posts' | 'about' | 'membership'>('posts');
 
     const [loading, setLoading] = useState(false);
     const [posts, setPosts] = useState<any[]>([]);
@@ -232,13 +232,13 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
             </div>
 
             {/* Main Content Grid */}
-            <div className="page-container responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: '40px', paddingBottom: '80px' }}>
+            <div className="page-container responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: '40px', paddingBottom: '100px' }}>
 
                 {/* Left: Feed & Tabs */}
                 <div>
                     {/* Tabs */}
                     <div style={{ display: 'flex', borderBottom: '1px solid var(--color-border)', marginBottom: '32px', gap: '8px' }}>
-                        {['posts', 'about', 'collections'].map((tab) => (
+                        {['posts', 'about', 'membership'].map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab as any)}
@@ -271,6 +271,8 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                             ) : (
                                 posts.map((post, i) => {
                                     const locked = !canViewPost(post);
+                                    const minTierName = creatorTiers[post.minTier || 0]?.name || 'Members Only';
+
                                     return (
                                         <div key={i} className="card-surface" style={{ overflow: 'hidden', padding: 0, display: 'flex', flexDirection: 'column', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)' }}>
                                             <div style={{ padding: '24px' }}>
@@ -278,13 +280,22 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                                                     <span className="text-caption" style={{ color: 'var(--color-text-tertiary)' }}>
                                                         {new Date(post.createdAt).toLocaleDateString()}
                                                     </span>
-                                                    {locked && (
+                                                    {locked ? (
                                                         <div style={{
                                                             fontSize: '0.7rem', fontWeight: 800,
                                                             color: 'var(--color-warning)', textTransform: 'uppercase',
-                                                            background: 'rgba(245, 158, 11, 0.1)', padding: '4px 8px', borderRadius: '4px'
+                                                            background: 'rgba(245, 158, 11, 0.1)', padding: '4px 8px', borderRadius: '4px',
+                                                            display: 'flex', alignItems: 'center', gap: '4px'
                                                         }}>
-                                                            Locked 🔒
+                                                            🔒 {minTierName}
+                                                        </div>
+                                                    ) : (
+                                                        <div style={{
+                                                            fontSize: '0.7rem', fontWeight: 800,
+                                                            color: 'var(--color-success)', textTransform: 'uppercase',
+                                                            background: 'rgba(16, 185, 129, 0.1)', padding: '4px 8px', borderRadius: '4px'
+                                                        }}>
+                                                            Public
                                                         </div>
                                                     )}
                                                 </div>
@@ -295,7 +306,8 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                                                 <div className="text-body" style={{ color: locked ? 'var(--color-text-tertiary)' : 'var(--color-text-secondary)', marginBottom: '20px', lineHeight: '1.6' }}>
                                                     {locked ? (
                                                         <div style={{ fontStyle: 'italic', opacity: 0.8 }}>
-                                                            This post is for <strong>Tier {post.minTier || 1}+</strong> members only. Join to unlock and read the full story.
+                                                            This post is exclusive to <strong>{minTierName}</strong> members.
+                                                            <br />Join to unlock and read the full story.
                                                         </div>
                                                     ) : (
                                                         post.content?.length > 200 ? post.content.substring(0, 200) + '...' : post.content
@@ -308,10 +320,12 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                                                         height: '240px', width: '100%', borderRadius: '12px', overflow: 'hidden',
                                                         marginBottom: '20px', position: 'relative', background: 'var(--color-bg-skeleton)'
                                                     }}>
-                                                        <img src={post.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: locked ? 'blur(8px)' : 'none', opacity: locked ? 0.7 : 1 }} />
+                                                        <img src={post.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: locked ? 'blur(12px)' : 'none', opacity: locked ? 0.6 : 1 }} />
                                                         {locked && (
                                                             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                                <span style={{ fontSize: '3rem' }}>🔒</span>
+                                                                <div style={{ background: 'rgba(0,0,0,0.6)', color: '#fff', padding: '12px 24px', borderRadius: '99px', backdropFilter: 'blur(4px)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                                    <span>🔒</span> Unlock to view
+                                                                </div>
                                                             </div>
                                                         )}
                                                     </div>
@@ -322,8 +336,13 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                                                         {locked ? (
                                                             <Button size="sm" onClick={() => {
                                                                 const el = document.getElementById('tiers-section');
-                                                                el?.scrollIntoView({ behavior: 'smooth' });
-                                                            }}>Unlock</Button>
+                                                                if (el && window.innerWidth >= 1000) {
+                                                                    el.scrollIntoView({ behavior: 'smooth' });
+                                                                } else {
+                                                                    setActiveTab('membership');
+                                                                    document.querySelector('.responsive-grid')?.scrollIntoView({ behavior: 'smooth' });
+                                                                }
+                                                            }}>Unlock Post</Button>
                                                         ) : (
                                                             <>
                                                                 <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-secondary)', fontSize: '0.9rem', display: 'flex', gap: '6px', alignItems: 'center' }}>
@@ -368,21 +387,45 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                         </div>
                     )}
 
-                    {activeTab === 'collections' && (
-                        <div style={{ padding: '64px', textAlign: 'center', background: 'var(--color-bg-surface)', borderRadius: 'var(--radius-lg)', border: '1px dashed var(--color-border)' }}>
-                            <div style={{ fontSize: '2rem', marginBottom: '16px' }}>📂</div>
-                            <h3 className="text-h3">No Collections</h3>
-                            <p className="text-body-sm" style={{ color: 'var(--color-text-tertiary)' }}>Collections help organize posts series.</p>
+                    {activeTab === 'membership' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                            <div className="text-h3" style={{ marginBottom: '8px' }}>Choose your plan</div>
+                            {creatorTiers.map((tier, i) => (
+                                <div key={i} className="card-surface" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', border: tier.recommended ? '2px solid var(--color-primary)' : '1px solid var(--color-border)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                        <div>
+                                            <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{tier.name}</h3>
+                                            <div style={{ fontSize: '1.5rem', fontWeight: 800, marginTop: '4px', color: 'var(--color-primary)' }}>{formatPrice(tier.price)} <span style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', fontWeight: 400 }}>/ month</span></div>
+                                        </div>
+                                        {tier.recommended && <span style={{ background: 'var(--color-primary-light)', color: 'var(--color-primary)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700 }}>RECOMMENDED</span>}
+                                    </div>
+
+                                    <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '16px' }}>
+                                        <p style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '8px' }}>What's included:</p>
+                                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                            {tier.benefits?.map((b: string, idx: number) => (
+                                                <li key={idx} style={{ display: 'flex', gap: '8px', fontSize: '0.9rem' }}>
+                                                    <span style={{ color: 'var(--color-success)' }}>✓</span> {b}
+                                                </li>
+                                            ))}
+                                            <li style={{ display: 'flex', gap: '8px', fontSize: '0.9rem' }}>
+                                                <span style={{ color: 'var(--color-success)' }}>✓</span> Direct support to {displayName}
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <Button onClick={() => handleSubscribeClick(i)} variant={tier.recommended ? 'primary' : 'outline'} style={{ width: '100%' }}>Join {tier.name}</Button>
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>
 
-                {/* Right: Sidebar (Sticky) */}
-                <aside style={{ position: 'relative' }}>
+                {/* Right: Sidebar (Sticky - Desktop Only) */}
+                <aside className="desktop-sidebar" style={{ position: 'relative' }}>
                     <div id="tiers-section" style={{ position: 'sticky', top: '90px' }}>
                         <div className="card-surface" style={{ padding: '24px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-lg)', borderRadius: 'var(--radius-lg)' }}>
-                            <h3 className="text-h3" style={{ marginBottom: '8px' }}>Join Membership</h3>
-                            <p className="text-body-sm" style={{ marginBottom: '24px', color: 'var(--color-text-secondary)' }}>Unlock exclusive content and support {displayName}.</p>
+                            <h3 className="text-h3" style={{ marginBottom: '8px' }}>Membership</h3>
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                 {creatorTiers.map((tier, i) => (
@@ -396,32 +439,24 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                                         position: 'relative'
                                     }}
                                         onClick={() => handleSubscribeClick(i)}
-                                        onMouseEnter={(e) => {
-                                            e.currentTarget.style.borderColor = 'var(--color-primary)';
-                                            e.currentTarget.style.transform = 'translateY(-2px)';
-                                            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.currentTarget.style.borderColor = tier.recommended ? 'var(--color-primary)' : 'var(--color-border)';
-                                            e.currentTarget.style.transform = 'translateY(0)';
-                                            e.currentTarget.style.boxShadow = 'none';
-                                        }}
                                     >
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                                             <h4 style={{ fontWeight: 700 }}>{tier.name}</h4>
                                             <span style={{ fontWeight: 800 }}>{formatPrice(tier.price)}</span>
                                         </div>
-                                        {tier.recommended && (
-                                            <div style={{ fontSize: '0.75rem', color: 'var(--color-primary)', fontWeight: 700, marginBottom: '8px' }}>RECOMMENDED</div>
-                                        )}
-                                        <p className="text-caption" style={{ color: 'var(--color-text-secondary)' }}>Includes {tier.benefits?.length || 0} benefits</p>
-                                        <Button size="sm" style={{ width: '100%', marginTop: '12px' }} variant={tier.recommended ? 'primary' : 'outline'}>Join</Button>
+                                        <p className="text-caption" style={{ color: 'var(--color-text-secondary)' }}>{tier.benefits?.length || 0} benefits</p>
                                     </div>
                                 ))}
 
                                 {creatorTiers.length === 0 && (
-                                    <div style={{ textAlign: 'center', padding: '16px', fontStyle: 'italic', color: 'var(--color-text-tertiary)' }}>No tiers public yet.</div>
+                                    <div style={{ textAlign: 'center', padding: '16px', fontStyle: 'italic', color: 'var(--color-text-tertiary)' }}>No public tiers.</div>
                                 )}
+                            </div>
+
+                            {/* Trust Microcopy */}
+                            <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid var(--color-border)', fontSize: '0.8rem', color: 'var(--color-text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>🛡️ <span>Cancel anytime</span></div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>⚡ <span>Instant access unlocked</span></div>
                             </div>
                         </div>
                     </div>
@@ -429,13 +464,36 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
 
             </div>
 
+            {/* Mobile Sticky Bottom Bar */}
+            <div className="mobile-sticky-bar" style={{
+                position: 'fixed', bottom: 0, left: 0, right: 0,
+                background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)',
+                padding: '16px 24px', borderTop: '1px solid var(--color-border)',
+                boxShadow: '0 -4px 10px rgba(0,0,0,0.05)', zIndex: 90,
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+            }}>
+                <div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Membership</div>
+                    <div style={{ fontWeight: 800, color: 'var(--color-text-primary)' }}>From {creatorTiers[0] ? formatPrice(creatorTiers[0].price) : 'Free'}</div>
+                </div>
+                <Button onClick={() => {
+                    setActiveTab('membership');
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); // Simplified scroll
+                }}>View Tiers</Button>
+            </div>
+
             {/* Global Styles for layout */}
             <style dangerouslySetInnerHTML={{
                 __html: `
+                .desktop-sidebar { display: none; }
+                .mobile-sticky-bar { display: flex; }
+                
                 @media (min-width: 1000px) {
                     .responsive-grid {
                         grid-template-columns: 7fr 350px !important;
                     }
+                    .desktop-sidebar { display: block; }
+                    .mobile-sticky-bar { display: none !important; }
                 }
             `}} />
 
