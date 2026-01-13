@@ -257,11 +257,16 @@ export default function PostsPage() {
 
             {/* HEADER CONTROLS */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginBottom: '24px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                <div className="posts-toolbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                    <style dangerouslySetInnerHTML={{
+                        __html: `
+                        @media (max-width: 640px) { .posts-toolbar { flex-direction: column; align-items: stretch; } .search-box { width: 100% !important; max-width: none !important; } }
+                        @media (max-width: 1024px) { .create-post-btn-desktop { display: none !important; } }
+                     `}} />
 
                     {/* Left: Filter & Search */}
                     <div style={{ display: 'flex', gap: '16px', flex: 1, minWidth: '300px', alignItems: 'center', flexWrap: 'wrap' }}>
-                        <div style={{ position: 'relative', flex: 1, maxWidth: '320px', minWidth: '200px' }}>
+                        <div className="search-box" style={{ position: 'relative', flex: 1, maxWidth: '320px', minWidth: '200px' }}>
                             <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5, zIndex: 1 }}>🔍</span>
                             <Input
                                 placeholder="Search library..."
@@ -293,8 +298,10 @@ export default function PostsPage() {
                         </div>
                     </div>
 
-                    {/* Right: Action */}
-                    <Button variant="primary" onClick={() => openEditor()} leftIcon={<span>+</span>}>New Post</Button>
+                    {/* Right: Action (Desktop Only) */}
+                    <div className="create-post-btn-desktop">
+                        <Button variant="primary" onClick={() => openEditor()} leftIcon={<span>+</span>}>New Post</Button>
+                    </div>
                 </div>
             </div>
 

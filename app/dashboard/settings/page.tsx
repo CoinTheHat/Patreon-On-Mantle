@@ -217,7 +217,7 @@ export default function SettingsPage() {
                 position: 'fixed', bottom: 0, left: 0, right: 0,
                 background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)',
                 borderTop: '1px solid var(--color-border)',
-                padding: '16px 24px', zIndex: 100,
+                padding: '16px 24px', zIndex: 90, // Lower than modals (1000)
                 transform: hasChanges ? 'translateY(0)' : 'translateY(100%)',
                 transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -257,6 +257,9 @@ export default function SettingsPage() {
                 __html: `
                 .avatar-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; cursor: pointer; }
                 .avatar-overlay:hover { opacity: 1; }
+                @media (max-width: 640px) {
+                    .settings-grid { grid-template-columns: 1fr !important; }
+                }
             `}} />
         </div>
     );

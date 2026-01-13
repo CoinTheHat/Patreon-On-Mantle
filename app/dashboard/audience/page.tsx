@@ -114,7 +114,11 @@ export default function AudiencePage() {
                             />
                         </div>
 
-                        <div style={{ display: 'flex', gap: '12px', flex: '1 1 auto', flexWrap: 'wrap' }}>
+                        <div className="action-row" style={{ display: 'flex', gap: '12px', flex: '1 1 auto' }}>
+                            <style dangerouslySetInnerHTML={{
+                                __html: `
+                                @media (max-width: 640px) { .filter-controls { flex-direction: column; align-items: stretch; } .action-row { width: 100%; } }
+                             `}} />
                             <div style={{ position: 'relative', flexGrow: 1, minWidth: '150px' }}>
                                 <select
                                     value={filterStatus}
@@ -275,7 +279,7 @@ export default function AudiencePage() {
                                         {m.subscriberAddress.substring(2, 4).toUpperCase()}
                                     </div>
                                     <div>
-                                        <div style={{ fontWeight: 600, fontFamily: 'monospace' }}>{m.subscriberAddress.slice(0, 6)}...{m.subscriberAddress.slice(-4)}</div>
+                                        <div style={{ fontWeight: 600, fontFamily: 'monospace', fontSize: '0.9rem' }}>{m.subscriberAddress.slice(0, 6)}...{m.subscriberAddress.slice(-4)}</div>
                                         <div className="text-caption">{m.tierName}</div>
                                     </div>
                                 </div>
@@ -286,8 +290,21 @@ export default function AudiencePage() {
                                     {m.status}
                                 </span>
                             </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                                <div>
+                                    <div className="text-caption">Joined</div>
+                                    <div style={{ fontSize: '0.9rem' }}>{new Date(m.createdAt).toLocaleDateString()}</div>
+                                </div>
+                                <div>
+                                    <div className="text-caption">Expires</div>
+                                    <div style={{ fontSize: '0.9rem' }}>{new Date(m.expiresAt).toLocaleDateString()}</div>
+                                </div>
+                            </div>
+
                             <div style={{ display: 'flex', gap: '12px' }}>
-                                <Button variant="secondary" size="sm" onClick={() => copyAddress(m.subscriberAddress)} style={{ flex: 1 }}>Copy Address</Button>
+                                <Button variant="outline" size="sm" onClick={() => copyAddress(m.subscriberAddress)} style={{ flex: 1 }}>Copy Address</Button>
+                                <Button variant="ghost" size="sm">Manage</Button>
                             </div>
                         </Card>
                     ))

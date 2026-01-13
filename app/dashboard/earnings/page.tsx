@@ -287,7 +287,7 @@ export default function EarningsPage() {
 
             {/* WITHDRAW MODAL */}
             {withdrawOpen && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200 }}>
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, padding: '16px' }}>
                     <div className="card-surface" style={{ width: '100%', maxWidth: '480px', padding: '32px' }}>
                         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                             <div style={{ fontSize: '3rem', marginBottom: '16px' }}>💰</div>

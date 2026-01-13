@@ -272,6 +272,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <div className="page-container" style={{ paddingBottom: '80px', paddingTop: '32px' }}>
                     {children}
                 </div>
+
+                {/* Mobile FAB: Create Post */}
+                <div
+                    className="mobile-fab"
+                    onClick={() => router.push('/dashboard/posts')}
+                    style={{
+                        position: 'fixed', bottom: '24px', right: '24px', zIndex: 60,
+                        width: '56px', height: '56px', borderRadius: '50%',
+                        background: 'var(--color-primary)', boxShadow: 'var(--shadow-xl)',
+                        display: 'none', alignItems: 'center', justifyContent: 'center',
+                        color: '#fff', fontSize: '1.5rem', cursor: 'pointer'
+                    }}
+                >
+                    +
+                </div>
+                <style dangerouslySetInnerHTML={{ __html: `@media(max-width: 1024px) { .mobile-fab { display: flex !important; margin-left: auto; } }` }} />
             </main>
         </div>
     );

@@ -215,7 +215,11 @@ export default function MembershipPage() {
                     <div className="modal-content card-surface">
                         <h2 className="text-h2" style={{ marginBottom: '24px' }}>{editingTier.index === -1 ? 'Create Plan' : 'Edit Plan'}</h2>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px', marginBottom: '24px' }}>
+                        <div className="tier-editor-layout" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px', marginBottom: '24px' }}>
+                            <style dangerouslySetInnerHTML={{
+                                __html: `
+                                @media(max-width: 640px) { .tier-editor-layout { grid-template-columns: 1fr !important; } }
+                             `}} />
                             <Card padding="md" style={{ background: 'var(--color-bg-page)', border: 'none' }}>
                                 <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-tertiary)', marginBottom: '16px', textTransform: 'uppercase' }}>Basic Info</div>
                                 <Input label="Tier Name" value={editingTier.name} onChange={(e) => setEditingTier({ ...editingTier, name: e.target.value })} placeholder="e.g. Gold Tier" style={{ marginBottom: '16px' }} />

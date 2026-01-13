@@ -87,8 +87,15 @@ export default function StudioOverview() {
             )}
 
             {/* 3. KPI Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '32px' }}>
-                <Card variant="surface" style={{ padding: '24px' }}>
+            <div className="kpi-grid" style={{ display: 'grid', gap: '24px', marginBottom: '32px' }}>
+                <style dangerouslySetInnerHTML={{
+                    __html: `
+                    .kpi-grid { grid-template-columns: 1fr; }
+                    @media(min-width: 640px) { .kpi-grid { grid-template-columns: 1fr 1fr; } .kpi-card:last-child { grid-column: span 2; } }
+                    @media(min-width: 1024px) { .kpi-grid { grid-template-columns: 1fr 1fr 1fr; } .kpi-card:last-child { grid-column: auto; } }
+                 `}} />
+
+                <Card variant="surface" className="kpi-card" style={{ padding: '24px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
                         <span className="text-caption" style={{ fontWeight: 700, textTransform: 'uppercase', color: 'var(--color-text-tertiary)' }}>Total Revenue</span>
                         <span style={{ fontSize: '1.25rem' }}>💰</span>
@@ -97,7 +104,7 @@ export default function StudioOverview() {
                     <div className="text-body-sm" style={{ color: 'var(--color-success)' }}>+0% from last month</div>
                 </Card>
 
-                <Card variant="surface" style={{ padding: '24px' }}>
+                <Card variant="surface" className="kpi-card" style={{ padding: '24px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
                         <span className="text-caption" style={{ fontWeight: 700, textTransform: 'uppercase', color: 'var(--color-text-tertiary)' }}>Active Members</span>
                         <span style={{ fontSize: '1.25rem' }}>👥</span>
@@ -106,7 +113,7 @@ export default function StudioOverview() {
                     <div className="text-body-sm" style={{ color: 'var(--color-success)' }}>+0 new this week</div>
                 </Card>
 
-                <Card variant="surface" style={{ padding: '24px' }}>
+                <Card variant="surface" className="kpi-card" style={{ padding: '24px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
                         <span className="text-caption" style={{ fontWeight: 700, textTransform: 'uppercase', color: 'var(--color-text-tertiary)' }}>Monthly Recurring</span>
                         <span style={{ fontSize: '1.25rem' }}>📅</span>
@@ -119,17 +126,30 @@ export default function StudioOverview() {
             {/* 4. Main Content Grid: Chart + Quick Actions */}
             <div className="dashboard-grid" style={{ marginBottom: '32px' }}>
 
-                {/* Revenue Chart */}
+                {/* Revenue Chart or Empty State */}
                 <Card variant="surface" style={{ padding: '24px', minHeight: '320px', display: 'flex', flexDirection: 'column' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                         <h3 className="text-h3">Revenue Growth</h3>
-                        <select className="focus-ring" style={{ fontSize: '0.875rem', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--color-border)', background: 'var(--color-bg-page)' }}>
-                            <option>Last 6 Months</option>
-                        </select>
+                        {stats.totalRevenue > 0 && (
+                            <select className="focus-ring" style={{ fontSize: '0.875rem', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--color-border)', background: 'var(--color-bg-page)' }}>
+                                <option>Last 6 Months</option>
+                            </select>
+                        )}
                     </div>
 
-                    <div style={{ flex: 1, minHeight: '200px' }}>
-                        <RevenueChart data={stats.history} />
+                    <div style={{ flex: 1, minHeight: '200px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        {stats.totalRevenue > 0 ? (
+                            <RevenueChart data={stats.history} />
+                        ) : (
+                            <div style={{ textAlign: 'center', padding: '20px' }}>
+                                <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🚀</div>
+                                <h4 style={{ fontWeight: 700, marginBottom: '8px' }}>Start your journey</h4>
+                                <p style={{ color: 'var(--color-text-secondary)', marginBottom: '24px', maxWidth: '300px', margin: '0 auto 24px' }}>
+                                    Launch your first membership tier to start earning revenue from your fans.
+                                </p>
+                                <Button onClick={() => router.push('/dashboard/membership')}>Example: Create Tier</Button>
+                            </div>
+                        )}
                     </div>
                 </Card>
 
