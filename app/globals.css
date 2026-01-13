@@ -4,15 +4,16 @@
 
 :root {
   /* Brand Colors */
-  --color-primary: #1FBCAD;
-  --color-primary-hover: #179C8F;
-  --color-primary-light: #effcfb;
+  --color-primary: #009F7F;
+  /* Mantle Teal */
+  --color-primary-hover: #008f72;
+  --color-primary-light: #e6f7f4;
 
   --color-brand-blue: #5865F2;
-  --color-brand-salmon: #FF908B;
-
-  --color-accent: #1FBCAD;
-  --color-accent-light: #effcfb;
+  /* Retain for Legacy references, treat as Accent */
+  --color-accent: #6366f1;
+  /* Indigo/Purple mix */
+  --color-accent-light: #eef2ff;
 
   /* Neutral Scale */
   --color-bg-page: #F9FAFB;
@@ -21,15 +22,18 @@
   --color-bg-skeleton: #e5e7eb;
 
   --color-text-primary: #111827;
+  /* Gray 900 */
   --color-text-secondary: #4B5563;
-  /* Darkened from #6B7280 */
-  --color-text-tertiary: #6B7280;
-  /* Darkened from #9CA3AF */
+  /* Gray 600 */
+  --color-text-tertiary: #9CA3AF;
+  /* Gray 400 */
 
   /* Borders */
-  --color-border: #F3F4F6;
-  --color-border-hover: #E5E7EB;
-  --color-border-focus: #1FBCAD;
+  --color-border: #E5E7EB;
+  /* Gray 200 */
+  --color-border-hover: #D1D5DB;
+  /* Gray 300 */
+  --color-border-focus: var(--color-primary);
 
   /* Status Colors */
   --color-success: #10B981;
@@ -53,28 +57,29 @@
   --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
-  /* Subtle card shadow */
-  --shadow-card-hover: 0 8px 16px rgba(0, 0, 0, 0.12);
-  /* Hover shadow */
-  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+  /* Shadows (Soft Product Feel) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-card-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08),
+    0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* Layout */
   --max-width-page: 1200px;
   --max-width-content: 1100px;
-  --sidebar-width: 260px;
+  --sidebar-width: 280px;
   --header-height: 72px;
 
   /* Typography Scale */
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
   --font-serif: var(--font-playfair), serif;
 
-  --text-display: clamp(2.5rem, 5vw, 3.5rem);
+  --text-display: clamp(2.5rem, 5vw, 4rem);
   --text-h1: clamp(2rem, 4vw, 2.5rem);
-  --text-h2: 2rem;
-  --text-h3: 1.5rem;
+  --text-h2: 1.75rem;
+  --text-h3: 1.25rem;
   --text-body: 1rem;
   --text-body-sm: 0.875rem;
   --text-caption: 0.75rem;
@@ -92,14 +97,16 @@ body {
   color: var(--color-text-primary);
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Utility Classes for this specific design system */
-/* Responsive Container */
+/* -----------------------------------------------------------------------------
+   UTILITY CLASSES (DESIGN SYSTEM)
+   ----------------------------------------------------------------------------- */
+
+/* Container */
 .page-container {
   width: 100%;
-  max-width: var(--max-width-content);
+  max-width: var(--max-width-page);
   margin: 0 auto;
   padding: 0 var(--space-4);
 }
@@ -116,51 +123,139 @@ body {
   }
 }
 
-/* 12-Column Responsive Grid */
+/* Grid System */
 .grid-system {
   display: grid;
   gap: var(--space-6);
-  grid-template-columns: repeat(1, 1fr);
-  /* Mobile default 1 col */
+  grid-template-columns: 1fr;
 }
 
 @media (min-width: 640px) {
   .grid-system {
     grid-template-columns: repeat(2, 1fr);
-    /* Tablet small: 2 cols */
-  }
-}
-
-@media (min-width: 768px) {
-  .grid-system {
-    grid-template-columns: repeat(3, 1fr);
-    /* Tablet: 3 cols */
   }
 }
 
 @media (min-width: 1024px) {
   .grid-system {
-    grid-template-columns: repeat(12, 1fr);
-    /* Desktop: 12 cols */
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-/* Card Surface Utility */
+/* Components: Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  text-decoration: none;
+  gap: 8px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-bg-page), 0 0 0 4px var(--color-primary);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-bg-surface-hover);
+  border-color: var(--color-border-hover);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--color-text-primary);
+}
+
+/* Components: Inputs */
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+/* Components: Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.badge-primary {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.badge-neutral {
+  background: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.badge-success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* Surface & Interaction */
 .card-surface {
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
 }
 
-.card-surface:hover {
-  border-color: var(--color-border-hover);
-}
-
-/* Hover Lift Utility */
 .hover-lift {
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
   will-change: transform, box-shadow;
 }
 
@@ -169,56 +264,48 @@ body {
   box-shadow: var(--shadow-card-hover);
 }
 
-/* Sticky Blur Navbar Utility */
+/* Sticky Nav */
 .sticky-blur {
   position: sticky;
   top: 0;
   z-index: 50;
   background: rgba(255, 255, 255, 0.85);
-  /* Slightly more opaque */
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  transition: background 0.3s ease;
 }
 
-/* Typography Utilities */
+/* Typography Helpers */
 .text-display {
   font-size: var(--text-display);
   font-weight: 800;
-  line-height: var(--leading-tight);
+  line-height: 1.1;
   letter-spacing: -0.02em;
 }
 
 .text-h1 {
   font-size: var(--text-h1);
   font-weight: 700;
-  line-height: var(--leading-tight);
+  line-height: 1.2;
   letter-spacing: -0.01em;
 }
 
 .text-h2 {
   font-size: var(--text-h2);
   font-weight: 600;
-  line-height: var(--leading-snug);
+  line-height: 1.3;
 }
 
 .text-h3 {
   font-size: var(--text-h3);
   font-weight: 600;
-  line-height: var(--leading-snug);
+  line-height: 1.4;
 }
 
 .text-body {
   font-size: var(--text-body);
-  line-height: var(--leading-normal);
   color: var(--color-text-primary);
-}
-
-.text-body-sm {
-  font-size: var(--text-body-sm);
-  line-height: var(--leading-normal);
-  color: var(--color-text-secondary);
+  line-height: 1.6;
 }
 
 .text-caption {
@@ -226,11 +313,6 @@ body {
   color: var(--color-text-tertiary);
 }
 
-/* Focus Ring Utility */
-.focus-ring:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--color-bg-page), 0 0 0 4px var(--color-border-focus);
-}
 
 /* Layout Content Area */
 .main-content {

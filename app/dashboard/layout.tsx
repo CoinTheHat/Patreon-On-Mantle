@@ -269,7 +269,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </header>
 
                 {/* Page Content */}
-                <div style={{ padding: '40px', maxWidth: 'var(--max-width-page)', width: '100%', margin: '0 auto' }}>
+                <div className="page-container" style={{ paddingBottom: '80px', paddingTop: '32px' }}>
                     {children}
                 </div>
             </main>

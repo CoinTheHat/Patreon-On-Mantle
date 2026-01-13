@@ -18,7 +18,7 @@ export default function EmptyState({
     onAction,
     variant = 'default'
 }: EmptyStateProps) {
-    const padding = variant === 'compact' ? 'var(--space-xl)' : 'var(--space-3xl)';
+    const padding = variant === 'compact' ? 'var(--space-8)' : 'var(--space-16)';
 
     return (
         <div

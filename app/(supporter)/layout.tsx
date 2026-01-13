@@ -197,8 +197,10 @@ export default function SupporterLayout({ children }: { children: React.ReactNod
             </nav>
 
             {/* Main Content */}
-            <main style={{ flex: 1, padding: '0', margin: '0 auto', width: '100%' }}>
-                {children}
+            <main style={{ flex: 1, width: '100%', paddingBottom: '96px' }}>
+                <div className="page-container" style={{ paddingTop: '24px' }}>
+                    {children}
+                </div>
             </main>
 
             {/* Mobile Bottom Navigation Bar */}

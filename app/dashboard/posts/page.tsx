@@ -298,8 +298,8 @@ export default function PostsPage() {
                 </div>
             </div>
 
-            {/* TABLE LIST VIEW */}
-            <Card padding="none" style={{ overflow: 'visible', background: '#fff', border: '1px solid var(--color-border)' }}>
+            {/* TABLE LIST VIEW (Desktop) */}
+            <Card padding="none" style={{ overflow: 'visible', background: '#fff', border: '1px solid var(--color-border)' }} className="desktop-view">
                 <div style={{ overflowX: 'auto' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
                         <thead style={{ background: 'var(--color-bg-page)', borderBottom: '1px solid var(--color-border)' }}>
@@ -334,10 +334,10 @@ export default function PostsPage() {
                                         </td>
                                         <td style={{ padding: '16px 24px' }}>
                                             {post.isPublic ? (
-                                                <span style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>🌍 Public</span>
+                                                <span className="badge badge-success" style={{ background: '#dcfce7', color: '#166534' }}>🌍 Public</span>
                                             ) : (
-                                                <span style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                    🔒 Member <span style={{ padding: '2px 6px', background: 'var(--color-bg-page)', borderRadius: '4px', fontSize: '0.75rem', border: '1px solid var(--color-border)' }}>T {post.minTier}+</span>
+                                                <span className="badge badge-neutral" style={{ display: 'inline-flex', gap: '6px' }}>
+                                                    🔒 Member <span style={{ opacity: 0.7 }}>T {post.minTier}+</span>
                                                 </span>
                                             )}
                                         </td>
@@ -355,12 +355,10 @@ export default function PostsPage() {
                                             </span>
                                         </td>
                                         <td style={{ padding: '16px 24px', textAlign: 'right' }}>
-                                            <Dropdown trigger={<Button variant="ghost" size="sm" style={{ fontWeight: 'bold', color: 'var(--color-text-secondary)' }}>•••</Button>}>
-                                                <div style={{ padding: '4px', display: 'flex', flexDirection: 'column' }}>
-                                                    <button onClick={() => openEditor(post)} style={{ textAlign: 'left', padding: '8px 12px', background: 'none', border: 'none', cursor: 'pointer', borderRadius: '4px', fontSize: '0.9rem' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--color-bg-page)'} onMouseLeave={e => e.currentTarget.style.background = 'none'}>Edit Post</button>
-                                                    <button onClick={() => handleDelete(post.id)} style={{ textAlign: 'left', padding: '8px 12px', background: 'none', border: 'none', cursor: 'pointer', borderRadius: '4px', fontSize: '0.9rem', color: 'var(--color-error)' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--color-bg-page)'} onMouseLeave={e => e.currentTarget.style.background = 'none'}>Delete</button>
-                                                </div>
-                                            </Dropdown>
+                                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                                                <Button variant="ghost" size="sm" onClick={() => openEditor(post)}>Edit</Button>
+                                                <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} style={{ color: 'var(--color-error)' }}>Delete</Button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
@@ -368,23 +366,70 @@ export default function PostsPage() {
                         </tbody>
                     </table>
                 </div>
-
-                {/* PAGINATION */}
-                {filteredPosts.length > 0 && (
-                    <div style={{ padding: '16px 24px', borderTop: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div className="text-caption">Showing {paginatedPosts.length} of {filteredPosts.length} posts</div>
-                        <div style={{ display: 'flex', gap: '8px' }}>
-                            <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)}>Prev</Button>
-                            <Button variant="outline" size="sm" disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)}>Next</Button>
-                        </div>
-                    </div>
-                )}
             </Card>
+
+            {/* MOBILE CARD LIST VIEW */}
+            <div className="mobile-view" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {paginatedPosts.length === 0 ? (
+                    <div className="card-surface" style={{ padding: '48px', textAlign: 'center', color: 'var(--color-text-secondary)' }}>
+                        <div style={{ fontSize: '2rem', marginBottom: '8px' }}>📝</div>
+                        <div>No posts found.</div>
+                        {posts.length === 0 && <Button variant="outline" size="sm" style={{ marginTop: '16px' }} onClick={() => openEditor()}>Create your first post</Button>}
+                    </div>
+                ) : (
+                    paginatedPosts.map(post => (
+                        <div key={post.id} className="card-surface" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <div style={{ display: 'flex', gap: '16px' }}>
+                                <div style={{ width: '64px', height: '64px', borderRadius: '8px', background: post.image ? `url(${post.image}) center/cover` : 'var(--color-bg-page)', border: '1px solid var(--color-border)', flexShrink: 0 }}></div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                        <div style={{ fontWeight: 600, fontSize: '1rem', color: 'var(--color-text-primary)', marginBottom: '4px' }}>{post.title}</div>
+                                        <span style={{
+                                            padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 700,
+                                            background: post.status === 'published' ? 'rgba(16, 185, 129, 0.1)' : 'var(--color-bg-page)',
+                                            color: post.status === 'published' ? 'var(--color-success)' : 'var(--color-text-secondary)',
+                                        }}>
+                                            {(post.status || 'draft').toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <div className="text-caption" style={{ marginBottom: '8px' }}>
+                                        {new Date(post.createdAt || 0).toLocaleDateString()} • {post.isPublic ? 'Public' : `Tier ${post.minTier}+`}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+                                <Button variant="secondary" style={{ flex: 1, justifyContent: 'center' }} onClick={() => openEditor(post)}>Edit</Button>
+                                <Button variant="ghost" style={{ flex: 1, justifyContent: 'center', color: 'var(--color-error)' }} onClick={() => handleDelete(post.id)}>Delete</Button>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+            {/* PAGINATION */}
+            {filteredPosts.length > 0 && (
+                <div style={{ padding: '16px 24px', borderTop: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="text-caption">Showing {paginatedPosts.length} of {filteredPosts.length} posts</div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                        <Button variant="outline" size="sm" disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)}>Prev</Button>
+                        <Button variant="outline" size="sm" disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)}>Next</Button>
+                    </div>
+                </div>
+            )}
+
 
             <style dangerouslySetInnerHTML={{
                 __html: `
                 .table-row:hover { background-color: var(--color-bg-surface-hover) !important; }
+                
+                .desktop-view { display: block; }
+                .mobile-view { display: none; }
+                
+                @media (max-width: 768px) {
+                    .desktop-view { display: none !important; }
+                    .mobile-view { display: flex !important; }
+                }
             `}} />
-        </div>
+        </div >
     );
 }
