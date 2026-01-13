@@ -137,7 +137,27 @@ function ExploreContent() {
 
                 {/* Results */}
                 {loading ? (
-                    <div style={{ textAlign: 'center', padding: '64px', color: '#52525b' }}>Loading creators...</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '32px' }}>
+                        {[1, 2, 3, 4, 5, 6].map(i => (
+                            <div key={i} style={{
+                                background: '#fff',
+                                borderRadius: '20px',
+                                overflow: 'hidden',
+                                border: '1px solid #e5e7eb',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
+                            }}>
+                                <div className="skeleton skeleton-card" style={{ height: '160px', borderRadius: 0 }} />
+                                <div style={{ padding: '52px 24px 24px' }}>
+                                    <div className="skeleton skeleton-text" style={{ width: '60%', marginBottom: '12px', height: '24px' }} />
+                                    <div className="skeleton skeleton-text" style={{ width: '100%' }} />
+                                    <div className="skeleton skeleton-text" style={{ width: '80%' }} />
+                                    <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid #f3f4f6' }}>
+                                        <div className="skeleton skeleton-text" style={{ width: '50%', height: '14px' }} />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 ) : filteredCreators.length === 0 ? (
                     <div style={{ textAlign: 'center', padding: '80px', background: '#f9fafb', borderRadius: '24px', border: '2px dashed #e5e7eb' }}>
                         <p style={{ fontSize: '1.2rem', color: '#52525b', marginBottom: '16px' }}>No creators found</p>
