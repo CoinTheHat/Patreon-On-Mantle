@@ -269,9 +269,9 @@ export default function Home() {
           {/* Card 3: Post/Article */}
           <div className="float-medium mobile-hide" style={{ position: 'absolute', top: '10%', right: '15%', width: '240px', background: '#fdfbf7', padding: '24px', borderRadius: '2px', boxShadow: '0 10px 20px rgba(0,0,0,0.08)', transform: 'rotate(2deg)' }}>
             <div style={{ fontFamily: 'serif', fontSize: '1.5rem', lineHeight: '1.2', marginBottom: '12px' }}>
-              "Why I decided to leave the studio system."
+              "My Gold Tier members just unlocked this exclusive demo."
             </div>
-            <div style={{ fontSize: '0.9rem', color: '#666' }}>Read on Backr →</div>
+            <div style={{ fontSize: '0.9rem', color: '#666' }}>Membership Perks →</div>
           </div>
 
         </section>
