@@ -1,6 +1,6 @@
 'use client';
 
-import { useAccount, useConnect, useDisconnect, useEnsName, useSwitchChain } from 'wagmi';
+import { useAccount, useConnect, useDisconnect, useEnsName, useSwitchChain, useBalance } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 import Button from './Button';
 import { useState, useEffect } from 'react';
@@ -10,11 +10,9 @@ export default function WalletButton() {
     const { connect, connectors } = useConnect();
     const { disconnect } = useDisconnect();
     const { switchChain } = useSwitchChain();
+    const { data: balance } = useBalance({ address });
 
-    // Mantle Testnet Chain ID = 5003 (or 5001 for Mainnet, here assuming Testnet for safety as per context)
-    // Actually typically 5003 is testnet. Let's assume we want to force whatever chain we configured.
-    // We'll rely on wagmi chain definitions.
-
+    // Mantle Testnet Chain ID = 5003
     const [showDropdown, setShowDropdown] = useState(false);
     const [showConnectModal, setShowConnectModal] = useState(false);
     const [profile, setProfile] = useState<any>(null);
@@ -22,7 +20,7 @@ export default function WalletButton() {
     // Fetch user profile on connect
     useEffect(() => {
         if (address) {
-            setShowConnectModal(false); // Close modal on connect
+            setShowConnectModal(false);
             fetch('/api/creators?includePending=true')
                 .then(res => res.json())
                 .then(creators => {
@@ -100,7 +98,7 @@ export default function WalletButton() {
     }
 
     // Network Enforcer
-    const isWrongNetwork = chain?.id !== 5000; // Mantle Mainnet ID
+    const isWrongNetwork = chain?.id !== 5000;
 
     if (isWrongNetwork) {
         return (
@@ -132,15 +130,28 @@ export default function WalletButton() {
                     transition: 'all 0.2s'
                 }}
             >
-                {/* Avatar or Gradient Placeholder */}
-                <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: profile?.avatarUrl ? `url(${profile.avatarUrl}) center/cover` : 'linear-gradient(135deg, #65b3ad, #8b5cf6)', border: '1px solid rgba(255,255,255,0.2)' }}></div>
-
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: '1' }}>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#fff' }}>
-                        {profile?.name || formatAddress(address as string)}
-                    </span>
-                    {profile?.name && <span style={{ fontSize: '0.65rem', color: '#a1a1aa' }}>{formatAddress(address as string)}</span>}
+                {/* Network Dot */}
+                <div style={{
+                    display: 'flex', alignItems: 'center', gap: '6px',
+                    paddingRight: '12px', borderRight: '1px solid rgba(255,255,255,0.1)'
+                }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }}></div>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#10b981' }}>Mantle</span>
                 </div>
+
+                {/* Balance */}
+                {balance && (
+                    <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#fff' }}>
+                        {(Number(balance.value) / Math.pow(10, balance.decimals)).toFixed(3)} {balance.symbol}
+                    </div>
+                )}
+
+                {/* Avatar */}
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: profile?.avatarUrl ? `url(${profile.avatarUrl}) center/cover` : 'linear-gradient(135deg, #65b3ad, #8b5cf6)', border: '1px solid rgba(255,255,255,0.2)' }}></div>
+
+                <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#fff' }}>
+                    {formatAddress(address as string)}
+                </span>
             </Button>
 
             {showDropdown && (

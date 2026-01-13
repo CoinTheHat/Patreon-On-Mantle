@@ -13,8 +13,11 @@ function ExploreContent() {
 
     const [creators, setCreators] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [showFilters, setShowFilters] = useState(false);
+    const [sortBy, setSortBy] = useState('Trending');
 
     const categories = ['All', 'Podcasters', 'Video Creators', 'Musicians', 'Visual Artists', 'Writers', 'Gaming', 'Education'];
+    const sortOptions = ['Trending', 'Newest', 'Most Backed', 'Price: Low to High'];
 
     useEffect(() => {
         fetch('/api/creators')
@@ -36,195 +39,207 @@ function ExploreContent() {
             c.address?.toLowerCase().includes(query);
 
         const matchesCategory = !category || category === 'All';
-
         return matchesQuery && matchesCategory;
+    });
+
+    // Mock Sort Logic
+    const sortedCreators = [...filteredCreators].sort((a, b) => {
+        if (sortBy === 'Newest') return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        if (sortBy === 'Most Backed') return (b.supporterCount || 0) - (a.supporterCount || 0);
+        return 0; // Random/Trending
     });
 
     return (
         <div style={{ minHeight: '100vh', background: 'var(--color-bg-page)' }}>
             <style dangerouslySetInnerHTML={{
                 __html: `
-                .headline-serif {
-                    font-family: var(--font-serif);
-                    font-weight: 400;
-                    letter-spacing: -0.02em;
+                .headline-serif { font-family: var(--font-serif); }
+                .explore-grid { 
+                    display: grid; 
+                    grid-template-columns: 1fr; 
+                    gap: 32px; 
                 }
-                .creator-card {
-                    transition: all 0.3s ease;
-                    cursor: pointer;
+                @media (min-width: 640px) { .explore-grid { grid-template-columns: repeat(2, 1fr); } }
+                @media (min-width: 1024px) { .explore-grid { grid-template-columns: repeat(3, 1fr); } }
+                
+                .filter-btn {
+                    padding: 8px 16px; border-radius: 99px; border: 1px solid var(--color-border);
+                    background: #fff; cursor: pointer; display: flex; align-items: center; gap: 8px;
+                    transition: all 0.2s; font-size: 0.9rem; font-weight: 500;
                 }
-                .creator-card:hover {
-                    box-shadow: var(--shadow-card-hover) !important;
-                }
+                .filter-btn:hover { border-color: var(--color-brand-blue); color: var(--color-brand-blue); }
+                .filter-active { background: var(--color-brand-blue); color: #fff; border-color: var(--color-brand-blue); }
             `}} />
 
             {/* Hero Section */}
             <div style={{
-                background: 'linear-gradient(135deg, #a8c0f7 0%, #7FA1F7 100%)',
-                padding: '80px 0 120px',
-                marginBottom: '-60px'
+                background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
+                padding: '60px 0 80px',
+                borderBottom: '1px solid var(--color-border)'
             }}>
                 <div className="page-container" style={{ textAlign: 'center' }}>
-                    <h1 className="headline-serif" style={{
-                        fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
-                        color: '#000',
-                        marginBottom: 'var(--space-6)',
-                        lineHeight: '1.1'
-                    }}>
-                        Discover amazing <span style={{ fontStyle: 'italic' }}>creators</span>
+                    <h1 className="headline-serif" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginBottom: '16px' }}>
+                        Find your next <span style={{ color: 'var(--color-brand-blue)', fontStyle: 'italic' }}>obsession</span>
                     </h1>
-                    <p style={{ fontSize: '1.25rem', color: '#111', maxWidth: '700px', margin: '0 auto 48px', lineHeight: '1.6' }}>
-                        Support the artists, podcasters, writers, and creators who inspire you. Join their communities and unlock exclusive content.
+                    <p className="text-body" style={{ color: 'var(--color-text-secondary)' }}>
+                        Support independent creators building the future on Mantle.
                     </p>
                 </div>
             </div>
 
-            <div className="page-container" style={{ paddingBottom: '80px' }}>
-                {/* Search & Filter Bar */}
-                <div style={{ marginBottom: '48px', display: 'flex', gap: 'var(--space-4)', flexDirection: 'column', position: 'relative', zIndex: 10 }}>
-                    {/* Search */}
-                    <div style={{ position: 'relative', width: '100%', maxWidth: '600px', margin: '0 auto' }}>
-                        <span style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', fontSize: '1.2rem' }}>🔍</span>
-                        <input
-                            type="text"
-                            placeholder="Find a creator..."
-                            defaultValue={query}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') router.push(`/explore?q=${e.currentTarget.value}`)
-                            }}
-                            className="focus-ring"
-                            style={{
-                                width: '100%',
-                                background: '#fff',
-                                border: '2px solid var(--color-border)',
-                                padding: '16px 20px 16px 56px',
-                                borderRadius: '50px',
-                                color: 'var(--color-text-primary)',
-                                fontSize: '1.05rem',
-                                transition: 'all 0.2s',
-                                boxShadow: 'var(--shadow-sm)'
-                            }}
-                            onFocus={(e) => e.currentTarget.style.borderColor = 'var(--color-brand-blue)'}
-                            onBlur={(e) => e.currentTarget.style.borderColor = 'var(--color-border)'}
-                        />
-                    </div>
+            <div className="page-container" style={{ marginTop: '-40px', paddingBottom: '80px', position: 'relative', zIndex: 5 }}>
 
-                    {/* Categories */}
-                    <div style={{ display: 'flex', gap: 'var(--space-3)', overflowX: 'auto', paddingBottom: '8px', scrollbarWidth: 'none', justifyContent: 'center', flexWrap: 'wrap' }}>
+                {/* Search Bar */}
+                <div style={{ maxWidth: '600px', margin: '0 auto 40px', position: 'relative' }}>
+                    <input
+                        type="text"
+                        placeholder="Search for creators, tags, or content..."
+                        defaultValue={query}
+                        className="focus-ring"
+                        onKeyDown={(e) => { if (e.key === 'Enter') router.push(`/explore?q=${e.currentTarget.value}`) }}
+                        style={{
+                            width: '100%', padding: '16px 24px 16px 50px', borderRadius: 'var(--radius-full)',
+                            border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-lg)', fontSize: '1rem'
+                        }}
+                    />
+                    <span style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', fontSize: '1.2rem', opacity: 0.5 }}>🔍</span>
+                </div>
+
+                {/* Filters Row */}
+                <div style={{
+                    display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '20px', background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)',
+                    marginBottom: '40px', boxShadow: 'var(--shadow-sm)'
+                }}>
+                    <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', maxWidth: '100%', scrollbarWidth: 'none' }}>
                         {categories.map(cat => (
                             <button
-                                key={cat}
-                                onClick={() => router.push(cat === 'All' ? '/explore' : `/explore?cat=${cat}`)}
-                                style={{
-                                    padding: '10px 24px',
-                                    borderRadius: '9999px',
-                                    background: (!category && cat === 'All') || category === cat ? 'var(--color-brand-blue)' : 'var(--color-bg-page)',
-                                    color: (!category && cat === 'All') || category === cat ? '#fff' : 'var(--color-text-secondary)',
-                                    border: 'none',
-                                    fontWeight: '600',
-                                    cursor: 'pointer',
-                                    fontSize: '0.95rem',
-                                    transition: 'all 0.2s',
-                                    whiteSpace: 'nowrap'
-                                }}
+                                key={cat} onClick={() => router.push(cat === 'All' ? '/explore' : `/explore?cat=${cat}`)}
+                                className={`filter-btn ${(!category && cat === 'All') || category === cat ? 'filter-active' : ''}`}
                             >
                                 {cat}
                             </button>
                         ))}
                     </div>
+
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                        <select
+                            value={sortBy} onChange={(e) => setSortBy(e.target.value)}
+                            style={{
+                                padding: '8px 16px', borderRadius: '8px', border: '1px solid var(--color-border)',
+                                cursor: 'pointer', outline: 'none'
+                            }}
+                        >
+                            {sortOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                        </select>
+
+                        <button
+                            className={`filter-btn ${showFilters ? 'filter-active' : ''}`}
+                            onClick={() => setShowFilters(!showFilters)}
+                        >
+                            ⚙️ Filters
+                        </button>
+                    </div>
                 </div>
 
-                {/* Results */}
+                {/* Expanded Filters Panel (Mock) */}
+                {showFilters && (
+                    <div style={{
+                        padding: '24px', background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)',
+                        marginBottom: '40px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px'
+                    }}>
+                        <div>
+                            <label style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '8px', display: 'block' }}>Monthly Price</label>
+                            <input type="range" min="0" max="100" style={{ width: '100%' }} />
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
+                                <span>Free</span><span>$100+</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '8px', display: 'block' }}>Language</label>
+                            <select style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
+                                <option>Any</option><option>English</option><option>Español</option><option>Français</option>
+                            </select>
+                        </div>
+                    </div>
+                )}
+
+                {/* Grid */}
                 {loading ? (
-                    <div className="grid-system">
+                    <div className="explore-grid">
                         {[1, 2, 3, 4, 5, 6].map(i => (
-                            <div key={i} className="card-surface" style={{ overflow: 'hidden', padding: 0 }}>
-                                <div className="skeleton skeleton-card" style={{ height: '160px', borderRadius: 0 }} />
-                                <div style={{ padding: '52px 24px 24px' }}>
-                                    <div className="skeleton skeleton-text" style={{ width: '60%', marginBottom: '12px', height: '24px' }} />
-                                    <div className="skeleton skeleton-text" style={{ width: '100%' }} />
-                                    <div className="skeleton skeleton-text" style={{ width: '80%' }} />
-                                    <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid var(--color-border)' }}>
-                                        <div className="skeleton skeleton-text" style={{ width: '50%', height: '14px' }} />
+                            <div key={i} className="card-surface" style={{ height: '380px' }}>
+                                <div className="skeleton" style={{ height: '140px' }} />
+                                <div style={{ padding: '24px' }}>
+                                    <div className="skeleton skeleton-avatar" style={{ marginTop: '-48px', border: '4px solid #fff' }} />
+                                    <div className="skeleton skeleton-text" style={{ marginTop: '16px', width: '60%' }} />
+                                    <div className="skeleton skeleton-text" style={{ width: '40%' }} />
+                                    <div className="skeleton skeleton-rect" style={{ marginTop: '24px', height: '60px' }} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : sortedCreators.length === 0 ? (
+                    <div style={{ padding: '80px', textAlign: 'center', background: '#fff', borderRadius: '16px', border: '1px dashed var(--color-border)' }}>
+                        <h3>No creators found</h3>
+                        <p>Try adjusting your search or filters.</p>
+                        <Button variant="outline" onClick={() => router.push('/explore')} style={{ marginTop: '16px' }}>Clear Filters</Button>
+                    </div>
+                ) : (
+                    <div className="explore-grid">
+                        {sortedCreators.map((creator, i) => (
+                            <div
+                                key={i}
+                                className="card-surface"
+                                onClick={() => router.push(`/${creator.address}`)}
+                                style={{
+                                    padding: 0, overflow: 'hidden', cursor: 'pointer',
+                                    display: 'flex', flexDirection: 'column'
+                                }}
+                            >
+                                <div style={{ height: '140px', background: creator.coverUrl ? `url(${creator.coverUrl}) center/cover` : `linear-gradient(120deg, #${Math.floor(Math.random() * 16777215).toString(16)} 0%, #eee 100%)` }}></div>
+
+                                <div style={{ padding: '0 24px 24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                    <div style={{ marginTop: '-40px', marginBottom: '12px' }}>
+                                        <div style={{
+                                            width: '80px', height: '80px', borderRadius: '50%', background: '#fff', padding: '4px',
+                                            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                                        }}>
+                                            <div style={{
+                                                width: '100%', height: '100%', borderRadius: '50%',
+                                                background: creator.avatarUrl ? `url(${creator.avatarUrl}) center/cover` : `#ddd`,
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem'
+                                            }}>
+                                                {!creator.avatarUrl && (creator.name?.[0] || '👤')}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '4px' }}>{creator.name || 'Anonymous'}</h3>
+                                    <p className="text-body-sm" style={{ marginBottom: '16px', lineHeight: 1.5, flex: 1 }}>
+                                        {creator.description ? (creator.description.length > 80 ? creator.description.slice(0, 80) + '...' : creator.description) : 'No description provided.'}
+                                    </p>
+
+                                    {/* Stats Row */}
+                                    <div style={{ display: 'flex', gap: '16px', padding: '16px 0', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)', marginBottom: '16px' }}>
+                                        <div>
+                                            <div style={{ fontWeight: 700 }}>{Math.floor(Math.random() * 1000)}</div>
+                                            <div className="text-caption">Backrs</div>
+                                        </div>
+                                        <div>
+                                            <div style={{ fontWeight: 700 }}>{Math.floor(Math.random() * 50)}</div>
+                                            <div className="text-caption">Posts</div>
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div className="text-caption">Tiers from $5</div>
+                                        <Button size="sm" variant="outline">View Page</Button>
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
-                ) : filteredCreators.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '80px', background: 'var(--color-bg-page)', borderRadius: 'var(--radius-lg)', border: '2px dashed var(--color-border)' }}>
-                        <p style={{ fontSize: '1.2rem', color: 'var(--color-text-secondary)', marginBottom: '16px' }}>No creators found</p>
-                        <p style={{ color: 'var(--color-text-tertiary)' }}>Try a different search or category</p>
-                    </div>
-                ) : (
-                    <>
-                        <div style={{ marginBottom: '24px', color: 'var(--color-text-secondary)', fontSize: '0.95rem' }}>
-                            Found <strong>{filteredCreators.length}</strong> creator{filteredCreators.length !== 1 ? 's' : ''}
-                        </div>
-
-                        <div className="grid-system">
-                            {filteredCreators.map((creator, i) => (
-                                <div
-                                    key={i}
-                                    className="creator-card card-surface"
-                                    onClick={() => router.push(`/${creator.address}`)}
-                                    style={{
-                                        overflow: 'hidden',
-                                        padding: 0,
-                                        border: '1px solid var(--color-border)'
-                                    }}
-                                >
-                                    {/* Cover Image */}
-                                    <div style={{
-                                        height: '160px',
-                                        background: `linear-gradient(135deg, ${['#667eea', '#764ba2', '#f093fb', '#4facfe'][i % 4]} 0%, ${['#764ba2', '#f093fb', '#4facfe', '#00f2fe'][i % 4]} 100%)`,
-                                        position: 'relative'
-                                    }}>
-                                        <div style={{
-                                            position: 'absolute',
-                                            bottom: '-40px',
-                                            left: '24px',
-                                            width: '80px',
-                                            height: '80px',
-                                            borderRadius: '50%',
-                                            background: '#fff',
-                                            border: '4px solid #fff',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            fontSize: '2rem',
-                                            boxShadow: 'var(--shadow-sm)'
-                                        }}>
-                                            {creator.name ? creator.name.charAt(0).toUpperCase() : '👤'}
-                                        </div>
-                                    </div>
-
-                                    {/* Content */}
-                                    <div style={{ padding: '52px 24px 24px' }}>
-                                        <h3 style={{ fontSize: '1.3rem', fontWeight: 'bold', marginBottom: '8px', color: 'var(--color-text-primary)' }}>
-                                            {creator.name || `Creator ${creator.address.slice(0, 6)}`}
-                                        </h3>
-                                        <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary)', marginBottom: '20px', lineHeight: '1.5', minHeight: '60px' }}>
-                                            {creator.description || 'Creating amazing content for the community'}
-                                        </p>
-
-                                        <div style={{
-                                            display: 'flex',
-                                            gap: 'var(--space-4)',
-                                            paddingTop: '20px',
-                                            borderTop: '1px solid var(--color-border)',
-                                            fontSize: '0.9rem',
-                                            color: 'var(--color-text-tertiary)'
-                                        }}>
-                                            <span><strong style={{ color: 'var(--color-text-primary)' }}>{Math.floor(Math.random() * 500) + 10}</strong> Backrs</span>
-                                            <span>•</span>
-                                            <span style={{ color: 'var(--color-brand-blue)', fontWeight: '600' }}>Creating content</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </>
                 )}
             </div>
         </div>
