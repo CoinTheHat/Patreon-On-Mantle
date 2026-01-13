@@ -67,6 +67,8 @@
 /* Reset & Base */
 html,
 body {
+  margin: 0;
+  padding: 0;
   background-color: var(--color-bg-page);
   color: var(--color-text-primary);
   font-family: var(--font-family);

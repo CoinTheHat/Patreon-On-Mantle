@@ -110,7 +110,6 @@ export default function Home() {
 
         <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
           <span className="mobile-hide" onClick={() => router.push('/explore')} style={{ cursor: 'pointer', fontWeight: '500', fontSize: '0.95rem' }}>Find Creators</span>
-          <span className="mobile-hide" onClick={() => router.push('/dashboard')} style={{ cursor: 'pointer', fontWeight: '500', fontSize: '0.95rem' }}>Log In</span>
           <button
             onClick={() => router.push('/dashboard')}
             style={{
