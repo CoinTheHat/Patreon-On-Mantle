@@ -83,66 +83,80 @@ export default function Home() {
       {/* ---------------------------------------------------------------------------
          NAVIGATION - Transparent to Sticky
          --------------------------------------------------------------------------- */}
+      {/* Navigation */}
       <nav
         className={scrolled ? 'nav-scrolled' : ''}
         style={{
           position: 'fixed',
           top: 0, left: 0, right: 0,
           zIndex: 100,
-          padding: '20px clamp(24px, 5vw, 64px)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          padding: '20px 0',
           transition: 'all 0.3s ease',
-          background: 'transparent'
+          background: scrolled ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(10px)' : 'none',
+          borderBottom: scrolled ? '1px solid var(--color-border)' : 'none'
         }}>
-        <div
-          onClick={() => router.push('/')}
-          style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: '1.5rem',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            color: '#000'
-          }}
-        >
-          Backr
-        </div>
-
-        <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
-          <span className="mobile-hide" onClick={() => router.push('/explore')} style={{ cursor: 'pointer', fontWeight: '500', fontSize: '0.95rem' }}>Find Creators</span>
-          <button
-            onClick={() => router.push('/dashboard')}
+        <div className="page-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div
+            onClick={() => router.push('/')}
             style={{
-              padding: '12px 24px',
-              borderRadius: '99px',
-              background: '#000',
-              color: '#fff',
-              border: 'none',
-              fontWeight: '600',
+              fontFamily: 'var(--font-serif)',
+              fontSize: '1.5rem',
+              fontWeight: 'bold',
               cursor: 'pointer',
-              fontSize: '0.95rem'
-            }}>
-            Get Started
-          </button>
+              color: 'var(--color-text-primary)'
+            }}
+          >
+            Backr
+          </div>
+
+          <div style={{ display: 'flex', gap: 'var(--space-6)', alignItems: 'center' }}>
+            <span
+              className="mobile-hide"
+              onClick={() => router.push('/explore')}
+              style={{
+                cursor: 'pointer',
+                fontWeight: '500',
+                fontSize: '0.95rem',
+                color: 'var(--color-text-primary)'
+              }}>
+              Find Creators
+            </span>
+            <button
+              onClick={() => router.push('/dashboard')}
+              style={{
+                padding: '12px 24px',
+                borderRadius: 'var(--radius-full)',
+                background: '#000',
+                color: '#fff',
+                border: 'none',
+                fontWeight: '600',
+                cursor: 'pointer',
+                fontSize: '0.95rem',
+                transition: 'transform 0.2s'
+              }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              Get Started
+            </button>
+          </div>
         </div>
       </nav>
 
       <main style={{ paddingTop: '0px' }}>
 
-        {/* ---------------------------------------------------------------------------
-            SECTION 1: HERO - "Creativity powered by fandom"
-            Ref: Image 4 (Asymmetric grid with massive text)
-            --------------------------------------------------------------------------- */}
+        {/* SECTION 1: HERO */}
         <section style={{
           minHeight: '100vh',
           background: 'linear-gradient(180deg, #dbeafe 0%, #eff6ff 100%)',
-          padding: '140px clamp(24px, 5vw, 64px) 80px',
+          paddingTop: '140px',
+          paddingBottom: '80px',
           position: 'relative',
           overflow: 'hidden'
         }}>
 
-          <div style={{ maxWidth: '1600px', margin: '0 auto', position: 'relative', height: '100%' }}>
+          <div className="page-container" style={{ position: 'relative', height: '100%' }}>
 
             {/* Top Text */}
             <h1 className="headline-huge" style={{ fontSize: 'clamp(5rem, 11vw, 13rem)', color: '#4b3f35', marginBottom: '0' }}>
@@ -157,7 +171,7 @@ export default function Home() {
                   color: '#4b3f35',
                   marginLeft: 'clamp(0px, 10vw, 150px)',
                   fontStyle: 'italic',
-                  fontFamily: 'var(--font-sans)', /* Mixing sans for "powered" per ref? Or keep serif */
+                  fontFamily: 'var(--font-sans)',
                   fontWeight: '300'
                 }}>
                   powered
@@ -168,9 +182,9 @@ export default function Home() {
               <div className="creator-card-hover float-slow" style={{
                 width: 'clamp(200px, 25vw, 350px)',
                 aspectRatio: '3/4',
-                borderRadius: '12px',
+                borderRadius: 'var(--radius-md)',
                 overflow: 'hidden',
-                boxShadow: '0 15px 30px rgba(0,0,0,0.1)',
+                boxShadow: 'var(--shadow-lg)',
                 transform: 'rotate(2deg)',
                 marginTop: '40px'
               }}>
@@ -183,9 +197,9 @@ export default function Home() {
               <div className="creator-card-hover float-medium mobile-hide" style={{
                 width: 'clamp(180px, 20vw, 280px)',
                 aspectRatio: '4/5',
-                borderRadius: '12px',
+                borderRadius: 'var(--radius-md)',
                 overflow: 'hidden',
-                boxShadow: '0 15px 30px rgba(0,0,0,0.1)',
+                boxShadow: 'var(--shadow-lg)',
                 transform: 'rotate(-3deg)',
                 marginTop: '-100px',
                 marginLeft: '50px'
@@ -196,7 +210,7 @@ export default function Home() {
               {/* Bottom Text - "by fandom" */}
               <h1 className="headline-huge" style={{
                 fontSize: 'clamp(5rem, 11vw, 13rem)',
-                color: '#9ca3af', /* Lighter grey for 'by fandom' per ref style */
+                color: '#9ca3af',
                 textAlign: 'right',
                 width: '100%',
                 marginTop: '20px'
@@ -205,9 +219,9 @@ export default function Home() {
               </h1>
             </div>
 
-            {/* Main CTA positioned absolutely or in flow depending on mobile */}
-            <div style={{ marginTop: '60px', textAlign: 'center' }}>
-              <p style={{ fontSize: '1.25rem', maxWidth: '600px', margin: '0 auto 32px', fontFamily: 'var(--font-sans)', lineHeight: '1.6' }}>
+            {/* Main CTA */}
+            <div style={{ marginTop: 'var(--space-16)', textAlign: 'center' }}>
+              <p style={{ fontSize: '1.25rem', maxWidth: '600px', margin: '0 auto 32px', lineHeight: '1.6', color: 'var(--color-text-secondary)' }}>
                 Patreon is the best place to build community with your biggest fans, share exclusive work, and turn your passion into a lasting creative business.
               </p>
               <button onClick={() => router.push('/dashboard')} style={{
@@ -215,12 +229,16 @@ export default function Home() {
                 fontSize: '1.25rem',
                 background: '#000',
                 color: '#fff',
-                borderRadius: '99px',
+                borderRadius: 'var(--radius-full)',
                 border: 'none',
                 cursor: 'pointer',
                 fontWeight: '600',
-                boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
-              }}>
+                boxShadow: 'var(--shadow-lg)',
+                transition: 'transform 0.2s'
+              }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+              >
                 Get Started
               </button>
             </div>
@@ -229,11 +247,8 @@ export default function Home() {
         </section>
 
 
-        {/* ---------------------------------------------------------------------------
-            SECTION 2: "Complete Creative Control"
-            Ref: Image 2 (Centered text + orbiting cards)
-            --------------------------------------------------------------------------- */}
-        <section style={{ padding: '160px 20px', background: '#fff', position: 'relative', overflow: 'hidden', minHeight: '90vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {/* SECTION 2: "Complete Creative Control" */}
+        <section style={{ padding: 'var(--space-16) 0', background: '#fff', position: 'relative', overflow: 'hidden', minHeight: '90vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
 
           {/* Centered Massive Text */}
           <div style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
@@ -244,22 +259,20 @@ export default function Home() {
             </h2>
           </div>
 
-          {/* Orbiting Cards - Absolute Positioned */}
-          {/* Card 1: Video Thumb */}
-          <div className="float-fast mobile-hide" style={{ position: 'absolute', top: '15%', left: '10%', width: '300px', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.15)', transform: 'rotate(-5deg)' }}>
+          {/* Orbiting Cards */}
+          <div className="float-fast mobile-hide" style={{ position: 'absolute', top: '15%', left: '10%', width: '300px', borderRadius: 'var(--radius-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-lg)', transform: 'rotate(-5deg)' }}>
             <div style={{ background: '#000', height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
               <span style={{ fontSize: '3rem' }}>▶</span>
             </div>
-            <div style={{ padding: '16px', background: '#fff' }}>
+            <div style={{ padding: 'var(--space-md)', background: '#fff' }}>
               <div style={{ fontWeight: 'bold' }}>Exclusive: Behind the scenes</div>
-              <div style={{ fontSize: '0.85rem', color: '#666' }}>Video • 12 mins</div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>Video • 12 mins</div>
             </div>
           </div>
 
-          {/* Card 2: Audio/Podcast */}
-          <div className="float-slow mobile-hide" style={{ position: 'absolute', bottom: '20%', right: '8%', width: '280px', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.15)', transform: 'rotate(3deg)' }}>
-            <img src="/images/home_visuals/creator2.png" style={{ width: '100%', height: '280px', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', bottom: '16px', left: '16px', right: '16px', background: 'rgba(255,255,255,0.9)', padding: '12px', borderRadius: '8px' }}>
+          <div className="float-slow mobile-hide" style={{ position: 'absolute', bottom: '20%', right: '8%', width: '280px', borderRadius: 'var(--radius-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-lg)', transform: 'rotate(3deg)' }}>
+            <img src="/images/home_visuals/creator2.png" style={{ width: '100%', height: '280px', objectFit: 'cover' }} alt="Musician" />
+            <div style={{ position: 'absolute', bottom: '16px', left: '16px', right: '16px', background: 'rgba(255,255,255,0.9)', padding: '12px', borderRadius: 'var(--radius-md)' }}>
               <div style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>New Track Demo</div>
               <div style={{ width: '100%', height: '4px', background: '#ddd', marginTop: '8px', borderRadius: '2px' }}>
                 <div style={{ width: '40%', height: '100%', background: '#000' }}></div>
@@ -267,9 +280,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Card 3: Post/Article */}
-          <div className="float-medium mobile-hide" style={{ position: 'absolute', top: '10%', right: '15%', width: '240px', background: '#fdfbf7', padding: '24px', borderRadius: '2px', boxShadow: '0 10px 20px rgba(0,0,0,0.08)', transform: 'rotate(2deg)' }}>
-            <div style={{ fontFamily: 'serif', fontSize: '1.5rem', lineHeight: '1.2', marginBottom: '12px' }}>
+          <div className="float-medium mobile-hide" style={{ position: 'absolute', top: '10%', right: '15%', width: '240px', background: '#fdfbf7', padding: 'var(--space-lg)', borderRadius: '2px', boxShadow: 'var(--shadow-md)', transform: 'rotate(2deg)' }}>
+            <div style={{ fontFamily: 'serif', fontSize: '1.5rem', lineHeight: '1.2', marginBottom: 'var(--space-3)' }}>
               "My Gold Tier members just unlocked this exclusive demo."
             </div>
             <div style={{ fontSize: '0.9rem', color: '#666' }}>Membership Perks →</div>
@@ -278,16 +290,13 @@ export default function Home() {
         </section>
 
 
-        {/* ---------------------------------------------------------------------------
-            SECTION 3: "Creators. Fans. Nothing in between."
-            Ref: Image 1 (Blue layout, chat mockup)
-            --------------------------------------------------------------------------- */}
-        <section style={{ background: '#5865F2', padding: '140px clamp(24px, 5vw, 80px)', color: '#fff' }}>
-          <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '80px', alignItems: 'center' }}>
+        {/* SECTION 3: "Creators. Fans. Nothing in between." */}
+        <section style={{ background: '#5865F2', padding: 'var(--space-16) 0', color: '#fff' }}>
+          <div className="page-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-16)', alignItems: 'center' }}>
 
             {/* Text Content */}
             <div>
-              <h2 className="headline-huge" style={{ fontSize: 'clamp(3.5rem, 8vw, 7rem)', marginBottom: '40px' }}>
+              <h2 className="headline-huge" style={{ fontSize: 'clamp(3.5rem, 8vw, 7rem)', marginBottom: 'var(--space-8)' }}>
                 Creators.<br />
                 Fans.<br />
                 Nothing in<br />
@@ -298,7 +307,7 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Visual: Exclusive Content Mockup */}
+            {/* Visual */}
             <div style={{ transform: 'scale(1.1) rotate(-2deg)' }}>
               <ExclusiveContentMockup />
             </div>
@@ -307,12 +316,9 @@ export default function Home() {
         </section>
 
 
-        {/* ---------------------------------------------------------------------------
-            SECTION 4: "Turning passions into business" (Phone Mockup)
-            Ref: Image 3
-            --------------------------------------------------------------------------- */}
-        <section style={{ background: '#000', padding: '140px clamp(24px, 5vw, 80px)', color: '#fff', position: 'relative' }}>
-          <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '60px', alignItems: 'center' }}>
+        {/* SECTION 4: "Turning passions into business" */}
+        <section style={{ background: '#000', padding: 'var(--space-16) 0', color: '#fff', position: 'relative' }}>
+          <div className="page-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-12)', alignItems: 'center' }}>
 
             {/* Phone Visual */}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -325,13 +331,11 @@ export default function Home() {
                 position: 'relative',
                 overflow: 'hidden'
               }}>
-                {/* Phone Screen Mockup */}
                 <div style={{ padding: '24px' }}>
                   <div style={{ fontSize: '0.9rem', color: '#888', marginBottom: '20px' }}>Dashboard</div>
                   <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '10px' }}>$16,414</div>
                   <div style={{ color: '#4ade80', fontSize: '0.9rem', marginBottom: '40px' }}>▲ 12% from last month</div>
 
-                  {/* Fake Chart */}
                   <div style={{ display: 'flex', alignItems: 'flex-end', height: '150px', gap: '8px', marginBottom: '40px' }}>
                     {[40, 60, 45, 70, 55, 80, 65, 90].map((h, i) => (
                       <div key={i} style={{ flex: 1, background: i === 7 ? '#5865F2' : '#333', height: `${h}%`, borderRadius: '4px' }}></div>
@@ -348,16 +352,16 @@ export default function Home() {
 
             {/* Text Content */}
             <div>
-              <h2 className="headline-huge" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', marginBottom: '32px' }}>
+              <h2 className="headline-huge" style={{ fontSize: 'clamp(3rem, 7vw, 6rem)', marginBottom: 'var(--space-8)' }}>
                 Turning<br /> passions into<br /> <span style={{ color: '#5865F2' }}>businesses</span>
               </h2>
-              <div style={{ display: 'grid', gap: '24px' }}>
+              <div style={{ display: 'grid', gap: 'var(--space-6)' }}>
                 <div>
-                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '8px' }}>Unlock growth</h3>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: 'var(--space-2)' }}>Unlock growth</h3>
                   <p style={{ color: '#aaa', lineHeight: '1.6' }}>Get deep insights into who your fans are and what they love.</p>
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '8px' }}>More ways to earn</h3>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: 'var(--space-2)' }}>More ways to earn</h3>
                   <p style={{ color: '#aaa', lineHeight: '1.6' }}>From memberships to one-off shops, you set the rules.</p>
                 </div>
               </div>
@@ -366,14 +370,11 @@ export default function Home() {
         </section>
 
 
-        {/* ---------------------------------------------------------------------------
-            SECTION 5: Halftone / Newsletter "Your Rules"
-            Ref: Image 5
-            --------------------------------------------------------------------------- */}
-        <section style={{ position: 'relative', padding: '160px 20px', background: '#f3f4f6', overflow: 'hidden' }}>
+        {/* SECTION 5: "Your Rules" */}
+        <section style={{ position: 'relative', padding: 'var(--space-16) 0', background: '#f3f4f6', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }} className="halftone-bg"></div>
 
-          <div style={{ position: 'relative', zIndex: 1, maxWidth: '1400px', margin: '0 auto' }}>
+          <div className="page-container" style={{ position: 'relative', zIndex: 1 }}>
             <div style={{
               fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(4rem, 12vw, 15rem)',
@@ -401,27 +402,27 @@ export default function Home() {
         </section>
 
 
-        {/* ---------------------------------------------------------------------------
-            FOOTER
-            --------------------------------------------------------------------------- */}
-        <footer style={{ background: '#000', color: '#fff', padding: '80px clamp(24px, 5vw, 64px)' }}>
-          <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '40px' }}>
-            <div className="headline-huge" style={{ fontSize: '3rem' }}>Backr</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', paddingTop: '40px', borderTop: '1px solid #333' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <strong style={{ marginBottom: '8px' }}>Product</strong>
-                <a href="#" style={{ color: '#aaa', textDecoration: 'none' }}>Lite</a>
-                <a href="#" style={{ color: '#aaa', textDecoration: 'none' }}>Pro</a>
-                <a href="#" style={{ color: '#aaa', textDecoration: 'none' }}>Premium</a>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <strong style={{ marginBottom: '8px' }}>For Creators</strong>
-                <a href="#" style={{ color: '#aaa', textDecoration: 'none' }}>Podcasters</a>
-                <a href="#" style={{ color: '#aaa', textDecoration: 'none' }}>Video Creators</a>
-                <a href="#" style={{ color: '#aaa', textDecoration: 'none' }}>Musicians</a>
-              </div>
-              <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
-                <p style={{ color: '#666' }}>© 2024 Backr on Mantle.</p>
+        {/* FOOTER */}
+        <footer style={{ background: '#000', color: '#fff', padding: '80px 0' }}>
+          <div className="page-container">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+              <div className="headline-huge" style={{ fontSize: '3rem' }}>Backr</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', paddingTop: '40px', borderTop: '1px solid #333' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <strong style={{ marginBottom: '8px' }}>Product</strong>
+                  <a href="#" style={{ color: '#aaa', textDecoration: 'none' }}>Lite</a>
+                  <a href="#" style={{ color: '#aaa', textDecoration: 'none' }}>Pro</a>
+                  <a href="#" style={{ color: '#aaa', textDecoration: 'none' }}>Premium</a>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <strong style={{ marginBottom: '8px' }}>For Creators</strong>
+                  <a href="#" style={{ color: '#aaa', textDecoration: 'none' }}>Podcasters</a>
+                  <a href="#" style={{ color: '#aaa', textDecoration: 'none' }}>Video Creators</a>
+                  <a href="#" style={{ color: '#aaa', textDecoration: 'none' }}>Musicians</a>
+                </div>
+                <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
+                  <p style={{ color: '#666' }}>© 2024 Backr on Mantle.</p>
+                </div>
               </div>
             </div>
           </div>
