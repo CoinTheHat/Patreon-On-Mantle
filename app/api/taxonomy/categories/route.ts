@@ -36,56 +36,58 @@ export async function POST(request: Request) {
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    // PATCH update category
-    export async function PATCH(request: Request) {
-        try {
-            const body = await request.json();
-            const { id, name, icon, sortOrder, isActive } = body;
+}
 
-            if (!id) {
-                return NextResponse.json({ error: 'Category ID is required' }, { status: 400 });
-            }
+// PATCH update category
+export async function PATCH(request: Request) {
+    try {
+        const body = await request.json();
+        const { id, name, icon, sortOrder, isActive } = body;
 
-            const updates: any = { updatedAt: new Date().toISOString() };
-            if (name !== undefined) updates.name = name;
-            if (icon !== undefined) updates.icon = icon;
-            if (sortOrder !== undefined) updates.sortOrder = sortOrder;
-            if (isActive !== undefined) updates.isActive = isActive;
-
-            const { data, error } = await supabase
-                .from('categories')
-                .update(updates)
-                .eq('id', id)
-                .select()
-                .single();
-
-            if (error) throw error;
-
-            return NextResponse.json(data);
-        } catch (error: any) {
-            return NextResponse.json({ error: error.message }, { status: 500 });
+        if (!id) {
+            return NextResponse.json({ error: 'Category ID is required' }, { status: 400 });
         }
+
+        const updates: any = { updatedAt: new Date().toISOString() };
+        if (name !== undefined) updates.name = name;
+        if (icon !== undefined) updates.icon = icon;
+        if (sortOrder !== undefined) updates.sortOrder = sortOrder;
+        if (isActive !== undefined) updates.isActive = isActive;
+
+        const { data, error } = await supabase
+            .from('categories')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        return NextResponse.json(data);
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
+}
 
-    // DELETE category
-    export async function DELETE(request: Request) {
-        try {
-            const { searchParams } = new URL(request.url);
-            const id = searchParams.get('id');
+// DELETE category
+export async function DELETE(request: Request) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const id = searchParams.get('id');
 
-            if (!id) {
-                return NextResponse.json({ error: 'Category ID is required' }, { status: 400 });
-            }
-
-            const { error } = await supabase
-                .from('categories')
-                .delete()
-                .eq('id', id);
-
-            if (error) throw error;
-
-            return NextResponse.json({ success: true });
-        } catch (error: any) {
-            return NextResponse.json({ error: error.message }, { status: 500 });
+        if (!id) {
+            return NextResponse.json({ error: 'Category ID is required' }, { status: 400 });
         }
+
+        const { error } = await supabase
+            .from('categories')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+
+        return NextResponse.json({ success: true });
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
+}
