@@ -174,7 +174,7 @@ export default function Home() {
                 transform: 'rotate(2deg)',
                 marginTop: '40px'
               }}>
-                <img src="/images/home_visuals/creator_portrait_2_1768261781716.png" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Musician" />
+                <img src="/images/home_visuals/creator2.png" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Musician" />
               </div>
             </div>
 
@@ -190,7 +190,7 @@ export default function Home() {
                 marginTop: '-100px',
                 marginLeft: '50px'
               }}>
-                <img src="/images/home_visuals/creator_portrait_1_1768261761845.png" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Artist" />
+                <img src="/images/home_visuals/creator1.png" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Artist" />
               </div>
 
               {/* Bottom Text - "by fandom" */}
@@ -258,7 +258,7 @@ export default function Home() {
 
           {/* Card 2: Audio/Podcast */}
           <div className="float-slow mobile-hide" style={{ position: 'absolute', bottom: '20%', right: '8%', width: '280px', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.15)', transform: 'rotate(3deg)' }}>
-            <img src="/images/home_visuals/creator_portrait_2_1768261781716.png" style={{ width: '100%', height: '280px', objectFit: 'cover' }} />
+            <img src="/images/home_visuals/creator2.png" style={{ width: '100%', height: '280px', objectFit: 'cover' }} />
             <div style={{ position: 'absolute', bottom: '16px', left: '16px', right: '16px', background: 'rgba(255,255,255,0.9)', padding: '12px', borderRadius: '8px' }}>
               <div style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>New Track Demo</div>
               <div style={{ width: '100%', height: '4px', background: '#ddd', marginTop: '8px', borderRadius: '2px' }}>
