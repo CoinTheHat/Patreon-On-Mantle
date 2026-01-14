@@ -45,7 +45,7 @@ export default function SettingsPage() {
     // Community Context to update Sidebar
     const { refreshData } = useCommunity();
 
-    // Verify Deployment on Factory
+    // Verify Deployment on Factory (Read-only check, does not override DB state anymore)
     const { data: factoryProfile } = useReadContract({
         address: FACTORY_ADDRESS as `0x${string}`,
         abi: FACTORY_ABI,
@@ -53,20 +53,12 @@ export default function SettingsPage() {
         args: [address],
     });
 
+    // Modified Effect: Only LOG the discrepancy, do NOT override state.
     useEffect(() => {
         if (!factoryProfile) return;
-        const zeroAddress = '0x0000000000000000000000000000000000000000';
-
-        // Normalize for case-insensitive comparison
-        const profileAddress = String(factoryProfile).toLowerCase();
-
-        if (profileAddress === zeroAddress) {
-            console.log("Factory returned 0x0. Resetting local state.");
-            setContractAddress(null);
-        } else {
-            console.log("Factory returned valid profile:", profileAddress);
-            setContractAddress(profileAddress);
-        }
+        console.log("On-chain factory profile:", String(factoryProfile));
+        // We rely on the Database (via /api/creators) to be the source of truth for the UI state.
+        // This prevents the UI from "magically" reverting to 'Deployed' after a user explicitly resets their account.
     }, [factoryProfile]);
 
     useEffect(() => {
