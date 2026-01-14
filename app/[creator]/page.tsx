@@ -179,7 +179,14 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
 
     const canViewPost = (post: any) => {
         if (post.isPublic) return true;
-        if (address?.toLowerCase() === creatorId.toLowerCase()) return true;
+
+        // Check if viewer is creator
+        const viewer = address?.toLowerCase();
+        const currentCreator = creatorId?.toLowerCase();
+        const profileAddress = creatorProfile?.address?.toLowerCase();
+
+        if (viewer && (viewer === currentCreator || viewer === profileAddress)) return true;
+
         if (!isSubscribed) return false;
 
         const minTier = post.minTier || 0;
@@ -302,8 +309,8 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                                 key={tab}
                                 onClick={() => setActiveTab(tab as any)}
                                 className={`py-4 px-1 border-b-2 bg-transparent capitalize text-base font-medium transition-colors whitespace-nowrap ${activeTab === tab
-                                        ? 'border-text-primary text-text-primary font-semibold'
-                                        : 'border-transparent text-gray-500 hover:text-text-primary'
+                                    ? 'border-text-primary text-text-primary font-semibold'
+                                    : 'border-transparent text-gray-500 hover:text-text-primary'
                                     }`}
                             >
                                 {tab}
