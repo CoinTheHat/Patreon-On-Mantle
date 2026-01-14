@@ -695,7 +695,7 @@ textarea {
   background-image:
     radial-gradient(circle at top, rgba(0, 0, 0, 0.25) 0, transparent 45%),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.45)),
-    url('/backgrounds/hero-bg.png');
+    url('/backgrounds/hero-bg-simple.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top center;
@@ -713,9 +713,7 @@ textarea {
   }
 }
 
-.home-page-overlay {
-  /* background merged into home-page-bg to prevent override */
-}
+
 
 /* --------------------------------------------------------------------------
    HERO BACKGROUND
