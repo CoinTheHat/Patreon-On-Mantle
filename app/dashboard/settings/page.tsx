@@ -258,6 +258,36 @@ export default function SettingsPage() {
                             >
                                 {isDeploying || isWaiting ? 'Deploying...' : 'Deploy Membership Contract'}
                             </Button>
+
+                            {/* Import Option (Safety Net) */}
+                            {(() => {
+                                const profileStr = factoryProfile ? String(factoryProfile) : '';
+                                const zeroAddress = '0x0000000000000000000000000000000000000000';
+                                if (!profileStr || profileStr === zeroAddress) return null;
+
+                                return (
+                                    <div className="mt-4 pt-4 border-t border-dashed border-brand-primary/20 text-center">
+                                        <p className="text-xs text-brand-muted mb-2">Found an existing contract on blockchain:</p>
+                                        <button
+                                            onClick={async () => {
+                                                try {
+                                                    const res = await fetch('/api/creators', {
+                                                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify({ address, contractAddress: profileStr })
+                                                    });
+                                                    if (res.ok) {
+                                                        showToast('Contract imported successfully!', 'success');
+                                                        setTimeout(() => window.location.reload(), 1000);
+                                                    } else { showToast('Failed to import.', 'error'); }
+                                                } catch (e) { showToast('Error importing.', 'error'); }
+                                            }}
+                                            className="text-sm font-bold text-brand-primary hover:text-brand-dark transition-colors flex items-center justify-center gap-1 mx-auto"
+                                        >
+                                            Import {profileStr.slice(0, 6)}...{profileStr.slice(-4)} ↗
+                                        </button>
+                                    </div>
+                                );
+                            })()}
                         </div>
                     ) : (
                         <div>
