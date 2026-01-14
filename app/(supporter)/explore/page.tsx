@@ -17,7 +17,6 @@ function ExploreContent() {
     const [creators, setCreators] = useState<any[]>([]);
     const [categories, setCategories] = useState<any[]>([]);
     const [trendingTags, setTrendingTags] = useState<any[]>([]);
-    const [assignments, setAssignments] = useState<any[]>([]);
 
     const [loading, setLoading] = useState(true);
     const [sortBy, setSortBy] = useState('Trending');
@@ -50,7 +49,6 @@ function ExploreContent() {
                 }
 
                 if (Array.isArray(tagRes)) setTrendingTags(tagRes.filter((t: any) => t.isTrending));
-                if (assignRes.data) setAssignments(assignRes.data);
 
             } catch (e) {
                 console.error("Explore fetch error", e);
