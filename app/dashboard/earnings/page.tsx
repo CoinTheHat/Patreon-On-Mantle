@@ -237,6 +237,44 @@ export default function EarningsPage() {
                 )}
             </div>
 
+            {/* RECOVER FUNDS (Manual Withdrawal) */}
+            <Card padding="lg" style={{ marginBottom: '32px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <div>
+                        <h3 className="text-h3" style={{ fontSize: '1.25rem' }}>Recover Funds</h3>
+                        <p className="text-sm text-brand-muted">Withdraw from an old or reset contract manually.</p>
+                    </div>
+                </div>
+                <div className="flex gap-4 items-end">
+                    <div className="flex-1">
+                        <label className="text-xs font-bold text-brand-muted uppercase mb-2 block">Contract Address</label>
+                        <input
+                            type="text"
+                            placeholder="0x..."
+                            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-brand-dark focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none transition-all font-mono text-sm"
+                            id="manual-contract-input"
+                        />
+                    </div>
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            const input = document.getElementById('manual-contract-input') as HTMLInputElement;
+                            if (!input?.value || !input.value.startsWith('0x')) return showToast('Invalid address', 'error');
+                            writeContract({
+                                address: input.value as `0x${string}`, abi: SUBSCRIPTION_ABI, functionName: 'withdraw', args: [],
+                            }, {
+                                onSuccess: () => { showToast('Recovery initiated!', 'success'); input.value = ''; },
+                                onError: (e) => showToast('Failed to withdraw. Are you the owner?', 'error')
+                            });
+                        }}
+                        disabled={isPending}
+                        className="h-[46px]"
+                    >
+                        {isPending ? 'Processing...' : 'Withdraw'}
+                    </Button>
+                </div>
+            </Card>
+
             {/* HISTORY TABLE */}
             <Card padding="none" style={{ background: '#fff' }}>
                 <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--color-border)' }}>

@@ -193,14 +193,30 @@ export default function SettingsPage() {
 
     const handleResetContract = async () => {
         if (resetConfirmation !== 'RESET') return;
+
+        // Optimistic UI update
+        const previousAddress = contractAddress;
+        setContractAddress(null);
+
         try {
             const res = await fetch('/api/creators', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ address, contractAddress: null })
             });
-            if (res.ok) window.location.reload();
-            else showToast('Failed to reset.', 'error');
-        } catch (e) { console.error(e); showToast('Error resetting.', 'error'); }
+
+            if (res.ok) {
+                showToast('Reset successful. Reloading...', 'success');
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                // Revert on failure
+                setContractAddress(previousAddress);
+                showToast('Failed to reset.', 'error');
+            }
+        } catch (e) {
+            console.error(e);
+            setContractAddress(previousAddress);
+            showToast('Error resetting.', 'error');
+        }
     };
 
     const copyAddress = () => {
