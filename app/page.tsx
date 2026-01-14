@@ -29,11 +29,13 @@ export default function Home() {
     };
 
     return (
-        <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden font-sans selection:bg-indigo-100">
+        <div className="min-h-screen home-page-bg home-page-overlay text-gray-900 overflow-x-hidden font-sans selection:bg-indigo-100">
 
-            {/* Background Decor */}
-            <div className="fixed inset-0 z-0 pointer-events-none bg-motif-light opacity-60" />
-            <div className="fixed inset-0 z-0 pointer-events-none bg-motif-grain opacity-40 mix-blend-overlay" />
+            {/* Background Decor - Optional add-ons can be removed if galaxy is enough, keeping for texture if needed
+                But user requested ONLY galaxy. Let's comment out or remove old motifs to be clean.
+            */}
+            {/* <div className="fixed inset-0 z-0 pointer-events-none bg-motif-light opacity-60" /> */}
+            {/* <div className="fixed inset-0 z-0 pointer-events-none bg-motif-grain opacity-40 mix-blend-overlay" /> */}
 
             {/* ---------------------------------------------------------------------------
          NAVIGATION
@@ -41,10 +43,11 @@ export default function Home() {
             <nav
                 className={`fixed top-0 inset-x-0 z-50 h-[72px] flex items-center transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-md border-b border-gray-100' : 'bg-transparent'
                     }`}>
+                {/* ... (Navigation content stays same) ... */}
                 <div className="page-container flex justify-between items-center w-full">
                     {/* Logo */}
-                    <div onClick={() => router.push('/')} className="font-serif text-2xl font-bold cursor-pointer tracking-tight hover:opacity-80 transition-opacity">
-                        Backr
+                    <div onClick={() => router.push('/')} className="cursor-pointer hover:opacity-80 transition-opacity">
+                        <img src="/logo/backr-mark-b.svg" alt="Backr Logo" className="h-10 w-10" />
                     </div>
 
                     {/* Desktop Links */}
@@ -85,25 +88,27 @@ export default function Home() {
 
             <main className="relative pt-[72px]">
 
+                {/* Hero Background Wrapper Removed - Now Full Page */}
+
                 {/* SECTION 1: HERO EDITORIAL */}
-                <section className="relative min-h-[90vh] flex items-center pt-8 pb-16 lg:pb-0 overflow-hidden">
+                <section className="relative z-10 min-h-[90vh] flex items-center pt-8 pb-16 lg:pb-0 overflow-hidden">
                     <div className="page-container grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
                         {/* LEFT COLUMN: Editorial & Value Prop */}
                         <div className="flex flex-col items-start z-10 text-center lg:text-left mx-auto lg:mx-0 max-w-xl lg:max-w-none">
 
                             {/* Trust Badge */}
-                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50/50 rounded-full mb-8 self-center lg:self-start border border-blue-100/50 backdrop-blur-sm">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                                <span className="text-xs font-bold text-blue-600 uppercase tracking-wide">Built on Mantle Network</span>
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full mb-8 self-center lg:self-start border border-white/20 backdrop-blur-sm">
+                                <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                                <span className="text-xs font-bold text-white uppercase tracking-wide">Built on Mantle Network</span>
                             </div>
 
-                            <h1 className="text-display mb-6 text-gray-900 leading-[1.05] tracking-tight">
+                            <h1 className="text-display mb-6 text-white leading-[1.05] tracking-tight">
                                 Empower <br />
-                                Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500 font-serif italic pr-2">Creativity</span>
+                                Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300 font-serif italic pr-2">Creativity</span>
                             </h1>
 
-                            <p className="text-xl text-gray-600 mb-10 leading-relaxed font-light max-w-lg mx-auto lg:mx-0">
+                            <p className="text-xl text-gray-200 mb-10 leading-relaxed font-light max-w-lg mx-auto lg:mx-0 font-medium">
                                 Build a thriving community and earn directly from your fans. All on Mantle, with no middleman.
                             </p>
 
@@ -123,22 +128,22 @@ export default function Home() {
                                     </button>
                                 )}
 
-                                <button className="btn-secondary px-8 py-4 text-lg w-full sm:w-auto justify-center bg-white border-gray-200 hover:border-gray-300" onClick={() => router.push('/explore')}>
+                                <button className="btn-secondary px-8 py-4 text-lg w-full sm:w-auto justify-center bg-white/10 text-white border-white/20 hover:bg-white/20 hover:border-white/40" onClick={() => router.push('/explore')}>
                                     Discover creators
                                 </button>
                             </div>
 
                             {/* Social Stats */}
-                            <div className="flex flex-wrap gap-8 text-sm font-medium justify-center lg:justify-start w-full opacity-70">
+                            <div className="flex flex-wrap gap-8 text-sm font-medium justify-center lg:justify-start w-full opacity-90 text-white">
                                 <div className="flex items-center gap-2">
                                     <div className="flex -space-x-2">
                                         {[1, 2, 3].map(i => <div key={i} className={`w-6 h-6 rounded-full bg-gray-200 border-2 border-white bg-cover`} style={{ backgroundImage: `url(https://i.pravatar.cc/100?u=${i + 10})` }} />)}
                                     </div>
                                     <span>1,200+ Creators</span>
                                 </div>
-                                <div className="w-px h-4 bg-gray-300 hidden sm:block"></div>
+                                <div className="w-px h-4 bg-white/30 hidden sm:block"></div>
                                 <div>$500k+ Paid Out</div>
-                                <div className="w-px h-4 bg-gray-300 hidden sm:block"></div>
+                                <div className="w-px h-4 bg-white/30 hidden sm:block"></div>
                                 <div>Instant Settlement</div>
                             </div>
                         </div>
@@ -159,12 +164,13 @@ export default function Home() {
 
 
                 {/* SECTION 2: HOW IT WORKS */}
-                <section id="how-it-works" className="py-24 bg-white relative border-b border-gray-50">
+                {/* Kept transparent to show galaxy, removed border wrapper styles if not needed or adapted */}
+                <section id="how-it-works" className="relative z-10 py-24 border-b border-white/10">
                     <div className="page-container">
                         <Reveal>
                             <div className="text-center mb-16">
-                                <h2 className="text-3xl font-bold mb-4 font-serif">How Backr Works</h2>
-                                <p className="text-body text-gray-500">Simple, transparent, and built for you.</p>
+                                <h2 className="text-3xl font-bold mb-4 font-serif text-white">How Backr Works</h2>
+                                <p className="text-body text-indigo-100 font-medium">Simple, transparent, and built for you.</p>
                             </div>
                         </Reveal>
 
@@ -175,10 +181,10 @@ export default function Home() {
                                 { icon: <Wallet size={28} className="text-emerald-600" />, title: 'Get paid instantly', desc: 'Earn crypto payouts in seconds & settle, directly on Mantle.' }
                             ].map((step, i) => (
                                 <Reveal key={i} delay={(i + 1) * 100}>
-                                    <div className="flex flex-col items-start p-8 rounded-2xl glass-card hover:bg-white hover:shadow-lg transition-all duration-300">
+                                    <div className="flex flex-col items-start p-8 rounded-2xl glass-card bg-white/90 shadow-xl hover:bg-white hover:shadow-2xl transition-all duration-300">
                                         <div className="mb-4 bg-indigo-50 p-3 rounded-full shadow-sm">{step.icon}</div>
                                         <h3 className="text-lg font-bold mb-2 text-gray-900">{step.title}</h3>
-                                        <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
+                                        <p className="text-sm text-gray-700 leading-relaxed font-medium">{step.desc}</p>
                                     </div>
                                 </Reveal>
                             ))}

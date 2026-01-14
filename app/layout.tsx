@@ -30,6 +30,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/logo/backr-mark-b.svg" type="image/svg+xml" />
+        <link rel="preload" as="image" href="/backgrounds/hero-bg.png" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable}`}>
         <Providers>
           {children}

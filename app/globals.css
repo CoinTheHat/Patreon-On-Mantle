@@ -668,3 +668,48 @@ textarea {
     display: none;
   }
 }
+
+/* --------------------------------------------------------------------------
+   FULL HOME PAGE BACKGROUND
+-------------------------------------------------------------------------- */
+.home-page-bg {
+  background-image: url('/backgrounds/hero-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top center;
+  background-attachment: fixed;
+  /* Fixed to cover scroll */
+}
+
+/* Fallback for mobile if fixed background causing issues */
+@media (max-width: 768px) {
+  .home-page-bg {
+    background-attachment: scroll;
+    background-position: top center;
+    background-size: cover;
+  }
+}
+
+.home-page-overlay {
+  background: radial-gradient(circle at top, rgba(0, 0, 0, 0.25) 0, transparent 45%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.45));
+}
+
+/* --------------------------------------------------------------------------
+   HERO BACKGROUND
+-------------------------------------------------------------------------- */
+.hero-bg {
+  background-image: url('/backgrounds/hero-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top center;
+  position: relative;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .hero-bg {
+    background-position: top center;
+    background-size: cover;
+  }
+}
