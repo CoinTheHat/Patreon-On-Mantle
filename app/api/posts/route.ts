@@ -42,7 +42,14 @@ export async function POST(request: Request) {
 
     if (error) {
         console.error("Supabase Insert Error:", error.message, error.details, error.hint);
-        return NextResponse.json({ error: error.message, details: error }, { status: 500 });
+        // Return detailed error for debugging
+        return NextResponse.json({
+            error: error.message,
+            code: error.code,
+            details: error.details,
+            hint: error.hint,
+            payload: payload // Show what we tried to insert
+        }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
