@@ -408,6 +408,38 @@ export default function CreatorPage({ params }: { params: Promise<{ creator: str
                                                                     className="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">
                                                                     <span>💬</span> Comment
                                                                 </button>
+                                                                {/* Edit/Delete for owner */}
+                                                                {address && post.creatorAddress === address && (
+                                                                    <>
+                                                                        <button
+                                                                            onClick={() => router.push(`/community/edit-post/${post.id}`)}
+                                                                            className="flex items-center gap-2 text-sm font-medium text-blue-500 hover:text-blue-700 transition-colors">
+                                                                            <span>✏️</span> Edit
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={async () => {
+                                                                                if (!confirm('Are you sure you want to delete this post?')) return;
+                                                                                try {
+                                                                                    const res = await fetch(`/api/posts/${post.id}`, {
+                                                                                        method: 'DELETE',
+                                                                                        headers: { 'Content-Type': 'application/json' },
+                                                                                        body: JSON.stringify({ creatorAddress: address })
+                                                                                    });
+                                                                                    if (res.ok) {
+                                                                                        showToast('Post deleted successfully', 'success');
+                                                                                        setPosts(posts.filter(p => p.id !== post.id));
+                                                                                    } else {
+                                                                                        throw new Error('Failed to delete');
+                                                                                    }
+                                                                                } catch (e) {
+                                                                                    showToast('Failed to delete post', 'error');
+                                                                                }
+                                                                            }}
+                                                                            className="flex items-center gap-2 text-sm font-medium text-red-500 hover:text-red-700 transition-colors">
+                                                                            <span>🗑️</span> Delete
+                                                                        </button>
+                                                                    </>
+                                                                )}
                                                             </>
                                                         )}
                                                     </div>
