@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAccount } from 'wagmi';
+import { Palette, Lock, Zap, ShieldCheck, DollarSign, Wallet } from 'lucide-react';
 import CreatorCollage from './components/CreatorCollage';
-import ExclusiveContentMockup from './components/ExclusiveContentMockup';
 import { Reveal } from './hooks/useScrollReveal';
 
 export default function Home() {
@@ -25,6 +25,7 @@ export default function Home() {
       {/* Background Decor */}
       <div className="fixed inset-0 z-0 pointer-events-none bg-dot-pattern opacity-50" />
       <div className="fixed inset-0 z-0 pointer-events-none bg-motif-light opacity-60" />
+      <div className="fixed inset-0 z-0 pointer-events-none bg-motif-grain opacity-50 mix-blend-overlay" />
 
       {/* ---------------------------------------------------------------------------
          NAVIGATION
@@ -99,11 +100,11 @@ export default function Home() {
               </div>
 
               <div className="flex gap-6 text-sm text-gray-500 font-medium justify-center lg:justify-start w-full">
-                <span className="flex items-center gap-2">🛡️ Data Ownership</span>
+                <span className="flex items-center gap-2"><ShieldCheck size={16} /> Data Ownership</span>
                 <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                <span className="flex items-center gap-2">⚡ Instant Payouts</span>
+                <span className="flex items-center gap-2"><Zap size={16} /> Instant Payouts</span>
                 <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                <span className="flex items-center gap-2">💎 5% Flat Fee</span>
+                <span className="flex items-center gap-2"><DollarSign size={16} /> 5% Flat Fee</span>
               </div>
             </div>
 
@@ -121,7 +122,7 @@ export default function Home() {
           </div>
 
           {/* Scroll Cue */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce opacity-40">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce opacity-40 text-gray-400">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 13l5 5 5-5M7 6l5 5 5-5" /></svg>
           </div>
         </section>
@@ -141,15 +142,17 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {[
-                { icon: '🎨', title: 'Create your page', desc: 'Customize your creator profile, set up membership tiers, and define your brand.' },
-                { icon: '🔒', title: 'Share content', desc: 'Post behind-the-scenes updates, early access work, and member-only media.' },
-                { icon: '💸', title: 'Get paid instantly', desc: 'Receive support directly in crypto with low fees and instant settlements.' }
+                { icon: <Palette size={32} className="text-indigo-600" />, title: 'Create your page', desc: 'Customize your creator profile, set up membership tiers, and define your brand.' },
+                { icon: <Lock size={32} className="text-pink-600" />, title: 'Share content', desc: 'Post behind-the-scenes updates, early access work, and member-only media.' },
+                { icon: <Wallet size={32} className="text-emerald-600" />, title: 'Get paid instantly', desc: 'Receive support directly in crypto with low fees and instant settlements.' }
               ].map((step, i) => (
                 <Reveal key={i} delay={(i + 1) * 100}>
                   <div className="group p-8 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col items-start relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-32 bg-gray-50 rounded-full blur-3xl -mr-16 -mt-16 transition-opacity group-hover:opacity-100 opacity-0 md:opacity-0" />
 
-                    <div className="text-4xl mb-6 bg-gray-50 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:bg-blue-50 group-hover:scale-110 transition-all duration-300">{step.icon}</div>
+                    <div className="mb-6 bg-gray-50 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:bg-blue-50 group-hover:scale-110 transition-all duration-300">
+                      {step.icon}
+                    </div>
                     <h3 className="text-xl font-bold mb-3 text-gray-900 z-10">{step.title}</h3>
                     <p className="text-gray-500 leading-relaxed z-10">{step.desc}</p>
                   </div>
@@ -167,28 +170,26 @@ export default function Home() {
 
 
         {/* BRIDGE SECTION: Visual Connector */}
-        <section className="py-16 bg-gradient-to-b from-white to-gray-50 overflow-hidden relative">
+        <section className="py-20 bg-gradient-to-b from-white via-gray-50 to-[#111827] overflow-hidden relative">
           <div className="page-container flex flex-col items-center">
             <p className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-8">Trusted by creators</p>
 
             {/* Creator Avatars Strip */}
-            <div className="flex -space-x-4 mb-4">
+            <div className="flex -space-x-4 mb-8">
               {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className={`w-12 h-12 rounded-full border-4 border-white bg-gray-200 bg-cover bg-center shadow-md`} style={{ backgroundImage: `url(https://i.pravatar.cc/150?u=${i + 20})` }} />
+                <div key={i} className={`w-14 h-14 rounded-full border-4 border-white bg-gray-200 bg-cover bg-center shadow-lg transition-transform hover:scale-110 hover:z-20`} style={{ backgroundImage: `url(https://i.pravatar.cc/150?u=${i + 30})` }} />
               ))}
-              <div className="w-12 h-12 rounded-full border-4 border-white bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500 shadow-md transform translate-x-1">
+              <div className="w-14 h-14 rounded-full border-4 border-white bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500 shadow-md">
                 +2k
               </div>
             </div>
-            <p className="text-gray-500 text-sm">Join thousands growing on Backr</p>
+            <p className="text-gray-300 text-sm font-medium">Join thousands growing on Backr</p>
           </div>
         </section>
 
-        <div className="separator-fade-to-dark" />
-
 
         {/* SECTION 3: FEES & FEATURES (Dark Mode) */}
-        <section className="py-32 bg-gray-900 text-white relative overflow-hidden">
+        <section className="py-32 bg-[#111827] text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_#1f2937_0%,_#111827_60%)]" />
 
           <div className="page-container relative z-10">
@@ -268,6 +269,9 @@ export default function Home() {
                 <div className="text-gray-300">Censorship</div>
                 <div className="text-center text-white font-bold">Resistant</div>
                 <div className="text-center text-gray-500">Risky</div>
+              </div>
+              <div className="text-center text-xs text-gray-500 mt-6 italic">
+                * Fees and policies may vary by region and plan type.
               </div>
             </div>
 
