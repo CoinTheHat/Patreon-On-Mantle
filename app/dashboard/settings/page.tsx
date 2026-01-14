@@ -134,7 +134,7 @@ export default function SettingsPage() {
                 }
             } catch (e) {
                 console.error('Log parse error', e);
-                showToast('Contract deployed but failed to verify address. Please refresh.', 'warning');
+                showToast('Contract deployed but failed to verify address. Please refresh.', 'error');
             }
         }
     }, [isDeployed, receipt]);
