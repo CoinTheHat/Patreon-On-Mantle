@@ -60,12 +60,54 @@ export function CommunityProvider({ children }: { children: ReactNode }) {
     const refreshData = () => {
         if (address) {
             setIsLoading(true);
+
+            // 1. Fetch Stats
             fetch(`/api/stats?creator=${address}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data) {
                         if (data.checklist) setIsDeployed(!!data.checklist.isDeployed);
                         setContractAddress(data.contractAddress || null);
+
+                        // Update Stats State
+                        setStats({
+                            totalBackrs: data.totalBackrs || 0,
+                            activeDiscussions: data.activeDiscussions || 0,
+                            likesThisWeek: data.likesThisWeek || 0,
+                            topTierMembers: data.topTierMembers || 0
+                        });
+                    }
+                })
+                .catch(err => console.error(err));
+
+            // 2. Fetch Posts
+            fetch(`/api/posts?address=${address}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        setPosts(data.map((p: any) => ({
+                            id: p.id,
+                            author: 'You', // In dashboard, it's always you
+                            content: p.content,
+                            timestamp: new Date(p.createdAt).toLocaleDateString(),
+                            likes: p.likes || 0,
+                            tier: `Tier ${p.minTier || 1}`
+                        })));
+                    }
+                })
+                .catch(err => console.error(err));
+
+            // 3. Fetch Tiers
+            fetch(`/api/tiers?creator=${address}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        setTiers(data.map((t: any) => ({
+                            id: t.id || t.tierId,
+                            name: t.name,
+                            price: t.price,
+                            perks: t.perks || []
+                        })));
                     }
                     setIsLoading(false);
                 })

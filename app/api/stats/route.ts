@@ -84,15 +84,37 @@ export async function GET(request: Request) {
     const isDeployed = !!(creatorProfile && creatorProfile.contractAddress);
 
     // Check Posts
-    const { count: postsCount } = await supabase.from('posts').select('*', { count: 'exact', head: true }).eq('author', creatorAddress);
+    const { data: allPosts, count: postsCount } = await supabase.from('posts').select('likes, createdAt').eq('author', creatorAddress);
     const hasPosts = (postsCount || 0) > 0;
+    const activeDiscussions = postsCount || 0;
 
-    // Check Tiers
+    // Likes this week
+    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const likesThisWeek = (allPosts || [])
+        .filter((p: any) => new Date(p.createdAt) > oneWeekAgo)
+        .reduce((sum: number, p: any) => sum + (p.likes || 0), 0);
+
+    // Check Tiers & Top Tier Members
+    // Find the most expensive tier
+    let topTierName = '';
+    let maxPrice = -1;
+    if (tiers) {
+        tiers.forEach((t: any) => {
+            const p = parseFloat(t.price);
+            if (p > maxPrice) {
+                maxPrice = p;
+                topTierName = t.name;
+            }
+        });
+    }
+
+    // Count members in that tier
+    const topTierMembers = validSubs.filter((s: any) => s.tierName === topTierName).length;
     const hasTiers = (tiers && tiers.length > 0);
 
     return NextResponse.json({
         contractAddress: creatorProfile?.contractAddress,
-        totalRevenue: totalRevenue, // Currently same as MRR in this simple logic, or 0 if we don't track historicals
+        totalRevenue: totalRevenue,
         monthlyRecurring: totalRevenue,
         activeMembers: membersCount,
         history,
@@ -101,6 +123,11 @@ export async function GET(request: Request) {
             isDeployed,
             hasTiers,
             hasPosts
-        }
+        },
+        // Dashboard Stats
+        totalBackrs: membersCount,
+        activeDiscussions,
+        likesThisWeek,
+        topTierMembers
     });
 }
