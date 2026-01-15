@@ -74,4 +74,6 @@ The contracts are located in the `kinship-contracts` folder (if available separa
 
 ## 📜 License
 
-This project is licensed under the MIT License.
+Copyright (c) 2026 Backr (Kinship App). All rights reserved.
+
+This project is proprietary software. Unauthorized copying, modification, distribution, or use of this software is strictly prohibited.
